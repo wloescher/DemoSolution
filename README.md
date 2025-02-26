@@ -1,2 +1,20 @@
-Demo Visual Studio 2022 solution with projects for multiple UI frameworks, services, common utilities, database, and tests
-wolf.loescher@gmail.com
+Demo Visual Studio 2022 solution
+
+- UI Frameworks
+  - Angular
+  - Blazor
+  - Razor
+  - React
+  - Vue
+
+- Models
+
+- Services
+
+- SQL
+
+- Tests
+
+- Utilities
+
+- Web API
