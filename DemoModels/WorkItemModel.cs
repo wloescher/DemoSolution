@@ -1,6 +1,4 @@
-﻿using static DemoModels.Enums;
-
-namespace DemoModels
+﻿namespace DemoModels
 {
     public class WorkItemModel
     {

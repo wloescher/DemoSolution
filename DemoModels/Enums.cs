@@ -15,19 +15,20 @@ namespace DemoModels
             Error,
         }
 
-        public enum ClientType { 
+        public enum ClientType
+        {
             Internal,
             External,
             Lead,
         }
 
-    public enum UserType
+        public enum UserType
         {
             Admin,
-		    Sales,
-		    Marketing,
-		    Accounting,
-		    Executive,
+            Sales,
+            Marketing,
+            Accounting,
+            Executive,
             Client,
         }
     }
