@@ -57,4 +57,20 @@
   <ItemGroup>
     <Folder Include="Properties" />
   </ItemGroup>
+  <ItemGroup>
+    <Build Include="User.sql" />
+    <Build Include="Client.sql" />
+    <Build Include="UserAudit.sql" />
+    <Build Include="DataDictionary.sql" />
+    <Build Include="DataDictionaryGroup.sql" />
+    <Build Include="ClientAudit.sql" />
+    <Build Include="DataDictionaryAudit.sql" />
+    <Build Include="DataDictionaryGroupAudit.sql" />
+    <Build Include="ClientUser.sql" />
+    <Build Include="WorkItem.sql" />
+    <Build Include="WorkItemAudit.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="DemoSql.refactorlog" />
+  </ItemGroup>
 </Project>
