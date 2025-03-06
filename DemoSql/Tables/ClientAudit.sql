@@ -4,7 +4,7 @@
     [ClientAuditActionId] INT NOT NULL, 
     [ClientAuditClientId] INT NOT NULL, 
     [ClientAuditUserId] INT NOT NULL, 
-    [ClientAuditDate] DATETIME2 NOT NULL, 
+    [ClientAuditDate] DATETIME2 NOT NULL DEFAULT GETDATE(), 
 	[ClientAuditBeforeJson] NVARCHAR(MAX) NOT NULL, 
 	[ClientAuditAfterJson] NVARCHAR(MAX) NOT NULL,
 	[ClientAuditAffectedColumns] NVARCHAR(MAX) NOT NULL,

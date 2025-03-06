@@ -1,4 +1,5 @@
-﻿using static DemoModels.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using static DemoModels.Enums;
 
 namespace DemoModels
 {
@@ -9,6 +10,17 @@ namespace DemoModels
         public ClientType Type { get; set; }
         public bool IsActive { get; set; }
         public string Name { get; set; } = string.Empty;
+        [MaxLength(255)]
+        public string Address { get; set; } = string.Empty;
+        [MaxLength(50)]
+        public string City { get; set; } = string.Empty;
+        [MaxLength(50)]
+        public string Region { get; set; } = string.Empty;
+        [MaxLength(10)]
+        public string PostalCode { get; set; } = string.Empty;
+        [MaxLength(50)]
+        public string Country { get; set; } = string.Empty;
+        [MaxLength(150)]
         public string Url { get; set; } = string.Empty;
     }
 }

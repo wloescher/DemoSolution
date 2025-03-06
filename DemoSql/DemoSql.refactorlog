@@ -112,4 +112,53 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="WorkItemId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="79a90c30-05e0-44cb-9382-04c3c1e499fd" ChangeDateTime="03/06/2025 04:36:49">
+    <Property Name="ElementName" Value="[dbo].[DataDictionaryGroupAudit].[DataDictionaryAuditBeforeJson]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[DataDictionaryGroupAudit]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="DataDictionaryGroupAuditBeforeJson" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b3dc9b93-ae74-4afd-9d5c-e1322c634612" ChangeDateTime="03/06/2025 04:36:54">
+    <Property Name="ElementName" Value="[dbo].[DataDictionaryGroupAudit].[DataDictionaryAuditAfterJson]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[DataDictionaryGroupAudit]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="DataDictionaryGroupAuditAfterJson" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f56696b0-c1c8-431b-ba55-099d4f273da5" ChangeDateTime="03/06/2025 04:36:57">
+    <Property Name="ElementName" Value="[dbo].[DataDictionaryGroupAudit].[DataDictionaryAuditAffectedColumns]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[DataDictionaryGroupAudit]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="DataDictionaryGroupAuditAffectedColumns" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="85cb813c-ec3b-4a37-a0a0-572be2148f28" ChangeDateTime="03/06/2025 07:00:15">
+    <Property Name="ElementName" Value="[dbo].[ClientUserAudit].[ClientAuditDate]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ClientUserAudit]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ClientUserAuditDate" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="65e3fac5-98d7-4050-ae86-14ad571fa849" ChangeDateTime="03/06/2025 07:00:18">
+    <Property Name="ElementName" Value="[dbo].[ClientUserAudit].[ClientAuditBeforeJson]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ClientUserAudit]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ClientUserAuditBeforeJson" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f7974d39-6f19-44fa-b5eb-6544cb2dfb20" ChangeDateTime="03/06/2025 07:00:23">
+    <Property Name="ElementName" Value="[dbo].[ClientUserAudit].[ClientAuditAfterJson]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ClientUserAudit]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ClientUserAuditAfterJson" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="60167f5f-fe42-4ef8-8278-b6271df84964" ChangeDateTime="03/06/2025 07:00:26">
+    <Property Name="ElementName" Value="[dbo].[ClientUserAudit].[ClientAuditAffectedColumns]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ClientUserAudit]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ClientUserAuditAffectedColumns" />
+  </Operation>
 </Operations>

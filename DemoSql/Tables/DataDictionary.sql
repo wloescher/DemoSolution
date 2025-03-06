@@ -9,4 +9,5 @@
 
 	CONSTRAINT [FK_DataDictionary_DataDictionarGroup] FOREIGN KEY ([DataDictionaryGroupId])
 		REFERENCES [dbo].[DataDictionaryGroup]([DataDictionaryGroupId]),
+    CONSTRAINT [UQ_DataDictionaryKey] UNIQUE ([DataDictionaryKey]),
 )

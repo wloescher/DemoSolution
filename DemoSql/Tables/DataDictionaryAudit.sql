@@ -4,7 +4,7 @@
     [DataDictionaryAuditActionId] INT NOT NULL, 
     [DataDictionaryAuditDataDictionaryId] INT NOT NULL, 
     [DataDictionaryAuditUserId] INT NOT NULL, 
-    [DataDictionaryAuditDate] DATETIME2 NOT NULL, 
+    [DataDictionaryAuditDate] DATETIME2 NOT NULL DEFAULT GETDATE(), 
 	[DataDictionaryAuditBeforeJson] NVARCHAR(MAX) NOT NULL, 
 	[DataDictionaryAuditAfterJson] NVARCHAR(MAX) NOT NULL,
 	[DataDictionaryAuditAffectedColumns] NVARCHAR(MAX) NOT NULL,

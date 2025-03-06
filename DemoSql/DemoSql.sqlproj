@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{da9a63ab-2e8a-4fa3-a474-53230c9c284f}</ProjectGuid>
-    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql160DatabaseSchemaProvider</DSP>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
@@ -56,21 +56,39 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
+    <Folder Include="Views" />
+    <Folder Include="Tables" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="User.sql" />
-    <Build Include="Client.sql" />
-    <Build Include="UserAudit.sql" />
-    <Build Include="DataDictionary.sql" />
-    <Build Include="DataDictionaryGroup.sql" />
-    <Build Include="ClientAudit.sql" />
-    <Build Include="DataDictionaryAudit.sql" />
-    <Build Include="DataDictionaryGroupAudit.sql" />
-    <Build Include="ClientUser.sql" />
-    <Build Include="WorkItem.sql" />
-    <Build Include="WorkItemAudit.sql" />
+    <Build Include="Views\ClientView.sql" />
+    <Build Include="Tables\Client.sql" />
+    <Build Include="Tables\ClientAudit.sql" />
+    <Build Include="Tables\ClientUser.sql" />
+    <Build Include="Tables\DataDictionary.sql" />
+    <Build Include="Tables\DataDictionaryAudit.sql" />
+    <Build Include="Tables\DataDictionaryGroup.sql" />
+    <Build Include="Tables\DataDictionaryGroupAudit.sql" />
+    <Build Include="Tables\User.sql" />
+    <Build Include="Views\UserView.sql" />
+    <Build Include="Views\WorkItemView.sql" />
+    <Build Include="Views\ClientUserView.sql" />
+    <Build Include="Views\ClientAuditView.sql" />
+    <Build Include="Views\UserAuditView.sql" />
+    <Build Include="Views\WorkItemAuditView.sql" />
+    <Build Include="Views\DataDictionaryGroupAuditView.sql" />
+    <Build Include="Views\DataDictionaryAuditView.sql" />
+    <Build Include="Tables\ClientUserAudit.sql" />
+    <Build Include="Views\ClientUserAuditView.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DemoSql.refactorlog" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DemoSql.publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Tables\UserAudit.sql" />
+    <Build Include="Tables\WorkItem.sql" />
+    <Build Include="Tables\WorkItemAudit.sql" />
   </ItemGroup>
 </Project>

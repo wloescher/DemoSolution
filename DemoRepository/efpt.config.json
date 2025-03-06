@@ -1,0 +1,133 @@
+﻿{
+   "CodeGenerationMode": 4,
+   "ContextClassName": "DemoSqlContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Entities",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "DemoRepository",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[Client]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientAudit]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientUser]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientUserAudit]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DataDictionary]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DataDictionaryAudit]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DataDictionaryGroup]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DataDictionaryGroupAudit]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[User]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UserAudit]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[WorkItem]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[WorkItemAudit]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientAuditView]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[ClientUserAuditView]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[ClientUserView]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[ClientView]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[DataDictionaryAuditView]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[DataDictionaryGroupAuditView]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[UserAuditView]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[UserView]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[WorkItemAuditView]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[WorkItemView]",
+         "ObjectType": 3
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDatabaseNamesForRoutines": true,
+   "UseDateOnlyTimeOnly": false,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": false,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseInternalAccessModifiersForSprocsAndFunctions": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": true,
+   "UseT4Split": false
+}

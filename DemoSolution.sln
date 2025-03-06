@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoBlazor", "DemoBlazor\De
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoRazor", "DemoRazor\DemoRazor.csproj", "{C8C5EA62-D4C0-4680-944B-383F06E28712}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoRepository", "DemoRepository\DemoRepository.csproj", "{554849B5-CF7F-4C38-814C-22D66E54DA73}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{C8C5EA62-D4C0-4680-944B-383F06E28712}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8C5EA62-D4C0-4680-944B-383F06E28712}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8C5EA62-D4C0-4680-944B-383F06E28712}.Release|Any CPU.Build.0 = Release|Any CPU
+		{554849B5-CF7F-4C38-814C-22D66E54DA73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{554849B5-CF7F-4C38-814C-22D66E54DA73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{554849B5-CF7F-4C38-814C-22D66E54DA73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{554849B5-CF7F-4C38-814C-22D66E54DA73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

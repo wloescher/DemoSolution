@@ -4,7 +4,7 @@
     [WorkItemAuditActionId] INT NOT NULL, 
     [WorkItemAuditWorkItemId] INT NOT NULL, 
     [WorkItemAuditUserId] INT NOT NULL, 
-    [WorkItemAuditDate] DATETIME2 NOT NULL, 
+    [WorkItemAuditDate] DATETIME2 NOT NULL DEFAULT GETDATE(), 
 	[WorkItemAuditBeforeJson] NVARCHAR(MAX) NOT NULL, 
 	[WorkItemAuditAfterJson] NVARCHAR(MAX) NOT NULL,
 	[WorkItemAuditAffectedColumns] NVARCHAR(MAX) NOT NULL,
