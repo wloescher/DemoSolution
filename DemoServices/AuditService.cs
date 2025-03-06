@@ -55,6 +55,31 @@ namespace DemoServices
             return CreateClientUserAudit(entity.ClientUserId, userId, AuditAction.Delete, beforeJson, afterJson);
         }
 
+        public bool CreateUser(User entity, int userId)
+        {
+            var entityBefore = new User();
+            var beforeJson = JsonConvert.SerializeObject(entityBefore);
+            var afterJson = JsonConvert.SerializeObject(entity);
+            var affectedColumns = GetAffectedColumns(entityBefore, entity);
+            return CreateUserAudit(entity.UserId, userId, AuditAction.Create, beforeJson, afterJson, affectedColumns);
+        }
+
+        public bool UpdateUser(User entityBefore, User entityAfter, int userId)
+        {
+            var beforeJson = JsonConvert.SerializeObject(entityBefore);
+            var afterJson = JsonConvert.SerializeObject(entityAfter);
+            var affectedColumns = GetAffectedColumns(entityBefore, entityAfter);
+            return CreateUserAudit(entityAfter.UserId, userId, AuditAction.Update, beforeJson, afterJson, affectedColumns);
+        }
+
+        public bool DeleteUser(User entityBefore, User entityAfter, int userId)
+        {
+            var beforeJson = JsonConvert.SerializeObject(entityBefore);
+            var afterJson = JsonConvert.SerializeObject(entityAfter);
+            var affectedColumns = GetAffectedColumns(entityBefore, entityAfter);
+            return CreateUserAudit(entityAfter.UserId, userId, AuditAction.Delete, beforeJson, afterJson, affectedColumns);
+        }
+
         #endregion
 
         #region Private Methods
@@ -131,6 +156,23 @@ namespace DemoServices
                 ClientUserAuditBeforeJson = beforeJson,
                 ClientUserAuditAfterJson = afterJson,
                 ClientUserAuditAffectedColumns = string.Empty,
+            });
+
+            return _dbContext.SaveChanges() > 0;
+        }
+
+        private bool CreateUserAudit(int userId, int userId_Source, AuditAction action, string beforeJson, string afterJson, List<string> affectedColumns)
+        {
+            // Create audit record
+            _dbContext.UserAudits.Add(new UserAudit
+            {
+                UserAuditUserId = userId,
+                UserAuditUserIdSource = userId_Source,
+                UserAuditDate = DateTime.Now,
+                UserAuditActionId = (int)action,
+                UserAuditBeforeJson = beforeJson,
+                UserAuditAfterJson = afterJson,
+                UserAuditAffectedColumns = string.Join(",", affectedColumns),
             });
 
             return _dbContext.SaveChanges() > 0;

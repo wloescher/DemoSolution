@@ -10,5 +10,9 @@ namespace DemoServices.Interfaces
 
         bool CreateClientUser(ClientUser entity, int userId);
         bool DeleteClientUser(ClientUser entity, int userId);
+
+        bool CreateUser(User entity, int userId);
+        bool UpdateUser(User entityBefore, User entityAfter, int userId);
+        bool DeleteUser(User entityBefore, User entityAfter, int userId);
     }
 }

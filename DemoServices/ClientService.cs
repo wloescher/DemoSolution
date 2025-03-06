@@ -65,11 +65,10 @@ namespace DemoServices
         /// <summary>
         /// Get clients.
         /// </summary>
-        /// <param name="httpContext"></param>
         /// <param name="activeOnly"></param>
         /// <param name="excludeInternal"></param>
         /// <returns>Collection of ClientModel objects.</returns>
-        public List<ClientModel> GetClients(HttpContext httpContext, bool activeOnly = true, bool excludeInternal = true)
+        public List<ClientModel> GetClients(bool activeOnly = true, bool excludeInternal = true)
         {
             var entities = new List<ClientView>();
             // Check for active
@@ -91,7 +90,7 @@ namespace DemoServices
             var models = new List<ClientModel>();
             foreach (var entity in entities.OrderBy(x => x.Name))
             {
-                var model = GetModel(entity, httpContext);
+                var model = GetModel(entity);
                 if (model != null)
                 {
                     models.Add(model);
@@ -103,21 +102,21 @@ namespace DemoServices
         /// <summary>
         /// Save a client.
         /// </summary>
-        /// <param name="client"></param>
+        /// <param name="model"></param>
         /// <param name="userId"></param>
         /// <returns><c>true</c> if successful, otherwise <c>fale</c>.</returns>
-        public bool UpdateClient(ClientModel client, int userId)
+        public bool UpdateClient(ClientModel model, int userId)
         {
             var dbUpdated = false;
 
-            var entity = _dbContext.Clients.Find(client.ClientId);
+            var entity = _dbContext.Clients.Find(model.ClientId);
             if (entity != null)
             {
                 // Check for a name change
-                if (entity.ClientName.ToLower().Trim() != client.Name.ToLower().Trim())
+                if (entity.ClientName.ToLower().Trim() != model.Name.ToLower().Trim())
                 {
                     // Check for unique client name
-                    var clientNameIsUnique = CheckForUniqueClientName(client.ClientId, client.Name);
+                    var clientNameIsUnique = CheckForUniqueClientName(model.ClientId, model.Name);
                     if (!clientNameIsUnique)
                     {
                         throw new ApplicationException("Client Name already exists - must be unique.");
@@ -128,14 +127,14 @@ namespace DemoServices
                 var entityBefore = entity;
 
                 // Update entity property values
-                entity.ClientIsActive = client.IsActive;
-                entity.ClientName = client.Name.Trim();
-                entity.ClientAddress = client.Address.Trim();
-                entity.ClientCity = client.City.Trim();
-                entity.ClientRegion = client.Region.Trim();
-                entity.ClientPostalCode = client.PostalCode.Trim();
-                entity.ClientCountry = client.Country.Trim();
-                entity.ClientUrl = client.Url.Trim();
+                entity.ClientIsActive = model.IsActive;
+                entity.ClientName = model.Name.Trim();
+                entity.ClientAddress = model.Address.Trim();
+                entity.ClientCity = model.City.Trim();
+                entity.ClientRegion = model.Region.Trim();
+                entity.ClientPostalCode = model.PostalCode.Trim();
+                entity.ClientCountry = model.Country.Trim();
+                entity.ClientUrl = model.Url.Trim();
 
                 dbUpdated = _dbContext.SaveChanges() > 0;
 
@@ -203,13 +202,12 @@ namespace DemoServices
         /// <summary>
         /// Get client key/value pairs.
         /// </summary>
-        /// <param name="httpContext"></param>
         /// <param name="activeOnly"></param>
         /// <param name="excludeInternal"></param>
         /// <returns>Collection of key/value pairs.</returns>
-        public List<KeyValuePair<int, string>> GetClientKeyValuePairs(HttpContext httpContext, bool activeOnly = true, bool excludeInternal = true)
+        public List<KeyValuePair<int, string>> GetClientKeyValuePairs(bool activeOnly = true, bool excludeInternal = true)
         {
-            var models = GetClients(httpContext, activeOnly, excludeInternal);
+            var models = GetClients(activeOnly, excludeInternal);
 
             var keyValuePairs = new List<KeyValuePair<int, string>>();
             foreach (var model in models)
@@ -329,6 +327,8 @@ namespace DemoServices
             var model = new ClientModel
             {
                 ClientId = entity.ClientId,
+                Type = (ClientType)entity.ClientTypeId,
+                IsActive = entity.ClientIsActive,
                 Name = entity.ClientName,
                 Address = entity.ClientAddress,
                 City = entity.ClientCity,
@@ -341,13 +341,15 @@ namespace DemoServices
             return model;
         }
 
-        private static ClientModel? GetModel(ClientView? entity, HttpContext httpContext, bool loadChildObjects = false)
+        private static ClientModel? GetModel(ClientView? entity)
         {
             if (entity == null) return null;
 
             var model = new ClientModel
             {
                 ClientId = entity.ClientId,
+                Type = (ClientType)entity.TypeId,
+                IsActive = entity.IsActive,
                 Name = entity.Name,
                 Address = entity.Address,
                 City = entity.City,

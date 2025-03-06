@@ -7,8 +7,13 @@
 		, IsActive = UserIsActive
 		, EmailAddress = UserEmailAddress
 		, FirstName = UserFirstname
+		, MiddleName = UserMiddleName
 		, LastName = UserLastName
-		, FullName = UserFirstName + ' ' + UserLastName
+		, FullName = CASE
+			WHEN Len(UserMiddleName) = 1 THEN UserFirstName + ' ' + UserMiddleName + '. ' + UserLastName
+			WHEN Len(UserMiddleName) > 1 THEN UserFirstName + ' ' + UserMiddleName + ' ' + UserLastName
+			ELSE UserFirstName + ' ' + UserLastName
+			END
 		, [Address] = UserAddress
 		, City = UserCity
 		, Region = UserRegion

@@ -28,9 +28,12 @@ public partial class UserView
     public string FirstName { get; set; }
 
     [StringLength(50)]
+    public string MiddleName { get; set; }
+
+    [StringLength(50)]
     public string LastName { get; set; }
 
-    [StringLength(101)]
+    [StringLength(153)]
     public string FullName { get; set; }
 
     [StringLength(255)]
