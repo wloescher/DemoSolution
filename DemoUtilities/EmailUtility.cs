@@ -16,7 +16,7 @@ namespace DemoUtilities
 
         public EmailUtility(IConfiguration config)
         {
-            var configSection = config.GetSection("Brandpoint:Email");
+            var configSection = config.GetSection("Demo:Email");
             if (configSection != null)
             {
                 SmtpServer = configSection["SmtpServer"] ?? string.Empty;
@@ -40,7 +40,7 @@ namespace DemoUtilities
         /// <returns></returns>
         public bool SendMail(string to, string subject, string body, out string returnMessage, bool isHtml = false)
         {
-            return SendMail("noreply@brandpoint.com", to, string.Empty, string.Empty, subject, body, out returnMessage, isHtml);
+            return SendMail("noreply@demo.com", to, string.Empty, string.Empty, subject, body, out returnMessage, isHtml);
         }
 
         /// <summary>
@@ -229,7 +229,7 @@ namespace DemoUtilities
         /// <returns></returns>
         public async Task<string> SendMailAsync(string to, string subject, string body, bool isHtml = false)
         {
-            return await SendMailAsync("noreply@brandpoint.com", to, string.Empty, string.Empty, subject, body, isHtml);
+            return await SendMailAsync("noreply@demo.com", to, string.Empty, string.Empty, subject, body, isHtml);
         }
 
         /// <summary>

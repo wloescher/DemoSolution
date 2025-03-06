@@ -426,11 +426,7 @@ namespace DemoUtilities
             if (string.IsNullOrWhiteSpace(intputString)) return string.Empty;
 
             // Remove double spaces and tags
-            var cleanString = intputString.Replace("  ", " ")
-                .Replace("(ARA) - ", string.Empty)
-                .Replace("(BPT) - ", string.Empty)
-                .Replace("(ARA) – ", string.Empty)
-                .Replace("(ARA) –", string.Empty);
+            var cleanString = intputString.Replace("  ", " ");
 
             // Create array of words
             cleanString = stripHtml ? StripHtml(cleanString) : cleanString;

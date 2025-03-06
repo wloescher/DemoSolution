@@ -12,7 +12,7 @@ namespace DemoUtilities
         /// <returns>Configuratoin key value as string.</returns>
         public static string GetConfigurationKeyValue(IConfiguration configuration, string key)
         {
-            var configSection = configuration.GetSection("Brandpoint");
+            var configSection = configuration.GetSection("Demo");
             if (configSection != null)
             {
                 return configSection[key] ?? string.Empty;
