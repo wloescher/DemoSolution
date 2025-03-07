@@ -2,6 +2,8 @@
 	
 	SELECT WorkItemId
 		, [Guid] = WorkItemGuid
+		, ClientId = WorkItemClientId
+		, ClientName
 		, TypeId = WorkItemTypeId
 		, [Type] = WorkItemType.DataDictionaryKey
 		, StatusId = WorkItemStatusId
@@ -13,6 +15,7 @@
 		, Body = WorkItemBody
 
 	FROM WorkItem
+		LEFT JOIN Client ON WorkItemClientId = ClientId
 		LEFT JOIN DataDictionary AS WorkItemType ON WorkItemType.DataDictionaryGroupId = 4 -- WorkItemType
 			AND WorkItemTypeId = WorkItemType.DataDictionaryValue
 		LEFT JOIN DataDictionary AS WorkItemStatus ON WorkItemStatus.DataDictionaryGroupId = 5 -- WorkItemStatus

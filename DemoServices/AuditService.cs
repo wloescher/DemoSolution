@@ -80,6 +80,31 @@ namespace DemoServices
             return CreateUserAudit(entityAfter.UserId, userId, AuditAction.Delete, beforeJson, afterJson, affectedColumns);
         }
 
+        public bool CreateWorkItem(WorkItem entity, int userId)
+        {
+            var entityBefore = new WorkItem();
+            var beforeJson = JsonConvert.SerializeObject(entityBefore);
+            var afterJson = JsonConvert.SerializeObject(entity);
+            var affectedColumns = GetAffectedColumns(entityBefore, entity);
+            return CreateWorkItemAudit(entity.WorkItemId, userId, AuditAction.Create, beforeJson, afterJson, affectedColumns);
+        }
+
+        public bool UpdateWorkItem(WorkItem entityBefore, WorkItem entityAfter, int userId)
+        {
+            var beforeJson = JsonConvert.SerializeObject(entityBefore);
+            var afterJson = JsonConvert.SerializeObject(entityAfter);
+            var affectedColumns = GetAffectedColumns(entityBefore, entityAfter);
+            return CreateWorkItemAudit(entityAfter.WorkItemId, userId, AuditAction.Update, beforeJson, afterJson, affectedColumns);
+        }
+
+        public bool DeleteWorkItem(WorkItem entityBefore, WorkItem entityAfter, int userId)
+        {
+            var beforeJson = JsonConvert.SerializeObject(entityBefore);
+            var afterJson = JsonConvert.SerializeObject(entityAfter);
+            var affectedColumns = GetAffectedColumns(entityBefore, entityAfter);
+            return CreateWorkItemAudit(entityAfter.WorkItemId, userId, AuditAction.Delete, beforeJson, afterJson, affectedColumns);
+        }
+
         #endregion
 
         #region Private Methods
@@ -173,6 +198,23 @@ namespace DemoServices
                 UserAuditBeforeJson = beforeJson,
                 UserAuditAfterJson = afterJson,
                 UserAuditAffectedColumns = string.Join(",", affectedColumns),
+            });
+
+            return _dbContext.SaveChanges() > 0;
+        }
+
+        private bool CreateWorkItemAudit(int workItemId, int userId, AuditAction action, string beforeJson, string afterJson, List<string> affectedColumns)
+        {
+            // Create audit record
+            _dbContext.WorkItemAudits.Add(new WorkItemAudit
+            {
+                WorkItemAuditWorkItemId = workItemId,
+                WorkItemAuditUserId = userId,
+                WorkItemAuditDate = DateTime.Now,
+                WorkItemAuditActionId = (int)action,
+                WorkItemAuditBeforeJson = beforeJson,
+                WorkItemAuditAfterJson = afterJson,
+                WorkItemAuditAffectedColumns = string.Join(",", affectedColumns),
             });
 
             return _dbContext.SaveChanges() > 0;

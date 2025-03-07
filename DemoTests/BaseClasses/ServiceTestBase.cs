@@ -43,6 +43,7 @@ namespace DemoTests.BaseClasses
             serviceCollection.AddSingleton<IAuditService, AuditService>();
             serviceCollection.AddSingleton<IClientService, ClientService>();
             serviceCollection.AddSingleton<IUserService, UserService>();
+            serviceCollection.AddSingleton<IWorkItemService, WorkItemService>();
 
             _serviceProvider = serviceCollection.BuildServiceProvider();
         }

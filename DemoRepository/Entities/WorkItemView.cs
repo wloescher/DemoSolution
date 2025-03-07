@@ -13,6 +13,11 @@ public partial class WorkItemView
 
     public Guid Guid { get; set; }
 
+    public int ClientId { get; set; }
+
+    [StringLength(100)]
+    public string ClientName { get; set; }
+
     public int TypeId { get; set; }
 
     [StringLength(50)]

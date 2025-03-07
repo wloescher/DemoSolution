@@ -135,12 +135,6 @@ namespace DemoTests.ServiceTests
         }
 
         [TestMethodDependencyInjection]
-        public void GetCurrentClientIdTest(IClientService clientService)
-        {
-            Assert.Fail();
-        }
-
-        [TestMethodDependencyInjection]
         public void CreateClientUserTest(IClientService clientService)
         {
             var clientId = _dbContext.ClientViews.First().ClientId;
@@ -156,6 +150,22 @@ namespace DemoTests.ServiceTests
             var userId = _dbContext.UserViews.First().UserId;
             var result = clientService.DeleteClientUser(clientId, userId, userId);
             Assert.IsTrue(result);
+        }
+
+        [TestMethodDependencyInjection]
+        public void GetClientUsersTest(IClientService clientService)
+        {
+            var clientId = _dbContext.ClientViews.First().ClientId;
+            var result = clientService.GetClientUsers(clientId);
+            Assert.AreNotEqual(0, result.Count);
+        }
+
+        [TestMethodDependencyInjection]
+        public void GetClientWorkItemsTest(IClientService clientService)
+        {
+            var clientId = _dbContext.ClientViews.First().ClientId;
+            var result = clientService.GetClientWorkItems(clientId);
+            Assert.AreNotEqual(0, result.Count);
         }
 
         #endregion
@@ -210,6 +220,7 @@ namespace DemoTests.ServiceTests
             // Check results
             Assert.IsNotNull(result);
             model.ClientId = result.ClientId;
+            model.ClientGuid = result.ClientGuid;
             ClientTestHelper.Compare(model, result);
 #if !DEBUG
             Assert.IsTrue(stopWatch.Elapsed.TotalSeconds <= 1);

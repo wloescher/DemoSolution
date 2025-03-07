@@ -2,11 +2,9 @@
 using DemoRepository.Entities;
 using DemoServices.BaseClasses;
 using DemoServices.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Security.Claims;
 using static DemoModels.Enums;
 
 namespace DemoServices
@@ -224,17 +222,6 @@ namespace DemoServices
             return keyValuePairs;
         }
 
-        /// <summary>
-        /// Get the current user.
-        /// </summary>
-        /// <param name="httpContext"></param>
-        /// <returns>Current UserId as Int</returns>
-        public int GetCurrentUserId(HttpContext httpContext)
-        {
-            var nameIdentifierClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-            return nameIdentifierClaim == null ? 0 : Convert.ToInt32(nameIdentifierClaim.Value);
-        }
-
         #endregion
 
         #region Private Methods
@@ -246,6 +233,7 @@ namespace DemoServices
             var model = new UserModel
             {
                 UserId = entity.UserId,
+                UserGuid = entity.UserGuid,
                 Type = (UserType)entity.UserTypeId,
                 IsActive = entity.UserIsActive,
                 IsDeleted = entity.UserIsDeleted,
@@ -263,13 +251,14 @@ namespace DemoServices
             return model;
         }
 
-        private static UserModel? GetModel(UserView? entity)
+        internal static UserModel? GetModel(UserView? entity)
         {
             if (entity == null) return null;
 
             var model = new UserModel
             {
                 UserId = entity.UserId,
+                UserGuid = entity.Guid,
                 Type = (UserType)entity.TypeId,
                 IsActive = entity.IsActive,
                 EmailAddress = entity.EmailAddress,

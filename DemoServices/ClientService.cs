@@ -2,7 +2,6 @@
 using DemoRepository.Entities;
 using DemoServices.BaseClasses;
 using DemoServices.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -96,6 +95,7 @@ namespace DemoServices
                     models.Add(model);
                 }
             }
+
             return models;
         }
 
@@ -219,30 +219,27 @@ namespace DemoServices
         }
 
         /// <summary>
-        /// Get the current client.
+        /// Get client users.
         /// </summary>
-        /// <param name="httpContext"></param>
-        /// <returns>Current ClientId as Int</returns>
-        public int GetCurrentClientId(HttpContext httpContext)
+        /// <param name="clientId"></param>
+        /// <returns>Collection of UserModel objects.</returns>
+        public List<UserModel> GetClientUsers(int clientId)
         {
-            var clientId = 0;
-            if (httpContext.User.Identity != null)
+            var entities = (from clientUserView in _dbContext.ClientUserViews
+                            join user in _dbContext.UserViews on clientUserView.UserId equals user.UserId
+                            where clientUserView.ClientId == clientId
+                            select new { User = user });
+
+            var models = new List<UserModel>();
+            foreach (var entity in entities.OrderBy(x => x.User.FullName))
             {
-                var identityName = httpContext.User.Identity.Name;
-                if (!string.IsNullOrEmpty(identityName) && identityName.Contains(',') && identityName.Split(',').Length > 1)
+                var model = UserService.GetModel(entity.User);
+                if (model != null)
                 {
-                    clientId = Convert.ToInt32(identityName.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)[1]);
-                }
-                else
-                {
-                    var clientIdClaim = httpContext.User.Claims.FirstOrDefault(c => c.Type == "ClientId");
-                    if (clientIdClaim != null)
-                    {
-                        clientId = Convert.ToInt32(clientIdClaim.Value);
-                    }
+                    models.Add(model);
                 }
             }
-            return clientId;
+            return models;
         }
 
         /// <summary>
@@ -316,6 +313,28 @@ namespace DemoServices
             return dbUpdated;
         }
 
+
+        /// <summary>
+        /// Get client work items.
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <returns>Collection of WorkItemModel objects.</returns>
+        public List<WorkItemModel> GetClientWorkItems(int clientId)
+        {
+            var entities = _dbContext.WorkItemViews.Where(x => x.ClientId == clientId);
+
+            var models = new List<WorkItemModel>();
+            foreach (var entity in entities.OrderBy(x => x.Title))
+            {
+                var model = WorkItemService.GetModel(entity);
+                if (model != null)
+                {
+                    models.Add(model);
+                }
+            }
+            return models;
+        }
+
         #endregion
 
         #region Private Methods
@@ -327,6 +346,7 @@ namespace DemoServices
             var model = new ClientModel
             {
                 ClientId = entity.ClientId,
+                ClientGuid = entity.ClienttGuid,
                 Type = (ClientType)entity.ClientTypeId,
                 IsActive = entity.ClientIsActive,
                 IsDeleted = entity.ClientIsDeleted,
@@ -349,6 +369,7 @@ namespace DemoServices
             var model = new ClientModel
             {
                 ClientId = entity.ClientId,
+                ClientGuid = entity.Guid,
                 Type = (ClientType)entity.TypeId,
                 IsActive = entity.IsActive,
                 Name = entity.Name,

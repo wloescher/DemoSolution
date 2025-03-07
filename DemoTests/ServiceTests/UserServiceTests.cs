@@ -136,12 +136,6 @@ namespace DemoTests.ServiceTests
             }
         }
 
-        [TestMethodDependencyInjection]
-        public void GetCurrentUserIdTest(IUserService userService)
-        {
-            Assert.Fail();
-        }
-
         #endregion
 
         #region Private Methods
@@ -194,6 +188,7 @@ namespace DemoTests.ServiceTests
             // Check results
             Assert.IsNotNull(result);
             model.UserId = result.UserId;
+            model.UserGuid = result.UserGuid;
             UserTestHelper.Compare(model, result);
 #if !DEBUG
             Assert.IsTrue(stopWatch.Elapsed.TotalSeconds <= 1);

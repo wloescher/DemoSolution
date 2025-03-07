@@ -1,5 +1,4 @@
 ﻿using DemoModels;
-using Microsoft.AspNetCore.Http;
 
 namespace DemoServices.Interfaces
 {
@@ -13,6 +12,5 @@ namespace DemoServices.Interfaces
 
         bool CheckForUniqueUserEmailAddress(int userId, string emailAddress);
         List<KeyValuePair<int, string>> GetUserKeyValuePairs(bool activeOnly = true, bool excludeInternal = true);
-        int GetCurrentUserId(HttpContext httpContext);
     }
 }
