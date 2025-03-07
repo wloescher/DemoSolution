@@ -18,6 +18,8 @@ namespace DemoTests.ServiceTests
         private readonly DemoSqlContext _dbContext;
 
         // Configuration Values
+        private readonly List<int> _testClientIds = new();
+        private readonly List<int> _testUserIds = new();
         private readonly List<int> _testWorkItemIds = new();
 
         public WorkItemServiceTests()
@@ -33,6 +35,8 @@ namespace DemoTests.ServiceTests
             _dbContext = new DemoSqlContext(optionsBuilder.Options);
 
             // Configuration Values
+            _testClientIds = (configuration.GetValue<string>("Demo:TestClientIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
+            _testUserIds = (configuration.GetValue<string>("Demo:TestUserIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
             _testWorkItemIds = (configuration.GetValue<string>("Demo:TestWorkItemIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
         }
 
@@ -77,11 +81,11 @@ namespace DemoTests.ServiceTests
         [TestMethodDependencyInjection]
         public void CrudTest(IWorkItemService workItemService)
         {
-            var userId = _dbContext.UserViews.First().UserId;
+            var userId = _testUserIds.First();
             var ticks = DateTime.Now.Ticks;
             var model = new WorkItemModel
             {
-                ClientId = _dbContext.ClientViews.First().ClientId,
+                ClientId = _testClientIds.First(),
                 Type = WorkItemType.Article,
                 Status = WorkItemStatus.New,
                 Title = string.Format("Title-{0}", ticks),
@@ -169,7 +173,9 @@ namespace DemoTests.ServiceTests
         private void CheckForWorkItemAuditRecord(int workItemId, int userId, AuditAction action)
         {
             var entities = _dbContext.WorkItemAudits
-                .Where(x => x.WorkItemAuditWorkItemId == workItemId && x.WorkItemAuditUserId == userId && x.WorkItemAuditActionId == (int)action);
+                .Where(x => x.WorkItemAuditWorkItemId == workItemId
+                    && x.WorkItemAuditUserId == userId
+                    && x.WorkItemAuditActionId == (int)action);
             Assert.IsNotNull(entities);
             Assert.AreEqual(1, entities.Count());
             Console.WriteLine("audit record created.");

@@ -19,6 +19,7 @@ namespace DemoTests.ServiceTests
 
         // Configuration Values
         private readonly List<int> _testClientIds = new();
+        private readonly List<int> _testUserIds = new();
 
         public ClientServiceTests()
         {
@@ -34,6 +35,7 @@ namespace DemoTests.ServiceTests
 
             // Configuration Values
             _testClientIds = (configuration.GetValue<string>("Demo:TestClientIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
+            _testUserIds = (configuration.GetValue<string>("Demo:TestUserIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
         }
 
         #region Test Methods
@@ -77,7 +79,7 @@ namespace DemoTests.ServiceTests
         [TestMethodDependencyInjection]
         public void CrudTest(IClientService clientService)
         {
-            var userId = _dbContext.UserViews.First().UserId;
+            var userId = _testUserIds.First();
             var ticks = DateTime.Now.Ticks;
             var model = new ClientModel
             {
@@ -137,8 +139,8 @@ namespace DemoTests.ServiceTests
         [TestMethodDependencyInjection]
         public void CreateClientUserTest(IClientService clientService)
         {
-            var clientId = _dbContext.ClientViews.First().ClientId;
-            var userId = _dbContext.UserViews.First().UserId;
+            var clientId = _testClientIds.First();
+            var userId = _testUserIds.First();
             var result = clientService.CreateClientUser(clientId, userId, userId);
             Assert.IsTrue(result);
         }
@@ -146,8 +148,8 @@ namespace DemoTests.ServiceTests
         [TestMethodDependencyInjection]
         public void DeleteClientUserTest(IClientService clientService)
         {
-            var clientId = _dbContext.ClientViews.First().ClientId;
-            var userId = _dbContext.UserViews.First().UserId;
+            var clientId = _testClientIds.First();
+            var userId = _testUserIds.First();
             var result = clientService.DeleteClientUser(clientId, userId, userId);
             Assert.IsTrue(result);
         }
@@ -155,7 +157,7 @@ namespace DemoTests.ServiceTests
         [TestMethodDependencyInjection]
         public void GetClientUsersTest(IClientService clientService)
         {
-            var clientId = _dbContext.ClientViews.First().ClientId;
+            var clientId = _testClientIds.First();
             var result = clientService.GetClientUsers(clientId);
             Assert.AreNotEqual(0, result.Count);
         }
@@ -163,7 +165,7 @@ namespace DemoTests.ServiceTests
         [TestMethodDependencyInjection]
         public void GetClientWorkItemsTest(IClientService clientService)
         {
-            var clientId = _dbContext.ClientViews.First().ClientId;
+            var clientId = _testClientIds.First();
             var result = clientService.GetClientWorkItems(clientId);
             Assert.AreNotEqual(0, result.Count);
         }

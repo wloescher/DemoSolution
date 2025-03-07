@@ -77,7 +77,7 @@ namespace DemoTests.ServiceTests
         [TestMethodDependencyInjection]
         public void CrudTest(IUserService userService)
         {
-            var userId = _dbContext.UserViews.First().UserId;
+            var userId = _testUserIds.First();
             var ticks = DateTime.Now.Ticks;
             var model = new UserModel
             {
@@ -172,7 +172,9 @@ namespace DemoTests.ServiceTests
         private void CheckForUserAuditRecord(int userId, int userIdSource, AuditAction action)
         {
             var entities = _dbContext.UserAudits
-                .Where(x => x.UserAuditUserId == userId && x.UserAuditUserIdSource == userIdSource && x.UserAuditActionId == (int)action);
+                .Where(x => x.UserAuditUserId == userId
+                    && x.UserAuditUserIdSource == userIdSource
+                    && x.UserAuditActionId == (int)action);
             Assert.IsNotNull(entities);
             Assert.AreEqual(1, entities.Count());
             Console.WriteLine("audit record created.");

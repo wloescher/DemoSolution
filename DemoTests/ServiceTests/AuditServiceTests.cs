@@ -15,6 +15,9 @@ namespace DemoTests.ServiceTests
 
         // Configuration Values
         private readonly List<int> _testClientIds = new();
+        private readonly List<int> _testClientUserIds = new();
+        private readonly List<int> _testUserIds = new();
+        private readonly List<int> _testWorkItemIds = new();
 
         public AuditServiceTests()
         {
@@ -30,6 +33,9 @@ namespace DemoTests.ServiceTests
 
             // Configuration Values
             _testClientIds = (configuration.GetValue<string>("Demo:TestClientIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
+            _testClientUserIds = (configuration.GetValue<string>("Demo:TestClientUserIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
+            _testUserIds = (configuration.GetValue<string>("Demo:TestUserIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
+            _testWorkItemIds = (configuration.GetValue<string>("Demo:TestWorkItemIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
         }
 
         #region Test Methods
@@ -37,7 +43,7 @@ namespace DemoTests.ServiceTests
         [TestMethodDependencyInjection]
         public void GetClientAuditsTest(IAuditService auditService)
         {
-            var clientId = _dbContext.ClientAuditViews.First().ClientId;
+            var clientId = _testClientIds.First();
             var result = auditService.GetClientAudits(clientId);
             Assert.AreNotEqual(0, result.Count);
         }
@@ -45,7 +51,7 @@ namespace DemoTests.ServiceTests
         [TestMethodDependencyInjection]
         public void ClientCrudTest(IAuditService auditService)
         {
-            var userId = _dbContext.UserViews.First().UserId;
+            var userId = _testUserIds.First();
             var entity = _dbContext.Clients.First();
 
             CreateClientTest(auditService, entity, userId);
@@ -56,7 +62,7 @@ namespace DemoTests.ServiceTests
         [TestMethodDependencyInjection]
         public void GetClientUserAuditsTest(IAuditService auditService)
         {
-            var clientUserId = _dbContext.ClientUserAuditViews.First().ClientUserId;
+            var clientUserId = _testClientUserIds.First();
             var result = auditService.GetClientUserAudits(clientUserId);
             Assert.AreNotEqual(0, result.Count);
         }
@@ -64,8 +70,8 @@ namespace DemoTests.ServiceTests
         [TestMethodDependencyInjection]
         public void ClientUserCrudTest(IAuditService auditService)
         {
-            var userId = _dbContext.UserViews.First().UserId;
-            var clientId = _dbContext.ClientViews.First().ClientId;
+            var userId = _testUserIds.First();
+            var clientId = _testClientIds.First();
 
             CreateClientUserTest(auditService, clientId, userId);
             DeleteClientUserTest(auditService, clientId, userId);
@@ -74,15 +80,15 @@ namespace DemoTests.ServiceTests
         [TestMethodDependencyInjection]
         public void GetUserAuditsTest(IAuditService auditService)
         {
-            var UserId = _dbContext.UserAuditViews.First().UserId;
-            var result = auditService.GetUserAudits(UserId);
+            var userId = _testUserIds.First();
+            var result = auditService.GetUserAudits(userId);
             Assert.AreNotEqual(0, result.Count);
         }
 
         [TestMethodDependencyInjection]
         public void UserCrudTest(IAuditService auditService)
         {
-            var userId = _dbContext.UserViews.First().UserId;
+            var userId = _testUserIds.First();
             var entity = _dbContext.Users.First();
 
             CreateUserTest(auditService, entity, userId);
@@ -93,15 +99,15 @@ namespace DemoTests.ServiceTests
         [TestMethodDependencyInjection]
         public void GetWorkItemAuditsTest(IAuditService auditService)
         {
-            var WorkItemId = _dbContext.WorkItemAuditViews.First().WorkItemId;
-            var result = auditService.GetWorkItemAudits(WorkItemId);
+            var workItemId = _testWorkItemIds.First();
+            var result = auditService.GetWorkItemAudits(workItemId);
             Assert.AreNotEqual(0, result.Count);
         }
 
         [TestMethodDependencyInjection]
         public void WorkItemCrudTest(IAuditService auditService)
         {
-            var userId = _dbContext.UserViews.First().UserId;
+            var userId = _testUserIds.First();
             var entity = _dbContext.WorkItems.First();
 
             CreateWorkItemTest(auditService, entity, userId);

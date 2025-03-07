@@ -6,7 +6,7 @@
 		, [Type] = UserType.DataDictionaryKey
 		, IsActive = UserIsActive
 		, EmailAddress = UserEmailAddress
-		, FirstName = UserFirstname
+		, FirstName = UserFirstName
 		, MiddleName = UserMiddleName
 		, LastName = UserLastName
 		, FullName = CASE
