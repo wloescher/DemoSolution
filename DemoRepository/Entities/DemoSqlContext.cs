@@ -244,9 +244,8 @@ public partial class DemoSqlContext : DbContext
 
         modelBuilder.Entity<WorkItem>(entity =>
         {
-            entity.HasKey(e => e.WorkItemId).HasName("PK__tmp_ms_x__A10D1B4583D60C23");
+            entity.HasKey(e => e.WorkItemId).HasName("PK__tmp_ms_x__A10D1B45A8690677");
 
-            entity.Property(e => e.WorkItemId).ValueGeneratedNever();
             entity.Property(e => e.WorkItemGuid).HasDefaultValueSql("(newid())");
 
             entity.HasOne(d => d.WorkItemClient).WithMany(p => p.WorkItems)

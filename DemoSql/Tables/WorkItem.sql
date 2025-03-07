@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[WorkItem]
 (
-	[WorkItemId] INT NOT NULL PRIMARY KEY, 
+	[WorkItemId] INT NOT NULL PRIMARY KEY IDENTITY, 
     [WorkItemGuid] UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID(), 
     [WorkItemClientId] INT NOT NULL,
     [WorkItemTypeId] INT NOT NULL,

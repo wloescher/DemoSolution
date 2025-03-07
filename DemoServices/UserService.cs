@@ -130,6 +130,7 @@ namespace DemoServices
                 var entityBefore = entity;
 
                 // Update entity property values
+                entity.UserTypeId = (int)model.Type;
                 entity.UserIsActive = model.IsActive;
                 entity.UserEmailAddress = model.EmailAddress.Trim();
                 entity.UserFirstName = model.FirstName.Trim();
@@ -247,6 +248,7 @@ namespace DemoServices
                 UserId = entity.UserId,
                 Type = (UserType)entity.UserTypeId,
                 IsActive = entity.UserIsActive,
+                IsDeleted = entity.UserIsDeleted,
                 EmailAddress = entity.UserEmailAddress,
                 FirstName = entity.UserFirstName,
                 MiddleName = entity.UserMiddleName,

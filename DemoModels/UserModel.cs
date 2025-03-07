@@ -10,6 +10,7 @@ namespace DemoModels
         public UserType Type { get; set; }
         public string EmailAddress { get; set; } = string.Empty;
         public bool IsActive { get; set; }
+        public bool IsDeleted { get; set; }
         [MaxLength(50)]
         public string FirstName { get; set; } = string.Empty;
         [MaxLength(50)]
