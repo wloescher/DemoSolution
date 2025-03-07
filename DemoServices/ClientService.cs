@@ -254,27 +254,31 @@ namespace DemoServices
             var dbUpdated = false;
 
             // Check for existing client user
-            var entities = _dbContext.ClientUsers.Where(x => x.ClientUserClientId == clientId && x.ClientUserUserId == userId);
-            if (entities.Count() == 0)
+            var entity = _dbContext.ClientUsers.FirstOrDefault(x => x.ClientUserClientId == clientId && x.ClientUserUserId == userId);
+            if (entity == null)
             {
-                var entity = new ClientUser
+                entity = new ClientUser
                 {
                     ClientUserClientId = clientId,
                     ClientUserUserId = userId,
                 };
 
                 _dbContext.ClientUsers.Add(entity);
+            }
+            else
+            {
+                entity.ClientUserIsDeleted = false;
+            }
 
-                dbUpdated = _dbContext.SaveChanges() > 0;
+            dbUpdated = _dbContext.SaveChanges() > 0;
 
-                if (dbUpdated)
+            if (dbUpdated)
+            {
+                using (var scope = _serviceProvider.CreateScope())
                 {
-                    using (var scope = _serviceProvider.CreateScope())
-                    {
-                        // Create audit record
-                        var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
-                        auditService.CreateClientUser(entity, userId_Source);
-                    }
+                    // Create audit record
+                    var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
+                    auditService.CreateClientUser(entity, userId_Source);
                 }
             }
 
@@ -295,8 +299,7 @@ namespace DemoServices
             var entity = _dbContext.ClientUsers.FirstOrDefault(x => x.ClientUserClientId == clientId && x.ClientUserUserId == userId);
             if (entity != null)
             {
-                _dbContext.ClientUsers.Remove(entity);
-
+                entity.ClientUserIsDeleted = true;
                 dbUpdated = _dbContext.SaveChanges() > 0;
 
                 if (dbUpdated)

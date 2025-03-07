@@ -3,6 +3,7 @@
 	SELECT ClientUserAuditId
 		, ActionId = ClientUserAuditActionId
 		, [Action] = AuditAction.DataDictionaryKey
+		, ClientUserId = ClientUserAuditClientUserId
 		, ClientId = ClientUserAuditClientUserId
 		, UserId = ClientUserAuditUserId
 		, ClientName

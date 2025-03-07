@@ -4,7 +4,8 @@
     [ClientUserClientId] INT NOT NULL, 
     [ClientUserUserId] INT NOT NULL, 
 
-	CONSTRAINT [FK_ClientUser_Client] FOREIGN KEY ([ClientUserClientId])
+	[ClientUserIsDeleted] BIT NOT NULL DEFAULT 0, 
+    CONSTRAINT [FK_ClientUser_Client] FOREIGN KEY ([ClientUserClientId])
 		REFERENCES [dbo].[Client]([ClientId]),
 	CONSTRAINT [FK_ClientUser_User] FOREIGN KEY ([ClientUserUserId])
 		REFERENCES [dbo].[User]([UserId]),

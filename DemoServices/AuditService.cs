@@ -1,4 +1,5 @@
-﻿using DemoRepository.Entities;
+﻿using DemoModels;
+using DemoRepository.Entities;
 using DemoServices.BaseClasses;
 using DemoServices.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
@@ -13,6 +14,19 @@ namespace DemoServices
         : DbContextService(configuration, dbContext, memoryCache, serviceProvider), IAuditService
     {
         #region Public Methods
+
+        public List<AuditModel> GetClientAudits(int clientId)
+        {
+            var models = new List<AuditModel>();
+
+            var entities = _dbContext.ClientAudits.Where(a => a.ClientAuditClientId == clientId);
+            foreach (var entity in entities)
+            {
+                models.Add(GetModel(entity));
+            }
+
+            return models;
+        }
 
         public bool CreateClient(Client entity, int userId)
         {
@@ -39,6 +53,19 @@ namespace DemoServices
             return CreateClientAudit(entityAfter.ClientId, userId, AuditAction.Delete, beforeJson, afterJson, affectedColumns);
         }
 
+        public List<AuditModel> GetClientUserAudits(int clientUserId)
+        {
+            var models = new List<AuditModel>();
+
+            var entities = _dbContext.ClientUserAudits.Where(a => a.ClientUserAuditClientUserId == clientUserId);
+            foreach (var entity in entities)
+            {
+                models.Add(GetModel(entity));
+            }
+
+            return models;
+        }
+
         public bool CreateClientUser(ClientUser entity, int userId)
         {
             var entityBefore = new ClientUser();
@@ -53,6 +80,19 @@ namespace DemoServices
             var beforeJson = JsonConvert.SerializeObject(entity);
             var afterJson = JsonConvert.SerializeObject(entityAfter);
             return CreateClientUserAudit(entity.ClientUserId, userId, AuditAction.Delete, beforeJson, afterJson);
+        }
+
+        public List<AuditModel> GetUserAudits(int userId)
+        {
+            var models = new List<AuditModel>();
+
+            var entities = _dbContext.UserAudits.Where(a => a.UserAuditUserId == userId);
+            foreach (var entity in entities)
+            {
+                models.Add(GetModel(entity));
+            }
+
+            return models;
         }
 
         public bool CreateUser(User entity, int userId)
@@ -78,6 +118,19 @@ namespace DemoServices
             var afterJson = JsonConvert.SerializeObject(entityAfter);
             var affectedColumns = GetAffectedColumns(entityBefore, entityAfter);
             return CreateUserAudit(entityAfter.UserId, userId, AuditAction.Delete, beforeJson, afterJson, affectedColumns);
+        }
+
+        public List<AuditModel> GetWorkItemAudits(int workItemId)
+        {
+            var models = new List<AuditModel>();
+
+            var entities = _dbContext.WorkItemAudits.Where(a => a.WorkItemAuditWorkItemId == workItemId);
+            foreach (var entity in entities)
+            {
+                models.Add(GetModel(entity));
+            }
+
+            return models;
         }
 
         public bool CreateWorkItem(WorkItem entity, int userId)
@@ -218,6 +271,58 @@ namespace DemoServices
             });
 
             return _dbContext.SaveChanges() > 0;
+        }
+
+        private static AuditModel GetModel(ClientAudit entity)
+        {
+            return new AuditModel
+            {
+                AuditId = entity.ClientAuditId,
+                Date = entity.ClientAuditDate,
+                Action = (AuditAction)entity.ClientAuditActionId,
+                BeforeJson = entity.ClientAuditBeforeJson,
+                AfterJson = entity.ClientAuditAfterJson,
+                AffectedColumns = entity.ClientAuditAffectedColumns.Split(',').ToList(),
+            };
+        }
+
+        private static AuditModel GetModel(ClientUserAudit entity)
+        {
+            return new AuditModel
+            {
+                AuditId = entity.ClientUserAuditId,
+                Date = entity.ClientUserAuditDate,
+                Action = (AuditAction)entity.ClientUserAuditActionId,
+                BeforeJson = entity.ClientUserAuditBeforeJson,
+                AfterJson = entity.ClientUserAuditAfterJson,
+                AffectedColumns = entity.ClientUserAuditAffectedColumns.Split(',').ToList(),
+            };
+        }
+
+        private static AuditModel GetModel(UserAudit entity)
+        {
+            return new AuditModel
+            {
+                AuditId = entity.UserAuditId,
+                Date = entity.UserAuditDate,
+                Action = (AuditAction)entity.UserAuditActionId,
+                BeforeJson = entity.UserAuditBeforeJson,
+                AfterJson = entity.UserAuditAfterJson,
+                AffectedColumns = entity.UserAuditAffectedColumns.Split(',').ToList(),
+            };
+        }
+
+        private static AuditModel GetModel(WorkItemAudit entity)
+        {
+            return new AuditModel
+            {
+                AuditId = entity.WorkItemAuditId,
+                Date = entity.WorkItemAuditDate,
+                Action = (AuditAction)entity.WorkItemAuditActionId,
+                BeforeJson = entity.WorkItemAuditBeforeJson,
+                AfterJson = entity.WorkItemAuditAfterJson,
+                AffectedColumns = entity.WorkItemAuditAffectedColumns.Split(',').ToList(),
+            };
         }
 
         #endregion

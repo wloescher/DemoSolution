@@ -33,9 +33,9 @@ public partial class ClientUserAudit
     [InverseProperty("ClientUserAudits")]
     public virtual DataDictionary ClientUserAuditAction { get; set; }
 
-    [ForeignKey("ClientUserAuditId")]
-    [InverseProperty("ClientUserAudit")]
-    public virtual ClientUser ClientUserAuditNavigation { get; set; }
+    [ForeignKey("ClientUserAuditClientUserId")]
+    [InverseProperty("ClientUserAudits")]
+    public virtual ClientUser ClientUserAuditClientUser { get; set; }
 
     [ForeignKey("ClientUserAuditUserId")]
     [InverseProperty("ClientUserAudits")]

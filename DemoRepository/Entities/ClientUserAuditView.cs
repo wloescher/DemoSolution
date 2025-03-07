@@ -16,6 +16,8 @@ public partial class ClientUserAuditView
     [StringLength(50)]
     public string Action { get; set; }
 
+    public int ClientUserId { get; set; }
+
     public int ClientId { get; set; }
 
     public int UserId { get; set; }

@@ -109,16 +109,15 @@ public partial class DemoSqlContext : DbContext
         {
             entity.HasKey(e => e.ClientUserAuditId).HasName("PK__ClientUs__57424D02A70A9BC6");
 
-            entity.Property(e => e.ClientUserAuditId).ValueGeneratedOnAdd();
             entity.Property(e => e.ClientUserAuditDate).HasDefaultValueSql("(getdate())");
 
             entity.HasOne(d => d.ClientUserAuditAction).WithMany(p => p.ClientUserAudits)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ClientUserAudit_DataDictionary");
 
-            entity.HasOne(d => d.ClientUserAuditNavigation).WithOne(p => p.ClientUserAudit)
+            entity.HasOne(d => d.ClientUserAuditClientUser).WithMany(p => p.ClientUserAudits)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ClientUserAudit_Client");
+                .HasConstraintName("FK_ClientUserAudit_ClientUser");
 
             entity.HasOne(d => d.ClientUserAuditUser).WithMany(p => p.ClientUserAudits)
                 .OnDelete(DeleteBehavior.ClientSetNull)

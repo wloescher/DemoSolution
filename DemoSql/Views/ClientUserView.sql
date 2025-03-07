@@ -13,4 +13,6 @@
 			AND ClientIsDeleted = 0
 		LEFT JOIN [User] ON ClientUserUserId = UserId
 			AND UserIsActive = 1
-			AND UserIsDeleted = 0;
+			AND UserIsDeleted = 0
+			
+	WHERE ClientUserIsDeleted = 0;

@@ -17,8 +17,10 @@ public partial class ClientUser
 
     public int ClientUserUserId { get; set; }
 
-    [InverseProperty("ClientUserAuditNavigation")]
-    public virtual ClientUserAudit ClientUserAudit { get; set; }
+    public bool ClientUserIsDeleted { get; set; }
+
+    [InverseProperty("ClientUserAuditClientUser")]
+    public virtual ICollection<ClientUserAudit> ClientUserAudits { get; set; } = new List<ClientUserAudit>();
 
     [ForeignKey("ClientUserClientId")]
     [InverseProperty("ClientUsers")]
