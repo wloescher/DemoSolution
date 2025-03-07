@@ -9,6 +9,7 @@ namespace DemoModels
         public Guid ClientGuid { get; set; }
         public ClientType Type { get; set; }
         public bool IsActive { get; set; }
+        public bool IsDeleted { get; set; }
         public string Name { get; set; } = string.Empty;
         [MaxLength(255)]
         public string Address { get; set; } = string.Empty;

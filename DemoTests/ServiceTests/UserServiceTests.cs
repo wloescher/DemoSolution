@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
 using static DemoModels.Enums;
 
-namespace DemoTests.Services
+namespace DemoTests.ServiceTests
 {
     [TestClass()]
     public class UserServiceTests : ServiceTestBase
@@ -41,7 +41,7 @@ namespace DemoTests.Services
         [TestMethodDependencyInjection]
         public void GetUserTest(IUserService userService)
         {
-            Console.WriteLine("UserId, UserType, Elapsed");
+            Console.WriteLine("UserId, Type, Elapsed");
             foreach (var userId in _testUserIds)
             {
                 GetUserTest(userService, userId);
@@ -77,6 +77,7 @@ namespace DemoTests.Services
         [TestMethodDependencyInjection]
         public void CrudTest(IUserService userService)
         {
+            var userId = _dbContext.UserViews.First().UserId;
             var ticks = DateTime.Now.Ticks;
             var model = new UserModel
             {
@@ -91,117 +92,11 @@ namespace DemoTests.Services
                 PostalCode = string.Format("Zip-{0}", ticks.ToString().Substring(ticks.ToString().Length - 6)),
                 Country = string.Format("Country-{0}", ticks),
             };
-            var userIdSource = _dbContext.UserViews.First().UserId;
 
-            // ------------------------------------------------------------
-            // Create
-            // ------------------------------------------------------------
-
-            Console.Write("Create User...");
-
-            var stopWatchCreate = new Stopwatch();
-            stopWatchCreate.Start();
-            var createUserResult = userService.CreateUser(model, userIdSource);
-            stopWatchCreate.Stop();
-
-            // Check results
-            Assert.IsNotNull(createUserResult);
-            var newUserId = createUserResult.UserId;
-            model.UserId = newUserId;
-            UserTestHelper.Compare(model, createUserResult);
-#if !DEBUG
-            Assert.IsTrue(stopWatchCreate.Elapsed.TotalSeconds <= 1);
-#endif
-
-            CheckForUserAuditRecord(newUserId, userIdSource, AuditAction.Create);
-
-            // ------------------------------------------------------------
-            // Get
-            // ------------------------------------------------------------
-
-            Console.WriteLine("Get User.");
-
-            var stopWatchGet = new Stopwatch();
-            stopWatchGet.Start();
-            var getUserResult = userService.GetUser(newUserId);
-            stopWatchGet.Stop();
-
-            // Check results
-            UserTestHelper.Compare(model, getUserResult);
-#if !DEBUG
-            Assert.IsTrue(stopWatchGet.Elapsed.TotalSeconds <= 1);
-#endif
-
-            // ------------------------------------------------------------
-            // Update
-            // ------------------------------------------------------------
-
-            Console.Write("Update User...");
-
-            // Update properties
-            ticks = DateTime.Now.Ticks;
-            model.Type = UserType.Client;
-            model.EmailAddress = string.Format("{0}@demo.com", ticks);
-            model.FirstName = string.Format("First-{0}", ticks);
-            model.MiddleName = string.Format("Middle-{0}", ticks);
-            model.LastName = string.Format("Last-{0}", ticks);
-            model.Address = string.Format("Address-{0}", ticks);
-            model.City = string.Format("City-{0}", ticks);
-            model.Region = string.Format("Region-{0}", ticks);
-            model.PostalCode = string.Format("Zip-{0}", ticks.ToString().Substring(ticks.ToString().Length - 6));
-            model.Country = string.Format("Country-{0}", ticks);
-
-            Assert.AreNotEqual(model.EmailAddress, createUserResult.EmailAddress);
-
-            var stopWatchUpdate = new Stopwatch();
-            stopWatchUpdate.Start();
-            var updateUserResult = userService.UpdateUser(model, userIdSource);
-            stopWatchGet.Stop();
-
-            // Check results
-            Assert.IsTrue(updateUserResult);
-            var getUpdatedUserResult = userService.GetUser(newUserId);
-            Assert.IsNotNull(getUpdatedUserResult);
-            UserTestHelper.Compare(model, getUpdatedUserResult);
-#if !DEBUG
-            Assert.IsTrue(stopWatchUpdate.Elapsed.TotalSeconds <= 1);
-#endif
-
-            CheckForUserAuditRecord(newUserId, userIdSource, AuditAction.Update);
-
-            // ------------------------------------------------------------
-            // Delete
-            // ------------------------------------------------------------
-
-            Console.Write("Delete User...");
-
-            var stopWatchDelete = new Stopwatch();
-            stopWatchDelete.Start();
-            var deleteUserResult = userService.DeleteUser(newUserId, userIdSource);
-            stopWatchDelete.Stop();
-
-            // Check results
-            Assert.IsTrue(deleteUserResult);
-#if !DEBUG
-            Assert.IsTrue(stopWatchDelete.Elapsed.TotalSeconds <= 1);
-#endif
-
-            var getDeletedUserResult = userService.GetUser(newUserId);
-            Assert.IsNotNull(getDeletedUserResult);
-            Assert.IsTrue(getDeletedUserResult.IsDeleted);
-
-            CheckForUserAuditRecord(newUserId, userIdSource, AuditAction.Delete);
-
-            // ------------------------------------------------------------
-
-            // Display results
-            Console.WriteLine();
-            Console.WriteLine(string.Format("UserId: {0}", newUserId));
-            Console.WriteLine(string.Format("Type: {0}", createUserResult.Type));
-            Console.WriteLine(string.Format("Create: {0}ms", stopWatchCreate.ElapsedMilliseconds));
-            Console.WriteLine(string.Format("Get: {0}ms", stopWatchGet.ElapsedMilliseconds));
-            Console.WriteLine(string.Format("Update: {0}ms", stopWatchUpdate.ElapsedMilliseconds));
-            Console.WriteLine(string.Format("Delete: {0}ms", stopWatchDelete.ElapsedMilliseconds));
+            var testUserId = CreateUserTest(userService, model, userId);
+            GetUserTest(userService, model, testUserId);
+            UpdateUserTest(userService, model, testUserId, userId);
+            DeleteUserTest(userService, testUserId, userId);
         }
 
         [TestMethodDependencyInjection]
@@ -234,7 +129,7 @@ namespace DemoTests.Services
 #endif
 
             // Display results
-            Console.WriteLine("UserId, Type, FullName");
+            Console.WriteLine("UserId, FullName");
             foreach (var keyValuePair in keyValuePairs)
             {
                 Console.WriteLine(string.Format("{0}, {1}", keyValuePair.Key, keyValuePair.Value));
@@ -287,6 +182,102 @@ namespace DemoTests.Services
             Assert.IsNotNull(entities);
             Assert.AreEqual(1, entities.Count());
             Console.WriteLine("audit record created.");
+        }
+
+        private int CreateUserTest(IUserService userService, UserModel model, int userId)
+        {
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            var result = userService.CreateUser(model, userId);
+            stopWatch.Stop();
+
+            // Check results
+            Assert.IsNotNull(result);
+            model.UserId = result.UserId;
+            UserTestHelper.Compare(model, result);
+#if !DEBUG
+            Assert.IsTrue(stopWatch.Elapsed.TotalSeconds <= 1);
+#endif
+
+            // Display results
+            Console.WriteLine(string.Format("UserId: {0}", result.UserId));
+            Console.Write(string.Format("Create: {0}ms...", stopWatch.ElapsedMilliseconds));
+
+            CheckForUserAuditRecord(result.UserId, userId, AuditAction.Create);
+
+            return result.UserId;
+        }
+
+        private static void GetUserTest(IUserService userService, UserModel model, int newUserId)
+        {
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            var getUserResult = userService.GetUser(newUserId);
+            stopWatch.Stop();
+
+            // Check results
+            UserTestHelper.Compare(model, getUserResult);
+#if !DEBUG
+            Assert.IsTrue(stopWatch.Elapsed.TotalSeconds <= 1);
+#endif
+
+            Console.WriteLine(string.Format("Get: {0}ms", stopWatch.ElapsedMilliseconds));
+        }
+
+        private void UpdateUserTest(IUserService userService, UserModel model, int newUserId, int userId)
+        {
+            // Update properties
+            var ticks = DateTime.Now.Ticks;
+            model.Type = UserType.Client;
+            model.EmailAddress = string.Format("{0}@demo.com", ticks);
+            model.FirstName = string.Format("First-{0}", ticks);
+            model.MiddleName = string.Format("Middle-{0}", ticks);
+            model.LastName = string.Format("Last-{0}", ticks);
+            model.Address = string.Format("Address-{0}", ticks);
+            model.City = string.Format("City-{0}", ticks);
+            model.Region = string.Format("Region-{0}", ticks);
+            model.PostalCode = string.Format("Zip-{0}", ticks.ToString().Substring(ticks.ToString().Length - 6));
+            model.Country = string.Format("Country-{0}", ticks);
+
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            var updateUserResult = userService.UpdateUser(model, userId);
+            stopWatch.Stop();
+
+            // Check results
+            Assert.IsTrue(updateUserResult);
+            var getUpdatedUserResult = userService.GetUser(newUserId);
+            Assert.IsNotNull(getUpdatedUserResult);
+            UserTestHelper.Compare(model, getUpdatedUserResult);
+#if !DEBUG
+            Assert.IsTrue(stopWatch.Elapsed.TotalSeconds <= 1);
+#endif
+
+            Console.Write(string.Format("Update: {0}ms...", stopWatch.ElapsedMilliseconds));
+
+            CheckForUserAuditRecord(newUserId, userId, AuditAction.Update);
+        }
+
+        private void DeleteUserTest(IUserService userService, int testUserId, int userId)
+        {
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            var deleteUserResult = userService.DeleteUser(testUserId, userId);
+            stopWatch.Stop();
+
+            // Check results
+            Assert.IsTrue(deleteUserResult);
+#if !DEBUG
+            Assert.IsTrue(stopWatch.Elapsed.TotalSeconds <= 1);
+#endif
+
+            var getDeletedUserResult = userService.GetUser(testUserId);
+            Assert.IsNotNull(getDeletedUserResult);
+            Assert.IsTrue(getDeletedUserResult.IsDeleted);
+
+            Console.Write(string.Format("Delete: {0}ms...", stopWatch.ElapsedMilliseconds));
+
+            CheckForUserAuditRecord(testUserId, userId, AuditAction.Delete);
         }
 
         #endregion

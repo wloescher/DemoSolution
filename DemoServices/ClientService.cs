@@ -329,6 +329,7 @@ namespace DemoServices
                 ClientId = entity.ClientId,
                 Type = (ClientType)entity.ClientTypeId,
                 IsActive = entity.ClientIsActive,
+                IsDeleted = entity.ClientIsDeleted,
                 Name = entity.ClientName,
                 Address = entity.ClientAddress,
                 City = entity.ClientCity,

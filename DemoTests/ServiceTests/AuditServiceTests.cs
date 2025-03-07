@@ -1,44 +1,22 @@
-﻿namespace DemoTests.Services
+﻿namespace DemoTests.ServiceTests
 {
     [TestClass()]
-    public class ClientServiceTests
+    public class AuditServiceTests
     {
         [TestMethod()]
-        public void CrudTest()
-        {
-            // Create
-            // Read
-            // Update
-            // Delete
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void GetClientTest()
+        public void CreateClientTest()
         {
             Assert.Fail();
         }
 
         [TestMethod()]
-        public void GetClientsTest()
+        public void UpdateClientTest()
         {
             Assert.Fail();
         }
 
         [TestMethod()]
-        public void CheckForUniqueClientNameTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void GetClientKeyValuePairsTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void GetCurrentClientIdTest()
+        public void DeleteClientTest()
         {
             Assert.Fail();
         }
@@ -51,6 +29,24 @@
 
         [TestMethod()]
         public void DeleteClientUserTest()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod()]
+        public void CreateUserTest()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod()]
+        public void UpdateUserTest()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod()]
+        public void DeleteUserTest()
         {
             Assert.Fail();
         }
