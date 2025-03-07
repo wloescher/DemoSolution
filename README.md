@@ -6,9 +6,9 @@ Full-Stack Visual Studio 2022 solution
 - Models
 - Services (.NET Core / Dependency Injection / Interfaces)
 - Utilities
+- Tests
 
 Still to come...
-- Tests
 - Web API
 - Multiple UI Frameworks
   - Angular
