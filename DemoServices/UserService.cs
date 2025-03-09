@@ -2,9 +2,12 @@
 using DemoRepository.Entities;
 using DemoServices.BaseClasses;
 using DemoServices.Interfaces;
+using DemoUtilities;
+using DemoUtilities.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text;
 using static DemoModels.Enums;
 
 namespace DemoServices
@@ -14,18 +17,35 @@ namespace DemoServices
     {
         #region Public Methods
 
+
         /// <summary>
-        /// Add a new user to the database.
+        /// Create a user.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="userId"></param>
+        /// <param name="errorMessage"></param>
         /// <returns>New UserModel object.</returns>
-        public UserModel? CreateUser(UserModel model, int userId)
+        public UserModel? CreateUser(UserModel model, int userId, out string errorMessage)
         {
+            errorMessage = string.Empty;
+
+            // Check for existing User record
+            var userEntity = _dbContext.Users.FirstOrDefault(x => x.UserEmailAddress == model.EmailAddress.Trim());
+            if (userEntity != null)
+            {
+                errorMessage = "User already exists - please try a different Email Address.";
+                return null;
+            }
+
+            // Set password
+            var password = SecurityUtility.GeneratePassword();
+
             var entity = new User
             {
                 UserTypeId = (int)model.Type,
+                UserIsActive = true,
                 UserEmailAddress = model.EmailAddress.Trim(),
+                UserPassword = password,
                 UserFirstName = model.FirstName.Trim(),
                 UserMiddleName = model.MiddleName.Trim(),
                 UserLastName = model.LastName.Trim(),
@@ -34,6 +54,8 @@ namespace DemoServices
                 UserRegion = model.Region.Trim(),
                 UserPostalCode = model.PostalCode.Trim(),
                 UserCountry = model.Country.Trim(),
+                UserPhoneNumber = model.PhoneNumber.Trim(),
+                UserPasswordHash = SecurityUtility.PasswordHash(password),
             };
 
             _dbContext.Users.Add(entity);
@@ -47,7 +69,19 @@ namespace DemoServices
                     var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
                     auditService.CreateUser(entity, userId);
                 }
+
+                // Send access info email
+                var emailBody = GetChangePasswordEmailBody(model.EmailAddress, password);
+                var returnMessage = string.Empty;
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var emailUtility = scope.ServiceProvider.GetRequiredService<IEmailUtility>();
+                    emailUtility.SendMail(model.EmailAddress, "Access Information", emailBody, out returnMessage, true);
+                }
             }
+
+            // Update cached data
+            GetUsers(true, false, true);
 
             return GetModel(entity);
         }
@@ -68,36 +102,50 @@ namespace DemoServices
         /// </summary>
         /// <param name="activeOnly"></param>
         /// <param name="excludeInternal"></param>
+        /// <param name="resetCache"></param>
         /// <returns>Collection of UserModel objects.</returns>
-        public List<UserModel> GetUsers(bool activeOnly = true, bool excludeInternal = true)
+        public List<UserModel> GetUsers(bool activeOnly = true, bool excludeInternal = true, bool resetCache = false)
         {
-            var entities = new List<UserView>();
-            // Check for active
-            if (activeOnly)
+            // Get model from cache
+            var cacheKey = string.Format("DemoUsers{0}", !activeOnly ? "IncludingInactive" : string.Empty);
+            var models = _memoryCache.Get(cacheKey) as List<UserModel>;
+            if (models == null || resetCache)
             {
-                entities = _dbContext.UserViews.Where(x => x.IsActive).ToList();
-            }
-            else
-            {
-                entities = _dbContext.UserViews.ToList();
-            }
-
-            // Check for internal
-            if (excludeInternal)
-            {
-                entities = entities.Where(x => x.TypeId != (int)UserType.Client).ToList();
-            }
-
-            var models = new List<UserModel>();
-            foreach (var entity in entities.OrderBy(x => x.LastName).ThenBy(x => x.FirstName))
-            {
-                var model = GetModel(entity);
-                if (model != null)
+                var entities = new List<UserView>();
+                // Check for active
+                if (activeOnly)
                 {
-                    models.Add(model);
+                    entities = _dbContext.UserViews.Where(x => x.IsActive).ToList();
                 }
+                else
+                {
+                    entities = _dbContext.UserViews.ToList();
+                }
+
+                // Check for internal
+                if (excludeInternal)
+                {
+                    entities = entities.Where(x => x.TypeId != (int)UserType.Client).ToList();
+                }
+
+                models = new List<UserModel>();
+                foreach (var entity in entities.OrderBy(x => x.LastName).ThenBy(x => x.FirstName))
+                {
+                    var model = GetModel(entity);
+                    if (model != null)
+                    {
+                        models.Add(model);
+                    }
+                }
+
+                // Update cache
+                _memoryCache.Set(cacheKey, models, _cacheOptions);
             }
-            return models;
+
+            return models
+                .OrderBy(x => x.LastName)
+                .ThenBy(x => x.FirstName)
+                .ToList();
         }
 
         /// <summary>
@@ -106,14 +154,24 @@ namespace DemoServices
         /// <param name="model"></param>
         /// <param name="userId"></param>
         /// <returns><c>true</c> if successful, otherwise <c>fale</c>.</returns>
-        public bool UpdateUser(UserModel model, int userId)
+        public bool UpdateUser(UserModel model, int userId, out string errorMessage)
         {
+            errorMessage = string.Empty;
+
             var dbUpdated = false;
+
+            // Check for duplicate real name
+            var userEntity = _dbContext.Users.FirstOrDefault(x => x.UserEmailAddress == model.EmailAddress.Trim() && x.UserId != userId);
+            if (userEntity != null)
+            {
+                errorMessage = "User already exists - please try a different Email Address.";
+                return false;
+            }
 
             var entity = _dbContext.Users.Find(model.UserId);
             if (entity != null)
             {
-                // Check for a name change
+                // Check for an email address change
                 if (entity.UserEmailAddress != model.EmailAddress.ToLower().Trim())
                 {
                     // Check for unique email address
@@ -139,6 +197,7 @@ namespace DemoServices
                 entity.UserRegion = model.Region.Trim();
                 entity.UserPostalCode = model.PostalCode.Trim();
                 entity.UserCountry = model.Country.Trim();
+                entity.UserPhoneNumber = model.PhoneNumber.Trim();
 
                 dbUpdated = _dbContext.SaveChanges() > 0;
 
@@ -150,6 +209,9 @@ namespace DemoServices
                         var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
                         auditService.UpdateUser(entityBefore, entity, userId);
                     }
+
+                    // Update cached data
+                    GetUsers(true, false, true);
                 }
             }
 
@@ -273,6 +335,20 @@ namespace DemoServices
             };
 
             return model;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private string GetChangePasswordEmailBody(string username, string password)
+        {
+            var sb = new StringBuilder();
+            sb.AppendFormat("<p>Here is your access information for demo.com.</p>");
+            sb.AppendFormat("<p>You can sign into the website by visiting <a href=\"https://www.demo.com\">demo.com</a> and entering your information.</p>");
+            sb.AppendFormat("<div><strong>Username:</strong> {0}</div>", username);
+            sb.AppendFormat("<div><strong>Password:</strong> {0}</div>", password);
+            return sb.ToString();
         }
 
         #endregion

@@ -15,6 +15,9 @@
     [UserRegion] NVARCHAR(50) NULL,
     [UserPostalCode] NVARCHAR(10) NULL,
     [UserCountry] NVARCHAR(50) NULL,
+    [UserPhoneNumber] NVARCHAR(20) NULL,
+    [UserPasswordHash] NVARCHAR(255) NULL,
+    [UserPasswordAttemptCount] INT NOT NULL DEFAULT -1,
 
 	CONSTRAINT [FK_User_DataDictionary] FOREIGN KEY ([UserTypeId])
 		REFERENCES [dbo].[DataDictionary]([DataDictionaryId]),

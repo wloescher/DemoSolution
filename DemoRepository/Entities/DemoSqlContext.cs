@@ -206,6 +206,7 @@ public partial class DemoSqlContext : DbContext
             entity.HasKey(e => e.UserId).HasName("PK__User__1788CC4C0A3B3990");
 
             entity.Property(e => e.UserGuid).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.UserPasswordAttemptCount).HasDefaultValue(-1);
 
             entity.HasOne(d => d.UserType).WithMany(p => p.Users)
                 .OnDelete(DeleteBehavior.ClientSetNull)

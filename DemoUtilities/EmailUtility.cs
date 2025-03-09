@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using DemoUtilities.Interfaces;
+using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Net.Mail;
 
 namespace DemoUtilities
 {
-    public class EmailUtility
+    public class EmailUtility : IEmailUtility
     {
         public string SmtpServer { get; set; } = string.Empty;
         public string SmtpServerEmailAddress { get; set; } = string.Empty;

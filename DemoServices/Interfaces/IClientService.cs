@@ -17,6 +17,6 @@ namespace DemoServices.Interfaces
         List<UserModel> GetClientUsers(int clientId);
         bool DeleteClientUser(int clientId, int userId, int userId_Source);
 
-        List<WorkItemModel> GetClientWorkItems(int clientId);
+        List<WorkItemModel> GetClientWorkItems(int clientId, bool includeActiveOnly = true);
     }
 }

@@ -195,8 +195,7 @@ namespace DemoServices
         /// <returns><c>true</c> if unique, otherwise <c>false</c>.</returns>
         public bool CheckForUniqueClientName(int clientId, string clientName)
         {
-            var entities = _dbContext.Clients.Where(x => x.ClientName.ToLower() == clientName.ToLower().Trim() && x.ClientId != clientId);
-            return !entities.Any();
+            return !_dbContext.Clients.Any(x => x.ClientName.ToLower() == clientName.ToLower().Trim() && x.ClientId != clientId);
         }
 
         /// <summary>
@@ -321,10 +320,15 @@ namespace DemoServices
         /// Get client work items.
         /// </summary>
         /// <param name="clientId"></param>
+        /// <param name="includeActiveOnly"></param>
         /// <returns>Collection of WorkItemModel objects.</returns>
-        public List<WorkItemModel> GetClientWorkItems(int clientId)
+        public List<WorkItemModel> GetClientWorkItems(int clientId, bool includeActiveOnly = true)
         {
             var entities = _dbContext.WorkItemViews.Where(x => x.ClientId == clientId);
+            if (includeActiveOnly)
+            {
+                entities = entities.Where(x => x.IsActive);
+            }
 
             var models = new List<WorkItemModel>();
             foreach (var entity in entities.OrderBy(x => x.Title))

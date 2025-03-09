@@ -52,6 +52,14 @@ public partial class User
     [StringLength(50)]
     public string UserCountry { get; set; }
 
+    [StringLength(20)]
+    public string UserPhoneNumber { get; set; }
+
+    [StringLength(255)]
+    public string UserPasswordHash { get; set; }
+
+    public int UserPasswordAttemptCount { get; set; }
+
     [InverseProperty("ClientAuditUser")]
     public virtual ICollection<ClientAudit> ClientAudits { get; set; } = new List<ClientAudit>();
 

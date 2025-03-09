@@ -27,6 +27,8 @@ namespace DemoModels
         public string PostalCode { get; set; } = string.Empty;
         [MaxLength(50)]
         public string Country { get; set; } = string.Empty;
+        [MaxLength(20)]
+        public string PhoneNumber { get; set; } = string.Empty;
 
         public string FullName
         {
