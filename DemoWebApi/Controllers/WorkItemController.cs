@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DemoWebApi.Controllers
 {
-    [Route("client")]
+    [Route("workitem")]
     public class WorkItemController(ILogger<WorkItemController> logger, IConfiguration configuration, IServiceProvider serviceProvider)
         : BaseController(logger, configuration, serviceProvider)
     {
