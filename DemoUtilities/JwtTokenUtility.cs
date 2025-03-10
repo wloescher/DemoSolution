@@ -24,7 +24,7 @@ namespace DemoModels
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["Jwt:Key"] ?? string.Empty)),
                 ValidIssuer = configuration["Jwt:Issuer"] ?? string.Empty,
-                ValidAudiences = (configuration["Jwt:Audiences"] ?? string.Empty).Split(','),
+                ValidAudience = configuration["Jwt:Audience"],
                 ClockSkew = TimeSpan.Zero,
             }, out SecurityToken validatedToken);
 
@@ -36,18 +36,18 @@ namespace DemoModels
         /// </summary>
         /// <param name="configuration"></param>
         /// <param name="userId"></param>
-        /// <param name="username"></param>
+        /// <param name="emailAddress"></param>
         /// <param name="firstName"></param>
         /// <param name="lastName"></param>
         /// <param name="emailAddress"></param>
         /// <returns>Token as string.</returns>
-        public static string GenerateToken(IConfiguration configuration, int userId, string username, string firstName, string lastName, string emailAddress)
+        public static string GenerateToken(IConfiguration configuration, int userId, string emailAddress, string firstName, string lastName)
         {
             var tokenHandler = new JsonWebTokenHandler();
 
             var claims = new List<Claim> {
                 new(ClaimTypes.NameIdentifier, userId.ToString()),
-                new(ClaimTypes.Name, username),
+                new(ClaimTypes.Name, emailAddress),
                 new(JwtRegisteredClaimNames.Sub, userId.ToString()),
                 new(JwtRegisteredClaimNames.Email, emailAddress),
                 new("UserId", userId.ToString()),
@@ -55,15 +55,17 @@ namespace DemoModels
                 new("LastName", lastName),
                 new("EmailAddress", emailAddress),
             };
+
             var key = Encoding.ASCII.GetBytes(configuration["Jwt:Key"] ?? string.Empty);
             var issuer = configuration["Jwt:Issuer"] ?? string.Empty;
+            var audience = configuration["Jwt:Audience"] ?? string.Empty;
             var expirationInMinutes = int.Parse(configuration["Jwt:ExpirationInMinutes"] ?? string.Empty);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 Issuer = issuer,
-                Audience = "Admin",
+                Audience = audience,
                 Expires = DateTime.UtcNow.AddMinutes(expirationInMinutes),
             };
 

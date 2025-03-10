@@ -58,7 +58,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? string.Empty)),
             ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? string.Empty,
-            ValidAudiences = (builder.Configuration["Jwt:Audiences"] ?? string.Empty).Split(','),
+            ValidAudiences = (builder.Configuration["Jwt:Audience"] ?? string.Empty).Split(','),
             ClockSkew = TimeSpan.Zero
         };
     });

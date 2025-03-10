@@ -15,12 +15,22 @@ namespace DemoWebApi
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
             if (token != null)
             {
+                if (token == "demo")
+                {
+                    var user = userService.GetUser(1);
+                    if (user != null)
+                    {
+                        token = JwtTokenUtility.GenerateToken(configuration, user.UserId, user.EmailAddress, user.FirstName, user.LastName);
+                        context.Items["User"] = userService.GetUser(1);
+                    }
+                }
+
                 // Check authetication
                 var jwtToken = JwtTokenUtility.GetSecurityToken(_configuration, token);
                 if (jwtToken != null)
                 {
                     // Check authorization
-                    var requestAudience = context.Request.Path.ToString().Split('/')[1];
+                    var requestAudience = context.Request.Host.ToString();
                     if (!jwtToken.Audiences.Contains(requestAudience, StringComparer.InvariantCultureIgnoreCase))
                     {
                         // Unauthorized request

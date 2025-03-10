@@ -1,4 +1,4 @@
-﻿using DemoRepository.Entities;
+﻿using DemoModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -9,7 +9,7 @@ namespace DemoWebApi
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            var user = (User?)context.HttpContext.Items["User"];
+            var user = (UserModel?)context.HttpContext.Items["User"];
             if (user == null)
             {
                 context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
