@@ -54,7 +54,7 @@ namespace DemoWebApi.Controllers
             return Ok(models);
         }
 
-        [HttpGet("{clientId}/contacts")]
+        [HttpGet("{clientId}/users")]
         public IActionResult GetUsers(int clientId)
         {
             List<UserModel> models;
@@ -69,19 +69,46 @@ namespace DemoWebApi.Controllers
         [HttpPost]
         public IActionResult CreateClient([FromBody] ClientModel model)
         {
-            throw new NotImplementedException();
+            ClientModel? client;
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+                var currentUserId = userService.GetCurrentUserId(HttpContext);
+
+                var clientService = scope.ServiceProvider.GetRequiredService<IClientService>();
+                client = clientService.CreateClient(model, currentUserId);
+            }
+            return Ok(client);
         }
 
         [HttpPut("{clientId}")]
         public IActionResult UpdateClient(int clientId, [FromBody] ClientModel model)
         {
-            throw new NotImplementedException();
+            bool result;
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+                var currentUserId = userService.GetCurrentUserId(HttpContext);
+
+                var clientService = scope.ServiceProvider.GetRequiredService<IClientService>();
+                result = clientService.UpdateClient(model, currentUserId);
+            }
+            return Ok(result);
         }
 
         [HttpDelete("{clientId}")]
         public IActionResult DeleteClient(int clientId)
         {
-            throw new NotImplementedException();
+            bool result;
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+                var currentUserId = userService.GetCurrentUserId(HttpContext);
+
+                var clientService = scope.ServiceProvider.GetRequiredService<IClientService>();
+                result = clientService.DeleteClient(clientId, currentUserId);
+            }
+            return Ok(result);
         }
 
         [HttpGet("{clientId}/checkname")]
@@ -97,24 +124,30 @@ namespace DemoWebApi.Controllers
         }
 
         [HttpPut("{clientId}/user/{userId}")]
-        public IActionResult AddUser(int clientId, int userId, int userId_Source)
+        public IActionResult AddUser(int clientId, int userId)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
+                var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+                var currentUserId = userService.GetCurrentUserId(HttpContext);
+
                 var clientService = scope.ServiceProvider.GetRequiredService<IClientService>();
-                clientService.CreateClientUser(clientId, userId, userId_Source);
+                clientService.CreateClientUser(clientId, userId, currentUserId);
             }
 
             return Ok(true);
         }
 
         [HttpDelete("{clientId}/user/{userId}")]
-        public IActionResult DeleteUser(int clientId, int userId, int userId_Source)
+        public IActionResult DeleteUser(int clientId, int userId)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
+                var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+                var currentUserId = userService.GetCurrentUserId(HttpContext);
+
                 var clientService = scope.ServiceProvider.GetRequiredService<IClientService>();
-                clientService.DeleteClientUser(clientId, userId, userId_Source);
+                clientService.DeleteClientUser(clientId, userId, currentUserId);
             }
 
             return Ok(true);

@@ -81,29 +81,25 @@ namespace DemoWebApi.Controllers
         [HttpPost()]
         public IActionResult CreateUser([FromBody] UserModel user)
         {
-            // TODO: Get current UserId from token
-            var userId = TestUserIds.First();
-
             string errorMessage;
             using (var scope = _serviceProvider.CreateScope())
             {
                 var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
-                userService.CreateUser(user, userId, out errorMessage);
+                var currentUserId = userService.GetCurrentUserId(HttpContext);
+                userService.CreateUser(user, currentUserId, out errorMessage);
             }
             return Ok(errorMessage);
         }
 
         [HttpPut("{userId}")]
-        public IActionResult SaveUser(int userId, [FromBody] UserModel user)
+        public IActionResult UpdateUser(int userId, [FromBody] UserModel user)
         {
-            // TODO: Get current UserId from token
-            var userId_Source = TestUserIds.First();
-
             string errorMessage;
             using (var scope = _serviceProvider.CreateScope())
             {
                 var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
-                userService.UpdateUser(user, userId_Source, out errorMessage);
+                var currentUserId = userService.GetCurrentUserId(HttpContext);
+                userService.UpdateUser(user, currentUserId, out errorMessage);
             }
             return Ok(errorMessage);
         }
@@ -111,13 +107,11 @@ namespace DemoWebApi.Controllers
         [HttpDelete("{userId}")]
         public IActionResult DeleteUser(int userId)
         {
-            // TODO: Get current UserId from token
-            var userId_Source = TestUserIds.First();
-
             using (var scope = _serviceProvider.CreateScope())
             {
                 var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
-                userService.DeleteUser(userId, userId_Source);
+                var currentUserId = userService.GetCurrentUserId(HttpContext);
+                userService.DeleteUser(userId, currentUserId);
             }
             return Ok(true);
         }

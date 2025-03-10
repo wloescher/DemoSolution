@@ -4,9 +4,11 @@ using DemoServices.BaseClasses;
 using DemoServices.Interfaces;
 using DemoUtilities;
 using DemoUtilities.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Security.Claims;
 using System.Text;
 using static DemoModels.Enums;
 
@@ -17,6 +19,15 @@ namespace DemoServices
     {
         #region Public Methods
 
+        /// <summary>
+        /// Get the currently logged in user's UserId.
+        /// </summary>
+        /// <returns>UserId of logged in User</returns>
+        public int GetCurrentUserId(HttpContext httpContext)
+        {
+            var nameIdentifierClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+            return nameIdentifierClaim == null ? 0 : Convert.ToInt32(nameIdentifierClaim.Value);
+        }
 
         /// <summary>
         /// Create a user.
