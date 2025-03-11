@@ -8,10 +8,10 @@ Full-Stack Visual Studio 2022 solution
 - Utilities
 - Tests
 - Web API
-
-Still to come...
 - Multiple UI Frameworks
   - Angular
+
+Still to come...
   - Blazor
   - Razor
   - React
