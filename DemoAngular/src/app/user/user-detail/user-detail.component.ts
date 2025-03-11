@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { IUser } from '../../../models/user.model';
+import { ActivatedRoute, Router } from '@angular/router';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { IUser } from '../../../models/user.model';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'demo-user-detail',
@@ -8,28 +10,21 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./user-detail.component.css']
 })
 export class UserDetailComponent {
-  user: IUser;
+  user: any;
+  id: number = 0;
   faTrash = faTrash;
 
-  constructor() {
-    this.user = {
-      id: 1,
-      guid: '55004793-5dd1-433f-8091-83dab517556b',
-      typeId: 1,
-      type: 'Admin',
-      isActive: true,
-      isDeleted: false,
-      emailAddress: 'demo@demo.com',
-      firstName: 'Admin',
-      middleName: '',
-      lastName: 'Demo',
-      address: '1234 Main St',
-      city: 'Anytown',
-      region: 'CA',
-      postalCode: '12345',
-      country: 'USA',
-      phoneNumber: '',
-    }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private userSvc: UserService
+  ) { }
+
+  ngOnInit() {
+    this.route.paramMap.subscribe((params) => {
+      this.id = parseInt(params.get('id') ?? '0') ?? 0;
+    });
+    this.userSvc.getUser(this.id).subscribe((user: IUser | undefined) => this.user = user);
   }
 
   deleteUser() {

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { IClient } from '../../../models/client.model';
+import { ActivatedRoute, Router } from '@angular/router';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { IClient } from '../../../models/client.model';
+import { ClientService } from '../../../services/client.service';
 
 @Component({
   selector: 'demo-client-detail',
@@ -8,25 +10,21 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./client-detail.component.css']
 })
 export class ClientDetailComponent {
-  client: IClient;
+  client: any;
+  id: number = 0;
   faTrash = faTrash;
 
-  constructor() {
-    this.client = {
-      id: 1,
-      guid: 'f01a5647-cec8-4531-a376-32386244e142',
-      typeId: 1,
-      type: 'Internal',
-      isActive: true,
-      isDeleted: false,
-      name: 'Internal Client',
-      address: '1234 Main St',
-      city: 'Anytown',
-      region: 'CA',
-      postalCode: '12345',
-      country: 'USA',
-      url: 'https://internal.demo.com',
-    }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private clientSvc: ClientService
+  ) { }
+
+  ngOnInit() {
+    this.route.paramMap.subscribe((params) => {
+      this.id = parseInt(params.get('id') ?? '0') ?? 0;
+    });
+    this.clientSvc.getClient(this.id).subscribe((client: IClient | undefined) => this.client = client);
   }
 
   deleteClient() {
