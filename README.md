@@ -9,7 +9,7 @@ Full-Stack Visual Studio 2022 solution
 - Tests
 - Web API
 - Multiple UI Frameworks
-  - Angular
+  - Angular (Work in Progress)
 
 Still to come...
   - Blazor
