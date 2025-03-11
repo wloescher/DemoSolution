@@ -27,7 +27,7 @@
       <tr *ngFor="let workItem of workItems">
         <th scope="row">{{ workItem.id }}</th>
         <td><a [routerLink]="['', 'client', workItem.clientId]">{{ workItem.clientName }}</a></td>
-        <td><a [routerLink]="['', 'client', workItem.id]">{{ workItem.title }}</a></td>
+        <td><a [routerLink]="['', 'workitem', workItem.id]">{{ workItem.title }}</a></td>
         <!--<td>{{ workItem.guid }}</td>-->
         <!--<td>{{ workItem.typeId }}</td>-->
         <td>{{ workItem.type }}</td>
