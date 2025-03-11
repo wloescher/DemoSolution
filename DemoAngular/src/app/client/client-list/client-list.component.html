@@ -3,6 +3,13 @@
     <div class="col">
       <h1>Client List</h1>
     </div>
+    <div class="col-3">
+      <div class="filters">
+        <a class="btn btn-secondary" routerLink="/clients/internal" routerLinkActive="btn-info border border-primary">Internal</a>
+        <a class="btn btn-secondary" routerLink="/clients/external" routerLinkActive="btn-info border border-primary">External</a>
+        <a class="btn btn-secondary" routerLink="/clients/lead" routerLinkActive="btn-info border border-primary">Lead</a>
+      </div>
+    </div>
     <div class="col text-end">
       <button class="btn btn-primary" (click)="addClient"><fa-icon [icon]="faAdd"></fa-icon> Add</button>
     </div>
@@ -26,7 +33,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let client of clients">
+      <tr *ngFor="let client of getFilteredClients()">
         <th scope="row">{{ client.id }}</th>
         <td><a [routerLink]="['', 'client', client.id]">{{ client.name }}</a></td>
         <!--<td>{{ client.guid }}</td>-->

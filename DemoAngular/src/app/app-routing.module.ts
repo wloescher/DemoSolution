@@ -10,10 +10,13 @@ import { WorkItemDetailComponent } from './workitem/workitem-detail/workitem-det
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, title: "Home - DemoAngular" },
+  { path: 'clients/:filter', component: ClientListComponent, title: "Client List - DemoAngular" },
   { path: 'clients', component: ClientListComponent, title: "Client List - DemoAngular" },
   { path: 'client/:id', component: ClientDetailComponent, title: "Client Detail - DemoAngular" },
+  { path: 'users/:filter', component: UserListComponent, title: "User List - DemoAngular" },
   { path: 'users', component: UserListComponent, title: "User List - DemoAngular" },
   { path: 'user/:id', component: UserDetailComponent, title: "User Detail - DemoAngular" },
+  { path: 'workitems/:filter', component: WorkItemListComponent, title: "Work Item List - DemoAngular" },
   { path: 'workitems', component: WorkItemListComponent, title: "Work Item List - DemoAngular" },
   { path: 'workitem/:id', component: WorkItemDetailComponent, title: "Work Item Detail - DemoAngular" },
   { path: '', redirectTo: '/home', pathMatch: 'full' }

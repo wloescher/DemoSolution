@@ -9,14 +9,46 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/clients">Clients</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Clients
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" routerLink="/clients">ALL</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" routerLink="/clients/internal">Internal</a></li>
+            <li><a class="dropdown-item" routerLink="/clients/external">External</a></li>
+            <li><a class="dropdown-item" routerLink="/clients/lead">Lead</a></li>
+          </ul>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/users">Users</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Users
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" routerLink="/users">ALL</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" routerLink="/users/admin">Admin</a></li>
+            <li><a class="dropdown-item" routerLink="/users/client">Client</a></li>
+            <li><a class="dropdown-item" routerLink="/users/sales">Sales</a></li>
+            <li><a class="dropdown-item" routerLink="/users/marketing">Marketing</a></li>
+            <li><a class="dropdown-item" routerLink="/users/accounting">Accounting</a></li>
+            <li><a class="dropdown-item" routerLink="/users/executive">Executive</a></li>
+          </ul>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/workitems">Work Items</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Work Items
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" routerLink="/workitems">ALL</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" routerLink="/workitems/user-story">User Story</a></li>
+            <li><a class="dropdown-item" routerLink="/workitems/task">Task</a></li>
+            <li><a class="dropdown-item" routerLink="/workitems/bug">Bug</a></li>
+            <li><a class="dropdown-item" routerLink="/workitems/epic">Epic</a></li>
+            <li><a class="dropdown-item" routerLink="/workitems/feature">Feature</a></li>
+          </ul>
         </li>
       </ul>
       <form class="d-flex" role="search">

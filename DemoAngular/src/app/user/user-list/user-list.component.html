@@ -1,7 +1,17 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h1>User List</h1>
+      <h1>Client List</h1>
+    </div>
+    <div class="col-6">
+      <div class="filters">
+        <a class="btn btn-secondary" routerLink="/users/admin" routerLinkActive="btn-info border border-primary">Admin</a>
+        <a class="btn btn-secondary" routerLink="/users/client" routerLinkActive="btn-info border border-primary">Client</a>
+        <a class="btn btn-secondary" routerLink="/users/sales" routerLinkActive="btn-info border border-primary">Sales</a>
+        <a class="btn btn-secondary" routerLink="/users/marketing" routerLinkActive="btn-info border border-primary">Marketing</a>
+        <a class="btn btn-secondary" routerLink="/users/accounting" routerLinkActive="btn-info border border-primary">Accounting</a>
+        <a class="btn btn-secondary" routerLink="/users/executive" routerLinkActive="btn-info border border-primary">Executive</a>
+      </div>
     </div>
     <div class="col text-end">
       <button class="btn btn-primary" (click)="addUser"><fa-icon [icon]="faAdd"></fa-icon> Add</button>
@@ -26,7 +36,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of users">
+      <tr *ngFor="let user of getFilteredUsers()">
         <th scope="row">{{ user.id }}</th>
         <td><a [routerLink]="['', 'user', user.id]">{{ user.lastName }}, {{ user.firstName }} {{ user.middleName }}</a></td>
         <td><a href="mailto:{{ user.emailAddress }}">{{ user.emailAddress }}</a></td>

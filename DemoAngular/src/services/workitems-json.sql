@@ -1,0 +1,15 @@
+SELECT id = WorkItemId,
+  [guid] = [Guid],
+  clientId = ClientId,
+  clientName = ClientName,
+  typeId = TypeId,
+  [type] = [Type],
+  statusId = StatusId,
+  [status] = [Status],
+  isActive = IsActive,
+    isDeleted = CONVERT(BIT, 0),
+  title = Title,
+  subTitle = IsNull(SubTitle, ''),
+  summary = IsNull(Summary, ''),
+  body = IsNull(Body, '')
+FROM WorkItemView FOR JSON PATH
