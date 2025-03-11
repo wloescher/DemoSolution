@@ -1,0 +1,100 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1>Client Detail</h1>
+    </div>
+    <div class="col text-end">
+      <button class="btn btn-primary" (click)="deleteClient"><fa-icon [icon]="faTrash"></fa-icon> Delete</button>
+    </div>
+  </div>
+  <div class="container data">
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Id
+      </div>
+      <div class="col-10 col-value">
+        {{ client.id }}
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Guid
+      </div>
+      <div class="col-10 col-value">
+        {{ client.guid }}
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        TypeId
+      </div>
+      <div class="col-10 col-value">
+        {{ client.typeId }}
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Type
+      </div>
+      <div class="col-10 col-value">
+        {{ client.type }}
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Name
+      </div>
+      <div class="col-10 col-value">
+        <div>{{ client.name }}</div>
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Address
+      </div>
+      <div class="col-10 col-value">
+        <div>{{ client.address }}</div>
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        City
+      </div>
+      <div class="col-10 col-value">
+        <div>{{ client.city }}</div>
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Region
+      </div>
+      <div class="col-10 col-value">
+        <div>{{ client.region }}</div>
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Postal Code
+      </div>
+      <div class="col-10 col-value">
+        <div>{{ client.postalCode }}</div>
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Country
+      </div>
+      <div class="col-10 col-value">
+        <div>{{ client.country }}</div>
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        URL
+      </div>
+      <div class="col-10 col-value">
+        <a href="{{ client.url }}" target="_blank">{{ client.url }}</a>
+      </div>
+    </div>
+  </div>
+</div>

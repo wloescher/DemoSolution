@@ -1,0 +1,46 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1>Client List</h1>
+    </div>
+    <div class="col text-end">
+      <button class="btn btn-primary" (click)="addClient"><fa-icon [icon]="faAdd"></fa-icon> Add</button>
+    </div>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Name</th>
+        <!--<th scope="col">Guid</th>-->
+        <!--<th scope="col">TypeId</th>-->
+        <th scope="col">Type</th>
+        <th scope="col">Active</th>
+        <!--<th scope="col">Deleted</th>-->
+        <th scope="col">Address</th>
+        <th scope="col">City</th>
+        <th scope="col">Region</th>
+        <th scope="col">PostalCode</th>
+        <th scope="col">Country</th>
+        <th scope="col">URL</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let client of clients">
+        <th scope="row">{{ client.id }}</th>
+        <td><a [routerLink]="['', 'client', client.id]">{{ client.name }}</a></td>
+        <!--<td>{{ client.guid }}</td>-->
+        <!--<td>{{ client.typeId }}</td>-->
+        <td>{{ client.type }}</td>
+        <td>{{ client.isActive }}</td>
+        <!--<td>{{ client.isDeleted }}</td>-->
+        <td>{{ client.address }}</td>
+        <td>{{ client.city }}</td>
+        <td>{{ client.region }}</td>
+        <td>{{ client.postalCode }}</td>
+        <td>{{ client.country }}</td>
+        <td><a href="{{ client.url }}" target="_blank">{{ client.url }}</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

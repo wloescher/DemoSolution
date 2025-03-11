@@ -1,0 +1,92 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1>WorkItem Detail</h1>
+    </div>
+    <div class="col text-end">
+      <button class="btn btn-primary" (click)="deleteWorkItem"><fa-icon [icon]="faTrash"></fa-icon> Delete</button>
+    </div>
+  </div>
+  <div class="container data">
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Id
+      </div>
+      <div class="col-10 col-value">
+        {{ workItem.id }}
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Guid
+      </div>
+      <div class="col-10 col-value">
+        {{ workItem.guid }}
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        TypeId
+      </div>
+      <div class="col-10 col-value">
+        {{ workItem.typeId }}
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Type
+      </div>
+      <div class="col-10 col-value">
+        {{ workItem.type }}
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        StatusId
+      </div>
+      <div class="col-10 col-value">
+        {{ workItem.statusId }}
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Status
+      </div>
+      <div class="col-10 col-value">
+        {{ workItem.status }}
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Title
+      </div>
+      <div class="col-10 col-value">
+        <div>{{ workItem.title }}</div>
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Sub-Title
+      </div>
+      <div class="col-10 col-value">
+        <div>{{ workItem.subTitle }}</div>
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Summary
+      </div>
+      <div class="col-10 col-value">
+        <div>{{ workItem.summary }}</div>
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Body
+      </div>
+      <div class="col-10 col-value">
+        <div>{{ workItem.body }}</div>
+      </div>
+    </div>
+  </div>
+</div>

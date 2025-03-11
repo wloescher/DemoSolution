@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1>Work Item List</h1>
+    </div>
+    <div class="col text-end">
+      <button class="btn btn-primary" (click)="addWorkItem"><fa-icon [icon]="faAdd"></fa-icon> Add</button>
+    </div>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Client</th>
+        <th scope="col">Title</th>
+        <!--<th scope="col">Guid</th>-->
+        <!--<th scope="col">TypeId</th>-->
+        <th scope="col">Type</th>
+        <!--<th scope="col">StatusId</th>-->
+        <th scope="col">Status</th>
+        <th scope="col">Active</th>
+        <!--<th scope="col">Deleted</th>-->
+        <th scope="col">Sub-Title</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let workItem of workItems">
+        <th scope="row">{{ workItem.id }}</th>
+        <td><a [routerLink]="['', 'client', workItem.clientId]">{{ workItem.clientName }}</a></td>
+        <td><a [routerLink]="['', 'client', workItem.id]">{{ workItem.title }}</a></td>
+        <!--<td>{{ workItem.guid }}</td>-->
+        <!--<td>{{ workItem.typeId }}</td>-->
+        <td>{{ workItem.type }}</td>
+        <!--<td>{{ workItem.statusId }}</td>-->
+        <td>{{ workItem.status }}</td>
+        <td>{{ workItem.isActive }}</td>
+        <!--<td>{{ workItem.isDeleted }}</td>-->
+        <td>{{ workItem.subTitle }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,124 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1>User Detail</h1>
+    </div>
+    <div class="col text-end">
+      <button class="btn btn-primary" (click)="deleteUser"><fa-icon [icon]="faTrash"></fa-icon> Delete</button>
+    </div>
+  </div>
+  <div class="container data">
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Id
+      </div>
+      <div class="col-10 col-value">
+        {{ user.id }}
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Guid
+      </div>
+      <div class="col-10 col-value">
+        {{ user.guid }}
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        TypeId
+      </div>
+      <div class="col-10 col-value">
+        {{ user.typeId }}
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Type
+      </div>
+      <div class="col-10 col-value">
+        {{ user.type }}
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Email Address
+      </div>
+      <div class="col-10 col-value">
+        <div><a href="mailto:{{ user.emailAddress }}">{{ user.emailAddress }}</a></div>
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        First Name
+      </div>
+      <div class="col-10 col-value">
+        <div>{{ user.firstName }}</div>
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        First Name
+      </div>
+      <div class="col-10 col-value">
+        <div>{{ user.middleName }}</div>
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        First Name
+      </div>
+      <div class="col-10 col-value">
+        <div>{{ user.lastName }}</div>
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Address
+      </div>
+      <div class="col-10 col-value">
+        <div>{{ user.address }}</div>
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        City
+      </div>
+      <div class="col-10 col-value">
+        <div>{{ user.city }}</div>
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Region
+      </div>
+      <div class="col-10 col-value">
+        <div>{{ user.region }}</div>
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Postal Code
+      </div>
+      <div class="col-10 col-value">
+        <div>{{ user.postalCode }}</div>
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Country
+      </div>
+      <div class="col-10 col-value">
+        <div>{{ user.country }}</div>
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Phone Number
+      </div>
+      <div class="col-10 col-value">
+        <a href="tel:{{ user.phoneNumber }}" target="_blank">{{ user.phoneNumber }}</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -141,7 +141,7 @@ public partial class DemoSqlContext : DbContext
 
         modelBuilder.Entity<DataDictionary>(entity =>
         {
-            entity.HasKey(e => e.DataDictionaryId).HasName("PK__DataDict__515DCA021860E1DC");
+            entity.HasKey(e => e.DataDictionaryId).HasName("PK__tmp_ms_x__515DCA02C8AFA9DE");
 
             entity.HasOne(d => d.DataDictionaryGroup).WithMany(p => p.DataDictionaries)
                 .OnDelete(DeleteBehavior.ClientSetNull)

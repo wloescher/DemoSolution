@@ -50,4 +50,7 @@ public partial class UserView
 
     [StringLength(50)]
     public string Country { get; set; }
+
+    [StringLength(20)]
+    public string PhoneNumber { get; set; }
 }

@@ -21,6 +21,9 @@ public partial class DataDictionary
 
     public int DataDictionaryValue { get; set; }
 
+    [StringLength(150)]
+    public string DataDictionaryDescription { get; set; }
+
     public bool DataDictionaryIsActive { get; set; }
 
     public bool DataDictionaryIsDeleted { get; set; }

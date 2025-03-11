@@ -19,6 +19,7 @@
 		, Region = UserRegion
 		, PostalCode = UserPostalCode
 		, Country = UserCountry
+		, PhoneNumber = UserPhoneNumber
 
 	FROM [User]
 		LEFT JOIN DataDictionary AS UserType ON DataDictionaryGroupId = 2 -- UserType

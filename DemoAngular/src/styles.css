@@ -1,1 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
+.data {
+  background: whitesmoke;
+}
+
+  .data .data-row {
+    border: solid 1px silver;
+    border-bottom: none;
+  }
+
+    .data .data-row:last-child {
+      border: solid 1px silver;
+    }
+
+  .data .col-key {
+    background: whitesmoke;
+    font-weight: bold;
+  }
+
+  .data .col-value {
+    background: white;
+    font-weight: bold;
+  }
