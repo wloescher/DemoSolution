@@ -86,7 +86,7 @@ namespace DemoTests.ServiceTests
             var model = new WorkItemModel
             {
                 ClientId = _testClientIds.First(),
-                Type = WorkItemType.Article,
+                Type = WorkItemType.UserStory,
                 Status = WorkItemStatus.New,
                 Title = string.Format("Title-{0}", ticks),
                 SubTitle = string.Format("SubTitle-{0}", ticks),
@@ -226,7 +226,7 @@ namespace DemoTests.ServiceTests
         {
             // Update properties
             var ticks = DateTime.Now.Ticks;
-            model.Type = WorkItemType.Infographic;
+            model.Type = WorkItemType.Bug;
             model.Status = WorkItemStatus.Approved;
             model.Title = string.Format("Title-{0}", ticks);
             model.SubTitle = string.Format("SubTitle-{0}", ticks);

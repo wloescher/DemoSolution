@@ -184,7 +184,7 @@ namespace DemoTests.ServiceTests
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            var result = userService.CreateUser(model, userId);
+            var result = userService.CreateUser(model, userId, out string _);
             stopWatch.Stop();
 
             // Check results
@@ -238,7 +238,7 @@ namespace DemoTests.ServiceTests
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            var updateUserResult = userService.UpdateUser(model, userId);
+            var updateUserResult = userService.UpdateUser(model, userId, out string _);
             stopWatch.Stop();
 
             // Check results

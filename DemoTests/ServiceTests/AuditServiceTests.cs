@@ -226,7 +226,7 @@ namespace DemoTests.ServiceTests
         private static void CreateWorkItemTest(IAuditService auditService, WorkItem entity, int userId)
         {
             var ticks = DateTime.Now.Ticks;
-            entity.WorkItemTypeId = (int)WorkItemType.Article;
+            entity.WorkItemTypeId = (int)WorkItemType.UserStory;
             entity.WorkItemStatusId = (int)WorkItemStatus.New;
             entity.WorkItemTitle = string.Format("Title-{0}", ticks);
             entity.WorkItemSubTitle = string.Format("SubTitle-{0}", ticks);
@@ -242,7 +242,7 @@ namespace DemoTests.ServiceTests
             var entityAfter = entity;
 
             var ticks = DateTime.Now.Ticks;
-            entityAfter.WorkItemTypeId = (int)WorkItemType.Article;
+            entityAfter.WorkItemTypeId = (int)WorkItemType.UserStory;
             entityAfter.WorkItemStatusId = (int)WorkItemStatus.New;
             entityAfter.WorkItemTitle = string.Format("Title-{0}", ticks);
             entityAfter.WorkItemSubTitle = string.Format("SubTitle-{0}", ticks);
