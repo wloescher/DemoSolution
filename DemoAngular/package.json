@@ -25,6 +25,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "bootbox": "^6.0.0",
     "bootstrap": "^5.3.3",
+    "http-server": "^14.1.1",
     "jest-editor-support": "*",
     "jquery": "^3.7.1",
     "rxjs": "~7.8.0",
