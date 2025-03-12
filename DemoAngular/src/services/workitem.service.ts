@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IWorkItem } from '../models/workItem.model';
+import { IWorkItem } from '../models/workitem.model';
 import { Observable, of } from 'rxjs';
 
 @Injectable({

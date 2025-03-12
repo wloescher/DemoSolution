@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
-import { IWorkItem } from '../../../models/workItem.model';
+import { IWorkItem } from '../../../models/workitem.model';
 import { WorkItemService } from '../../../services/workitem.service';
 
 @Component({

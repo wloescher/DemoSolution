@@ -1,14 +1,16 @@
-﻿SELECT id = ClientId,
+SELECT id = ClientId,
     [guid] = [Guid],
     typeId = TypeId,
     [type] = [Type],
     isActive = IsActive,
     isDeleted = CONVERT(BIT, 0),
     [name] = [Name],
-    [address] = IsNull([Address], ''),
+    addressLine1 = IsNull(AddressLine1, ''),
+    addressLine2 = IsNull(AddressLine2, ''),
     city = IsNull(City, ''),
     region = IsNull(Region, ''),
     postalCode = IsNull(PostalCode, ''),
     country = IsNull(Country, ''),
+    phoneNumber = IsNull(PhoneNumber, '')
     [url] = IsNull([Url], '')
 FROM ClientView FOR JSON PATH

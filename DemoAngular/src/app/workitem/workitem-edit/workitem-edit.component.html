@@ -1,0 +1,73 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1>{{ id === 0 ? 'Add' : 'Edit' }} Work Item</h1>
+    </div>
+    <div class="col text-end mt-2">
+      <button class="btn btn-light border me-2" routerLink="/workitems"><fa-icon [icon]="faX"></fa-icon> Cancel</button>
+      <button type="submit" class="btn btn-primary" (click)="saveWorkItem()"><fa-icon [icon]="faSave"></fa-icon> Save</button>
+    </div>
+  </div>
+  <form>
+    <div class="row">
+      <div class="col">
+        <div class="mb-3">
+          <label for="title" class="form-label">Title</label>
+          <input class="form-control required" required id="title" value="{{ workItem.title }}">
+        </div>
+        <div class="mb-3">
+          <label for="typeId" class="form-label">WorkItem Type</label>
+          <select class="form-select required" required aria-label="Type" id="typeId" name="typeId" [(ngModel)]="workItem.typeId">
+            <option selected>Select...</option>
+            <option value="1">User Story</option>
+            <option value="2">Task</option>
+            <option value="3">Bug</option>
+            <option value="4">Epic</option>
+            <option value="5">Feature</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="satusId" class="form-label">WorkItem Status</label>
+          <select class="form-select required" required aria-label="Status" id="statusId" name="statusId" [(ngModel)]="workItem.statusId">
+            <option selected>Select...</option>
+            <option value="1">New</option>
+            <option value="2">In Planning</option>
+            <option value="3">In Progress</option>
+            <option value="4">Approved</option>
+            <option value="5">Rejected</option>
+            <option value="6">Staged</option>
+            <option value="7">Completed</option>
+            <option value="8">OnHold</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="subTitle" class="form-label">Sub-Title</label>
+          <input class="form-control required" required id="subTitle" value="{{ workItem.subTitle }}">
+        </div>
+        <div class="mb-3">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="isActive" checked="{{ workItem.isActive }}">
+            <label class="form-check-label" for="isActive">
+              Active
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="mb-3">
+          <label for="summary" class="form-label">Summary</label>
+          <textarea class="form-control" id="subTitle" rows="3" value="{{ workItem.subTitle }}"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="body" class="form-label">Body</label>
+          <textarea class="form-control" id="body" rows="12" value="{{ workItem.body }}"></textarea>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div *ngIf="id != 0" class="row">
+    <div class="col text-end">
+      <button class="btn btn-danger" (click)="deleteWorkItem()"><fa-icon [icon]="faTrash"></fa-icon> Delete</button>
+    </div>
+  </div>
+</div>

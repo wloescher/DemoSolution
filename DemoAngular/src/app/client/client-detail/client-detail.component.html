@@ -1,10 +1,10 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h1>Client Detail</h1>
+      <h1>View Client</h1>
     </div>
-    <div class="col text-end">
-      <button class="btn btn-primary" (click)="deleteClient"><fa-icon [icon]="faTrash"></fa-icon> Delete</button>
+    <div class="col text-end mt-2">
+      <button class="btn btn-primary"  routerLink="/client/edit/{{ client.id }}"><fa-icon [icon]="faPencil"></fa-icon> Edit</button>
     </div>
   </div>
   <div class="container data">
@@ -50,10 +50,18 @@
     </div>
     <div class="row data-row">
       <div class="col-2 col-key">
-        Address
+        Address (Line 1)
       </div>
       <div class="col-10 col-value">
-        <div>{{ client.address }}</div>
+        <div>{{ client.addressLine1 }}</div>
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        Address (Line 2)
+      </div>
+      <div class="col-10 col-value">
+        <div>{{ client.addressLine2 }}</div>
       </div>
     </div>
     <div class="row data-row">

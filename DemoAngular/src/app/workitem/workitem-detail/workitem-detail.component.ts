@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { IWorkItem } from '../../../models/workItem.model';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { IWorkItem } from '../../../models/workitem.model';
 import { WorkItemService } from '../../../services/workitem.service';
+
+declare var bootbox: any;
 
 @Component({
   selector: 'demo-workitem-detail',
@@ -10,9 +12,9 @@ import { WorkItemService } from '../../../services/workitem.service';
   styleUrls: ['./workitem-detail.component.css']
 })
 export class WorkItemDetailComponent {
-  workItem: any;
   id: number = 0;
-  faTrash = faTrash;
+  workItem: any;
+  faPencil = faPencil;
 
   constructor(
     private router: Router,
@@ -28,6 +30,10 @@ export class WorkItemDetailComponent {
   }
 
   deleteWorkItem() {
-    console.log('TODO: Delete WorkItem');
+    bootbox.confirm('Are you sure you want to delete this WorkItem?', (result: boolean) => {
+      if (result) {
+        bootbox.alert('TODO: Delete WorkItem');
+      }
+    });
   }
 }

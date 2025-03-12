@@ -6,10 +6,12 @@ export interface IClient {
   isActive: boolean;
   isDeleted: boolean;
   name: string;
-  address: string;
+  addressLine1: string;
+  addressLine2: string;
   city: string;
   region: string;
   postalCode: string;
   country: string;
+  phoneNumber: string;
   url: string;
 }

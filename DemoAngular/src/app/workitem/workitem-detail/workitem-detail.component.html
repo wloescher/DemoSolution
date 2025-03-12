@@ -3,8 +3,8 @@
     <div class="col">
       <h1>WorkItem Detail</h1>
     </div>
-    <div class="col text-end">
-      <button class="btn btn-primary" (click)="deleteWorkItem"><fa-icon [icon]="faTrash"></fa-icon> Delete</button>
+    <div class="col text-end mt-2">
+      <button class="btn btn-primary" routerLink="/workitem/edit/{{ workItem.id }}"><fa-icon [icon]="faPencil"></fa-icon> Edit</button>
     </div>
   </div>
   <div class="container data">

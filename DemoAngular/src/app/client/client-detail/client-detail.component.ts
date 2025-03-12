@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import { IClient } from '../../../models/client.model';
 import { ClientService } from '../../../services/client.service';
+
+declare var bootbox: any;
 
 @Component({
   selector: 'demo-client-detail',
@@ -10,9 +12,9 @@ import { ClientService } from '../../../services/client.service';
   styleUrls: ['./client-detail.component.css']
 })
 export class ClientDetailComponent {
-  client: any;
   id: number = 0;
-  faTrash = faTrash;
+  client: any;
+  faPencil = faPencil;
 
   constructor(
     private router: Router,
@@ -25,9 +27,5 @@ export class ClientDetailComponent {
       this.id = parseInt(params.get('id') ?? '0') ?? 0;
     });
     this.clientSvc.getClient(this.id).subscribe((client: IClient | undefined) => this.client = client);
-  }
-
-  deleteClient() {
-    console.log('TODO: Delete Client');
   }
 }

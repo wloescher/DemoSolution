@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="col-1 text-end">
-      <button class="btn btn-primary" (click)="addClient"><fa-icon [icon]="faAdd"></fa-icon> Add</button>
+      <button class="btn btn-primary" routerLink="/client/add"><fa-icon [icon]="faAdd"></fa-icon> Add</button>
     </div>
   </div>
   <app-generic-table [headers]="headers" [data]="getFilteredClients()" (rowClicked)="handleRowClick($event)" [clickableColumns]="clickableColumns"></app-generic-table>

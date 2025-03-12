@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import { IUser } from '../../../models/user.model';
 import { UserService } from '../../../services/user.service';
+
+declare var bootbox: any;
 
 @Component({
   selector: 'demo-user-detail',
@@ -10,9 +12,9 @@ import { UserService } from '../../../services/user.service';
   styleUrls: ['./user-detail.component.css']
 })
 export class UserDetailComponent {
-  user: any;
   id: number = 0;
-  faTrash = faTrash;
+  user: any;
+  faPencil = faPencil;
 
   constructor(
     private router: Router,
@@ -28,6 +30,10 @@ export class UserDetailComponent {
   }
 
   deleteUser() {
-    console.log('TODO: Delete User');
+    bootbox.confirm('Are you sure you want to delete this User?', (result: boolean) => {
+      if (result) {
+        bootbox.alert('TODO: Delete User');
+      }
+    });
   }
 }

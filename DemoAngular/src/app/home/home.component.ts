@@ -3,7 +3,7 @@ import { IClient } from '../../models/client.model';
 import { ClientService } from '../../services/client.service';
 import { IUser } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
-import { IWorkItem } from '../../models/workItem.model';
+import { IWorkItem } from '../../models/workitem.model';
 import { WorkItemService } from '../../services/workitem.service';
 
 @Component({

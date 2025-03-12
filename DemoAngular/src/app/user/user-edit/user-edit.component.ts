@@ -3,19 +3,19 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import { faSave } from '@fortawesome/free-solid-svg-icons';
-import { IClient } from '../../../models/client.model';
-import { ClientService } from '../../../services/client.service';
+import { IUser } from '../../../models/user.model';
+import { UserService } from '../../../services/user.service';
 
 declare var bootbox: any;
 
 @Component({
-  selector: 'demo-client-edit',
-  templateUrl: './client-edit.component.html',
-  styleUrls: ['./client-edit.component.css'],
+  selector: 'demo-user-edit',
+  templateUrl: './user-edit.component.html',
+  styleUrls: ['./user-edit.component.css']
 })
-export class ClientEditComponent {
+export class UserEditComponent {
   id: number = 0;
-  client: any;
+  user: any;
   faTrash = faTrash;
   faX = faX;
   faSave = faSave;
@@ -23,7 +23,7 @@ export class ClientEditComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private clientSvc: ClientService
+    private userSvc: UserService
   ) { }
 
   ngOnInit() {
@@ -32,15 +32,17 @@ export class ClientEditComponent {
     });
 
     if (this.id === 0) {
-      // Create new client
-      this.client = {
+      // Create new User
+      this.user = {
         id: 0,
         guid: '',
         typeId: 0,
         type: '',
         isActive: true,
         isDeleted: false,
-        name: '',
+        firstName: '',
+        middleName: '',
+        lastName: '',
         addressLine1: '',
         addressLine2: '',
         city: '',
@@ -48,23 +50,22 @@ export class ClientEditComponent {
         postalCode: '',
         country: '',
         phoneNumber: '',
-        url: '',
       }
     }
     else {
-      // Get client
-      this.clientSvc.getClient(this.id).subscribe((client: IClient | undefined) => this.client = client);
+      // Get User
+      this.userSvc.getUser(this.id).subscribe((user: IUser | undefined) => this.user = user);
     }
   }
 
-  saveClient() {
-    bootbox.alert('TODO: Save Client');
+  saveUser() {
+    bootbox.alert('TODO: Save User');
   }
 
-  deleteClient() {
-    bootbox.confirm('Are you sure you want to delete this Client?', (result: boolean) => {
+  deleteUser() {
+    bootbox.confirm('Are you sure you want to delete this User?', (result: boolean) => {
       if (result) {
-        bootbox.alert('TODO: Delete Client');
+        bootbox.alert('TODO: Delete User');
       }
     });
   }

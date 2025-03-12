@@ -3,8 +3,8 @@
     <div class="col">
       <h1>User Detail</h1>
     </div>
-    <div class="col text-end">
-      <button class="btn btn-primary" (click)="deleteUser"><fa-icon [icon]="faTrash"></fa-icon> Delete</button>
+    <div class="col text-end mt-2">
+      <button class="btn btn-primary" routerLink="/user/edit/{{ user.id }}"><fa-icon [icon]="faPencil"></fa-icon> Edit</button>
     </div>
   </div>
   <div class="container data">
