@@ -5,6 +5,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faBackwardFast } from '@fortawesome/free-solid-svg-icons';
+import { faBackwardStep} from '@fortawesome/free-solid-svg-icons';
+import { faForwardStep } from '@fortawesome/free-solid-svg-icons';
+import { faForwardFast } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-generic-table',
@@ -25,6 +29,10 @@ export class GenericTableComponent {
   currentPage: number = 0;
   pageSize: number = 5;
   faFilter = faFilter;
+  faBackwardFast = faBackwardFast;
+  faBackwardStep = faBackwardStep;
+  faForwardStep = faForwardStep;
+  faForwardFast = faForwardFast;
 
   onRowClick(row: any) {
     this.rowClicked.emit(row);
@@ -63,6 +71,17 @@ export class GenericTableComponent {
     return Math.ceil(this.filteredData.length / this.pageSize);
   }
 
+  get pageStart() {
+    return this.currentPage == 0
+      ? 1
+      : this.currentPage * this.pageSize + 1;
+  }
+
+  get pageEnd() {
+    var pageEnd = (this.currentPage + 1) * this.pageSize;
+    return pageEnd > this.totalRecords ? this.totalRecords : (this.currentPage + 1) * this.pageSize;
+  }
+
   get totalRecords() {
     return this.filteredData.length;
   }
@@ -71,5 +90,13 @@ export class GenericTableComponent {
     if (page >= 0 && page < this.totalPages) {
       this.currentPage = page;
     }
+  }
+
+  onFirstPage() {
+    this.currentPage = 0;
+  }
+
+  onLastPage() {
+    this.currentPage = this.totalPages -1;
   }
 }

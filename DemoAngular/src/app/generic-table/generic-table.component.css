@@ -1,20 +1,40 @@
-.search-box {
+.filter-box {
   margin: 0 auto;
   width: 100%;
   border-radius: 0 !important;
 }
 
-  .search-box input {
+  .filter-box input {
       padding: 0;
       padding-left: 8px;
       border-radius: 0 !important;
   }
 
-  .search-box button {
+  .filter-box button {
     padding: 0 8px;
     border-radius: 0 !important;
   }
 
+.pagination {
+  font-size: 14px;
+}
+
+  .pagination .recordCount {
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 6px;
+  }
+
+  fa-icon {
+    color: #ccc;
+    margin-top: -2px;
+  }
+
+select {
+  width: 80px;
+}
+
+/*
 .table {
   margin: 0 auto;
 }
@@ -38,4 +58,4 @@
 
   .table-bordered th, .table-bordered td {
     border: 1px solid #dee2e6;
-  }
+  }*/

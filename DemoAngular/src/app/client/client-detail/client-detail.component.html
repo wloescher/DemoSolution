@@ -98,7 +98,15 @@
     </div>
     <div class="row data-row">
       <div class="col-2 col-key">
-        URL
+        Phone Number
+      </div>
+      <div class="col-10 col-value">
+        <a href="tel:{{ client.phoneNumber }}" target="_blank">{{ client.phoneNumber }}</a>
+      </div>
+    </div>
+    <div class="row data-row">
+      <div class="col-2 col-key">
+        URL / Website
       </div>
       <div class="col-10 col-value">
         <a href="{{ client.url }}" target="_blank">{{ client.url }}</a>

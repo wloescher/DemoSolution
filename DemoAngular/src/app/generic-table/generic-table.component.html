@@ -1,9 +1,9 @@
-<div class="search-box btn-group">
-  <button class="btn btn-light border"><fa-icon [icon]="faFilter" style="color: #999;"></fa-icon></button>
+<div class="filter-box btn-group">
+  <button class="btn btn-light border"><fa-icon [icon]="faFilter"></fa-icon></button>
   <input class="form-control form-control-sm border" type="search" placeholder="Filter..." aria-label="Search" [(ngModel)]="searchTerm">
 </div>
 <div class="table-responsive">
-  <table class="table">
+  <table class="table table-hover">
     <thead>
       <tr>
         <th *ngFor="let header of headers" (click)="onSort(header.key)" style="cursor: pointer;">
@@ -23,26 +23,17 @@
     </tbody>
   </table>
 </div>
-<div class="row py-3">
-  <div class="col">
-    <div class="btn-group me-2">
-      <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0" class="btn btn-light p-2 border"> &lt; </button>
-      <span class="pt-2 px-2 bg-white border-top border-bottom">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
-      <button (click)="onPageChange(currentPage + 1)" [disabled]="(currentPage + 1) * pageSize >= filteredData.length" class="btn btn-light p-2 border">&gt;</button>
-    </div>
-    {{ totalRecords }} records
-  </div>
-  <div class="col">
-    <div style="display: flex; justify-content: end; align-items: center;">
-      <div class="btn-group">
-        <label for="pageSize" class="px-1 pt-1 px-2 bg-white rounded-start border">Rows per page:</label>
-        <select id="pageSize" [(ngModel)]="pageSize" (change)="onPageChange(0)" class="form-select btn btn-light border" style="width: 80px;">
-          <option *ngFor="let size of [5, 10, 20]" [value]="size">{{ size }}</option>
-        </select>
-      </div>
-    </div>
-  </div>
+<div class="pagination d-flex align-middle justify-content-end">
+  <label for="pageSize" class="col-form-label col-form-label-sm me-2">Items&nbsp;per&nbsp;page:</label>
+  <select id="pageSize" [(ngModel)]="pageSize" (change)="onPageChange(0)" class="form-select form-select-sm">
+    <option *ngFor="let size of [5, 10, 20]" [value]="size">{{ size }}</option>
+  </select>
+  <span class="recordCount">
+    {{ pageStart }} - {{ pageEnd }} of {{ totalRecords }}
+  </span>
+  <button (click)="onFirstPage()" [disabled]="currentPage === 0" class="btn border border-0"><fa-icon [icon]="faBackwardFast"></fa-icon></button>
+  <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0" class="btn border border-0"><fa-icon [icon]="faBackwardStep"></fa-icon></button>
+  <button (click)="onPageChange(currentPage + 1)" [disabled]="(currentPage + 1) * pageSize >= filteredData.length" class="btn border border-0"><fa-icon [icon]="faForwardStep"></fa-icon></button>
+  <button (click)="onLastPage()" [disabled]="(currentPage + 1) * pageSize >= filteredData.length" class="btn border border-0"><fa-icon [icon]="faForwardFast"></fa-icon></button>
+  <!--<span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>-->
 </div>
-
-
-

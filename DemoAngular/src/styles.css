@@ -13,3 +13,31 @@
   color: #999;
   margin-bottom: 0;
 }
+
+/* Detail Page */
+.data {
+  background: whitesmoke;
+}
+
+  .data .data-row {
+    border: solid 1px silver;
+    border-bottom: none;
+  }
+
+    .data .data-row:last-child {
+      border: solid 1px silver;
+    }
+
+  .data .col-key {
+    background: whitesmoke;
+    font-weight: bold;
+    padding: 5px;
+    padding-right: 10px;
+    text-align: right;
+    border-right: solid 1px silver;
+  }
+
+  .data .col-value {
+    background: white;
+    padding: 5px;
+  }
