@@ -58,7 +58,7 @@ export class ClientEditComponent {
   }
 
   saveClient() {
-    bootbox.alert('TODO: Save Client');
+    this.client = this.clientSvc.saveClient(this.client);
   }
 
   deleteClient() {

@@ -18,7 +18,7 @@ export class ClientService {
   constructor(private http: HttpClient) { }
 
   getClients(): Observable<IClient[]> {
-    // TODO: Get data from Web API
+    // TODO: Get data via Web API
     //  return this.http.get<IClient[]>('/api/clients');
 
     // HACK: Hard code data from db
@@ -26,11 +26,26 @@ export class ClientService {
   }
 
   getClient(id: number): Observable<IClient | undefined> {
-    // TODO: Get data from Web API
+    // TODO: Get data via Web API
     //  return this.http.get<IClient>('/api/client/{id}');
 
     // HACK: Hard code data from db
     let client = this.clients.find(client => client.id === id);
+    return of(client);
+  }
+
+  saveClient(client: IClient): Observable<IClient | undefined> {
+    // TODO: Save data via Web API
+    //  return this.http.get<IClient>('/api/client/{id}');
+
+    // HACK: Hard code data from db
+    if (client.id === 0) {
+      // Create new record
+    }
+    else {
+      // Update existing record
+    }
+
     return of(client);
   }
 }
