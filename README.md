@@ -8,10 +8,10 @@ DATA LAYER
 - Models
 
 SERVICES LAYER
-- Services (.NET Core / Dependency Injection / Interfaces)
+- Services (C# / .NET Core / Dependency Injection / Interfaces)
 - Utilities
-- Tests
 - Web API
+- Tests
 
 PRESENTATION LAYER
 - Angular v16 (Work in Progress)
