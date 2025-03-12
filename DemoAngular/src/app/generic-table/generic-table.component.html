@@ -1,6 +1,6 @@
-<div class="search-box mb-3 btn-group">
-  <input class="form-control border" type="search" placeholder="Search..." aria-label="Search">
-  <button class="btn btn-light border"><fa-icon [icon]="faSearch"></fa-icon></button>
+<div class="search-box btn-group">
+  <button class="btn btn-light border"><fa-icon [icon]="faFilter" style="color: #999;"></fa-icon></button>
+  <input class="form-control form-control-sm border" type="search" placeholder="Filter..." aria-label="Search" [(ngModel)]="searchTerm">
 </div>
 <div class="table-responsive">
   <table class="table">
@@ -15,9 +15,8 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of paginatedData" (click)="clickableColumns.includes(item.key) ? onRowClick(item) : null">
-        <td *ngFor="let header of headers"
-            [ngClass]="clickableColumns.includes(header.key) ? 'text-primary text-decoration-underline cursor-pointer' : ''">
+      <tr *ngFor="let item of paginatedData" (click)="onRowClick(item)" style="cursor: pointer;">
+        <td *ngFor="let header of headers">
           {{ item[header.key] }}
         </td>
       </tr>

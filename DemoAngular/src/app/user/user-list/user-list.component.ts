@@ -43,8 +43,8 @@ export class UserListComponent {
       : this.users.filter((user: any) => user.type.toLowerCase().replace(' ', '-') === this.filter.toLowerCase())
   }
 
-  handleRowClick(data: any) {
-    console.log('Row clicked:', data);
+  handleRowClick(user: any) {
+    this.router.navigate(['user', user.id]);
   }
 
   addUser() {

@@ -20,7 +20,7 @@ export class ClientListComponent {
     { key: 'city', displayName: 'City' },
     { key: 'region', displayName: 'Region' },
   ];
-  clickableColumns = ['name']
+  clickableColumns = [];
 
   constructor(
     private router: Router,
@@ -41,8 +41,8 @@ export class ClientListComponent {
       : this.clients.filter((client: any) => client.type.toLowerCase().replace(' ', '-') === this.filter.toLowerCase())
   }
 
-  handleRowClick(userData: any) {
-    console.log('Row clicked:', userData);
+  handleRowClick(client: any) {
+    this.router.navigate(['client', client.id]);
   }
 
   addClient() {

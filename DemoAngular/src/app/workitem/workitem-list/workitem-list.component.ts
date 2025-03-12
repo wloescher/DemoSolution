@@ -21,7 +21,7 @@ export class WorkItemListComponent {
     { key: 'isActive', displayName: 'Active' },
     { key: 'subTitle', displayName: 'Sub-Title' },
   ];
-  clickableColumns = ['name'];
+  clickableColumns = ['title'];
 
   constructor(
     private router: Router,
@@ -42,8 +42,8 @@ export class WorkItemListComponent {
       : this.workItems.filter((workItem: any) => workItem.type.toLowerCase().replace(' ', '-') === this.filter.toLowerCase());
   }
 
-  handleRowClick(data: any) {
-    console.log('Row clicked:', data);
+  handleRowClick(workItem: any) {
+    this.router.navigate(['workitem', workItem.id]);
   }
 
   addWorkItem() {

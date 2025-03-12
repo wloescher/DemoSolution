@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { IClient } from '../../models/client.model';
 import { ClientService } from '../../services/client.service';
 import { IUser } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
 import { IWorkItem } from '../../models/workitem.model';
 import { WorkItemService } from '../../services/workitem.service';
+
+declare var bootbox: any;
 
 @Component({
   selector: 'demo-home',
@@ -45,6 +48,7 @@ export class HomeComponent {
   workItemClickableColumns = ['title'];
 
   constructor(
+    private router: Router,
     private clientSvc: ClientService,
     private userSvc: UserService,
     private workItemSvc: WorkItemService,
@@ -57,14 +61,14 @@ export class HomeComponent {
   }
 
   handleClientRowClick(client: any) {
-    console.log('Client clicked:', client);
+    this.router.navigate(['client', client.id]);
   }
 
   handleUserRowClick(user: any) {
-    console.log('User clicked:', user);
+    this.router.navigate(['user', user.id]);
   }
 
   handleWorkItemRowClick(workItem: any) {
-    console.log('Work Item clicked:', workItem);
+    this.router.navigate(['workitem', workItem.id]);
   }
 }

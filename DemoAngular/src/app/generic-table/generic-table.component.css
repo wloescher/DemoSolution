@@ -1,6 +1,19 @@
 .search-box {
   margin: 0 auto;
+  width: 100%;
+  border-radius: 0 !important;
 }
+
+  .search-box input {
+      padding: 0;
+      padding-left: 8px;
+      border-radius: 0 !important;
+  }
+
+  .search-box button {
+    padding: 0 8px;
+    border-radius: 0 !important;
+  }
 
 .table {
   margin: 0 auto;

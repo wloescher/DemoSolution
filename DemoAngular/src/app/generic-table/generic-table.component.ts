@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-generic-table',
@@ -24,7 +24,7 @@ export class GenericTableComponent {
   sortDirection: boolean = true;
   currentPage: number = 0;
   pageSize: number = 5;
-  faSearch = faSearch;
+  faFilter = faFilter;
 
   onRowClick(row: any) {
     this.rowClicked.emit(row);
