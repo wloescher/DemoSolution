@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DemoModels\DemoModels.csproj" />
-    <ProjectReference Include="..\DemoRepository\DemoRepository.csproj" />
+    <ProjectReference Include="..\..\Data\DemoModels\DemoModels.csproj" />
+    <ProjectReference Include="..\..\Data\DemoRepository\DemoRepository.csproj" />
     <ProjectReference Include="..\DemoServices\DemoServices.csproj" />
     <ProjectReference Include="..\DemoUtilities\DemoUtilities.csproj" />
   </ItemGroup>
