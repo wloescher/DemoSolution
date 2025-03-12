@@ -6,11 +6,13 @@
 		, [Type] = ClientType.DataDictionaryKey
 		, IsActive = ClientIsActive
 		, [Name] = ClientName
-		, [Address] = ClientAddress
+		, AddressLine1 = ClientAddressLine1
+		, AddressLine2 = ClientAddressLine2
 		, City = ClientCity
 		, Region = ClientRegion
 		, PostalCode = ClientPostalCode
 		, Country = ClientCountry
+		, PhoneNumber = ClientPhoneNumber
 		, [Url] = ClientUrl
 
 	FROM Client

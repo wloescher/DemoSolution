@@ -60,7 +60,8 @@ namespace DemoServices
                 UserFirstName = model.FirstName.Trim(),
                 UserMiddleName = model.MiddleName.Trim(),
                 UserLastName = model.LastName.Trim(),
-                UserAddress = model.Address.Trim(),
+                UserAddressLine1 = model.AddressLine1.Trim(),
+                UserAddressLine2 = model.AddressLine2.Trim(),
                 UserCity = model.City.Trim(),
                 UserRegion = model.Region.Trim(),
                 UserPostalCode = model.PostalCode.Trim(),
@@ -203,7 +204,8 @@ namespace DemoServices
                 entity.UserFirstName = model.FirstName.Trim();
                 entity.UserMiddleName = model.MiddleName.Trim();
                 entity.UserLastName = model.LastName.Trim();
-                entity.UserAddress = model.Address.Trim();
+                entity.UserAddressLine1 = model.AddressLine1.Trim();
+                entity.UserAddressLine2 = model.AddressLine2.Trim();
                 entity.UserCity = model.City.Trim();
                 entity.UserRegion = model.Region.Trim();
                 entity.UserPostalCode = model.PostalCode.Trim();
@@ -314,7 +316,8 @@ namespace DemoServices
                 FirstName = entity.UserFirstName,
                 MiddleName = entity.UserMiddleName,
                 LastName = entity.UserLastName,
-                Address = entity.UserAddress,
+                AddressLine1 = entity.UserAddressLine1,
+                AddressLine2 = entity.UserAddressLine2,
                 City = entity.UserCity,
                 Region = entity.UserRegion,
                 PostalCode = entity.UserPostalCode,
@@ -338,7 +341,8 @@ namespace DemoServices
                 FirstName = entity.FirstName,
                 MiddleName = entity.MiddleName,
                 LastName = entity.LastName,
-                Address = entity.Address,
+                AddressLine1 = entity.AddressLine1,
+                AddressLine2 = entity.AddressLine2,
                 City = entity.City,
                 Region = entity.Region,
                 PostalCode = entity.PostalCode,

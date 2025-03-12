@@ -26,11 +26,13 @@ namespace DemoServices
             {
                 ClientTypeId = (int)model.Type,
                 ClientName = model.Name.Trim(),
-                ClientAddress = model.Address.Trim(),
+                ClientAddressLine1 = model.AddressLine1.Trim(),
+                ClientAddressLine2 = model.AddressLine2.Trim(),
                 ClientCity = model.City.Trim(),
                 ClientRegion = model.Region.Trim(),
                 ClientPostalCode = model.PostalCode.Trim(),
                 ClientCountry = model.Country.Trim(),
+                ClientPhoneNumber = model.PhoneNumber.Trim(),
                 ClientUrl = model.Url.Trim(),
             };
 
@@ -129,11 +131,13 @@ namespace DemoServices
                 // Update entity property values
                 entity.ClientIsActive = model.IsActive;
                 entity.ClientName = model.Name.Trim();
-                entity.ClientAddress = model.Address.Trim();
+                entity.ClientAddressLine1 = model.AddressLine1.Trim();
+                entity.ClientAddressLine1 = model.AddressLine2.Trim();
                 entity.ClientCity = model.City.Trim();
                 entity.ClientRegion = model.Region.Trim();
                 entity.ClientPostalCode = model.PostalCode.Trim();
                 entity.ClientCountry = model.Country.Trim();
+                entity.ClientPhoneNumber = model.PhoneNumber.Trim();
                 entity.ClientUrl = model.Url.Trim();
 
                 dbUpdated = _dbContext.SaveChanges() > 0;
@@ -358,11 +362,13 @@ namespace DemoServices
                 IsActive = entity.ClientIsActive,
                 IsDeleted = entity.ClientIsDeleted,
                 Name = entity.ClientName,
-                Address = entity.ClientAddress,
+                AddressLine1 = entity.ClientAddressLine1,
+                AddressLine2 = entity.ClientAddressLine2,
                 City = entity.ClientCity,
                 Region = entity.ClientRegion,
                 PostalCode = entity.ClientPostalCode,
                 Country = entity.ClientCountry,
+                PhoneNumber = entity.ClientPhoneNumber,
                 Url = entity.ClientUrl,
             };
 
@@ -380,11 +386,13 @@ namespace DemoServices
                 Type = (ClientType)entity.TypeId,
                 IsActive = entity.IsActive,
                 Name = entity.Name,
-                Address = entity.Address,
+                AddressLine1 = entity.AddressLine1,
+                AddressLine2 = entity.AddressLine2,
                 City = entity.City,
                 Region = entity.Region,
                 PostalCode = entity.PostalCode,
                 Country = entity.Country,
+                PhoneNumber = entity.PhoneNumber,
                 Url = entity.Url,
             };
 

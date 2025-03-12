@@ -86,7 +86,8 @@ namespace DemoTests.ServiceTests
                 FirstName = string.Format("First-{0}", ticks),
                 MiddleName = string.Format("Middle-{0}", ticks),
                 LastName = string.Format("Last-{0}", ticks),
-                Address = string.Format("Address-{0}", ticks),
+                AddressLine1 = string.Format("AddressLine1-{0}", ticks),
+                AddressLine2 = string.Format("AddressLine2-{0}", ticks),
                 City = string.Format("City-{0}", ticks),
                 Region = string.Format("Region-{0}", ticks),
                 PostalCode = string.Format("Zip-{0}", ticks.ToString().Substring(ticks.ToString().Length - 6)),
@@ -230,7 +231,8 @@ namespace DemoTests.ServiceTests
             model.FirstName = string.Format("First-{0}", ticks);
             model.MiddleName = string.Format("Middle-{0}", ticks);
             model.LastName = string.Format("Last-{0}", ticks);
-            model.Address = string.Format("Address-{0}", ticks);
+            model.AddressLine1 = string.Format("AddressLine1-{0}", ticks);
+            model.AddressLine2 = string.Format("AddressLine2-{0}", ticks);
             model.City = string.Format("City-{0}", ticks);
             model.Region = string.Format("Region-{0}", ticks);
             model.PostalCode = string.Format("Zip-{0}", ticks.ToString().Substring(ticks.ToString().Length - 6));

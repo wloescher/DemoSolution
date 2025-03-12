@@ -124,11 +124,13 @@ namespace DemoTests.ServiceTests
             var ticks = DateTime.Now.Ticks;
             entity.ClientTypeId = (int)ClientType.Lead;
             entity.ClientName = string.Format("Name-{0}", ticks);
-            entity.ClientAddress = string.Format("Address-{0}", ticks);
+            entity.ClientAddressLine1 = string.Format("AddressLine1-{0}", ticks);
+            entity.ClientAddressLine2 = string.Format("AddressLine2-{0}", ticks);
             entity.ClientCity = string.Format("City-{0}", ticks);
             entity.ClientRegion = string.Format("Region-{0}", ticks);
             entity.ClientPostalCode = string.Format("Zip-{0}", ticks.ToString().Substring(ticks.ToString().Length - 6));
             entity.ClientCountry = string.Format("Country-{0}", ticks);
+            entity.ClientPhoneNumber = string.Format("PhoneNumber-{0}", ticks);
             entity.ClientUrl = string.Format("Url-{0}", ticks);
 
             Assert.IsTrue(auditService.CreateClient(entity, userId));
@@ -142,11 +144,13 @@ namespace DemoTests.ServiceTests
             var ticks = DateTime.Now.Ticks;
             entityAfter.ClientTypeId = (int)ClientType.Lead;
             entityAfter.ClientName = string.Format("Name-{0}", ticks);
-            entityAfter.ClientAddress = string.Format("Address-{0}", ticks);
+            entityAfter.ClientAddressLine1 = string.Format("AddressLine1-{0}", ticks);
+            entityAfter.ClientAddressLine2 = string.Format("AddressLine2-{0}", ticks);
             entityAfter.ClientCity = string.Format("City-{0}", ticks);
             entityAfter.ClientRegion = string.Format("Region-{0}", ticks);
             entityAfter.ClientPostalCode = string.Format("Zip-{0}", ticks.ToString().Substring(ticks.ToString().Length - 6));
             entityAfter.ClientCountry = string.Format("Country-{0}", ticks);
+            entityAfter.ClientPhoneNumber = string.Format("PhoneNumber-{0}", ticks);
             entityAfter.ClientUrl = string.Format("Url-{0}", ticks);
 
             Assert.IsTrue(auditService.UpdateClient(entityBefore, entityAfter, userId));
@@ -186,7 +190,8 @@ namespace DemoTests.ServiceTests
             entity.UserFirstName = string.Format("First-{0}", ticks);
             entity.UserMiddleName = string.Format("Middle-{0}", ticks);
             entity.UserLastName = string.Format("Last-{0}", ticks);
-            entity.UserAddress = string.Format("Address-{0}", ticks);
+            entity.UserAddressLine1 = string.Format("AddressLine1-{0}", ticks);
+            entity.UserAddressLine2 = string.Format("AddressLine2-{0}", ticks);
             entity.UserCity = string.Format("City-{0}", ticks);
             entity.UserRegion = string.Format("Region-{0}", ticks);
             entity.UserPostalCode = string.Format("Zip-{0}", ticks.ToString().Substring(ticks.ToString().Length - 6));
@@ -205,7 +210,8 @@ namespace DemoTests.ServiceTests
             entityAfter.UserFirstName = string.Format("First-{0}", ticks);
             entityAfter.UserMiddleName = string.Format("Middle-{0}", ticks);
             entityAfter.UserLastName = string.Format("Last-{0}", ticks);
-            entityAfter.UserAddress = string.Format("Address-{0}", ticks);
+            entityAfter.UserAddressLine1 = string.Format("AddressLine1-{0}", ticks);
+            entityAfter.UserAddressLine2 = string.Format("AddressLine2-{0}", ticks);
             entityAfter.UserCity = string.Format("City-{0}", ticks);
             entityAfter.UserRegion = string.Format("Region-{0}", ticks);
             entityAfter.UserPostalCode = string.Format("Zip-{0}", ticks.ToString().Substring(ticks.ToString().Length - 6));

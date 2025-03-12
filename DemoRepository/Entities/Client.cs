@@ -26,7 +26,10 @@ public partial class Client
     public bool ClientIsDeleted { get; set; }
 
     [StringLength(255)]
-    public string ClientAddress { get; set; }
+    public string ClientAddressLine1 { get; set; }
+
+    [StringLength(255)]
+    public string ClientAddressLine2 { get; set; }
 
     [StringLength(50)]
     public string ClientCity { get; set; }
@@ -39,6 +42,9 @@ public partial class Client
 
     [StringLength(50)]
     public string ClientCountry { get; set; }
+
+    [StringLength(20)]
+    public string ClientPhoneNumber { get; set; }
 
     [StringLength(150)]
     public string ClientUrl { get; set; }

@@ -14,7 +14,8 @@
 			WHEN Len(UserMiddleName) > 1 THEN UserFirstName + ' ' + UserMiddleName + ' ' + UserLastName
 			ELSE UserFirstName + ' ' + UserLastName
 			END
-		, [Address] = UserAddress
+		, AddressLine1 = UserAddressLine1
+		, AddressLine2 = UserAddressLine2
 		, City = UserCity
 		, Region = UserRegion
 		, PostalCode = UserPostalCode

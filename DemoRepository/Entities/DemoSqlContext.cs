@@ -59,7 +59,7 @@ public partial class DemoSqlContext : DbContext
     {
         modelBuilder.Entity<Client>(entity =>
         {
-            entity.HasKey(e => e.ClientId).HasName("PK__tmp_ms_x__E67E1A247251A995");
+            entity.HasKey(e => e.ClientId).HasName("PK__tmp_ms_x__E67E1A24AC0A634A");
 
             entity.Property(e => e.ClienttGuid).HasDefaultValueSql("(newid())");
 
@@ -203,7 +203,7 @@ public partial class DemoSqlContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__User__1788CC4C0A3B3990");
+            entity.HasKey(e => e.UserId).HasName("PK__tmp_ms_x__1788CC4C1DFCBA3C");
 
             entity.Property(e => e.UserGuid).HasDefaultValueSql("(newid())");
             entity.Property(e => e.UserPasswordAttemptCount).HasDefaultValue(-1);

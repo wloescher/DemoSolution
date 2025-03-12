@@ -18,7 +18,9 @@ namespace DemoModels
         [MaxLength(50)]
         public string LastName { get; set; } = string.Empty;
         [MaxLength(255)]
-        public string Address { get; set; } = string.Empty;
+        public string AddressLine1 { get; set; } = string.Empty;
+        [MaxLength(255)]
+        public string AddressLine2 { get; set; } = string.Empty;
         [MaxLength(50)]
         public string City { get; set; } = string.Empty;
         [MaxLength(50)]

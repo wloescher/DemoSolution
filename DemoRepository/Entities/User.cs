@@ -38,7 +38,10 @@ public partial class User
     public string UserLastName { get; set; }
 
     [StringLength(255)]
-    public string UserAddress { get; set; }
+    public string UserAddressLine1 { get; set; }
+
+    [StringLength(255)]
+    public string UserAddressLine2 { get; set; }
 
     [StringLength(50)]
     public string UserCity { get; set; }

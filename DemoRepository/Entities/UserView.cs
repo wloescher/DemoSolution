@@ -37,7 +37,10 @@ public partial class UserView
     public string FullName { get; set; }
 
     [StringLength(255)]
-    public string Address { get; set; }
+    public string AddressLine1 { get; set; }
+
+    [StringLength(255)]
+    public string AddressLine2 { get; set; }
 
     [StringLength(50)]
     public string City { get; set; }

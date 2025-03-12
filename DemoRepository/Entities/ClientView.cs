@@ -25,7 +25,10 @@ public partial class ClientView
     public string Name { get; set; }
 
     [StringLength(255)]
-    public string Address { get; set; }
+    public string AddressLine1 { get; set; }
+
+    [StringLength(255)]
+    public string AddressLine2 { get; set; }
 
     [StringLength(50)]
     public string City { get; set; }
@@ -38,6 +41,9 @@ public partial class ClientView
 
     [StringLength(50)]
     public string Country { get; set; }
+
+    [StringLength(20)]
+    public string PhoneNumber { get; set; }
 
     [StringLength(150)]
     public string Url { get; set; }

@@ -16,7 +16,8 @@ namespace DemoTests.TestHelpers
             Assert.AreEqual(expected.FirstName, actual.FirstName);
             Assert.AreEqual(expected.MiddleName, actual.MiddleName);
             Assert.AreEqual(expected.LastName, actual.LastName);
-            Assert.AreEqual(expected.Address, actual.Address);
+            Assert.AreEqual(expected.AddressLine1, actual.AddressLine1);
+            Assert.AreEqual(expected.AddressLine2, actual.AddressLine2);
             Assert.AreEqual(expected.City, actual.City);
             Assert.AreEqual(expected.Region, actual.Region);
             Assert.AreEqual(expected.PostalCode, actual.PostalCode);

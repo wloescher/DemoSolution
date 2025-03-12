@@ -12,7 +12,9 @@ namespace DemoModels
         public bool IsDeleted { get; set; }
         public string Name { get; set; } = string.Empty;
         [MaxLength(255)]
-        public string Address { get; set; } = string.Empty;
+        public string AddressLine1 { get; set; } = string.Empty;
+        [MaxLength(255)]
+        public string AddressLine2 { get; set; } = string.Empty;
         [MaxLength(50)]
         public string City { get; set; } = string.Empty;
         [MaxLength(50)]
@@ -23,5 +25,7 @@ namespace DemoModels
         public string Country { get; set; } = string.Empty;
         [MaxLength(150)]
         public string Url { get; set; } = string.Empty;
+        [MaxLength(20)]
+        public string PhoneNumber { get; set; } = string.Empty;
     }
 }

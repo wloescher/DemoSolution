@@ -85,11 +85,13 @@ namespace DemoTests.ServiceTests
             {
                 Type = ClientType.Internal,
                 Name = string.Format("Name-{0}", ticks),
-                Address = string.Format("Address-{0}", ticks),
+                AddressLine1 = string.Format("AddressLine1-{0}", ticks),
+                AddressLine2 = string.Format("AddressLine2-{0}", ticks),
                 City = string.Format("City-{0}", ticks),
                 Region = string.Format("Region-{0}", ticks),
                 PostalCode = string.Format("Zip-{0}", ticks.ToString().Substring(ticks.ToString().Length - 6)),
                 Country = string.Format("Country-{0}", ticks),
+                PhoneNumber = string.Format("PhoneNumber-{0}", ticks),
                 Url = string.Format("Url-{0}", ticks),
             };
 
@@ -259,11 +261,13 @@ namespace DemoTests.ServiceTests
             var ticks = DateTime.Now.Ticks;
             model.Type = ClientType.Internal;
             model.Name = string.Format("Name-{0}", ticks);
-            model.Address = string.Format("Address-{0}", ticks);
+            model.AddressLine1 = string.Format("AddressLine1-{0}", ticks);
+            model.AddressLine2 = string.Format("AddressLine2-{0}", ticks);
             model.City = string.Format("City-{0}", ticks);
             model.Region = string.Format("Region-{0}", ticks);
             model.PostalCode = string.Format("Zip-{0}", ticks.ToString().Substring(ticks.ToString().Length - 6));
             model.Country = string.Format("Country-{0}", ticks);
+            model.PhoneNumber = string.Format("PhoneNumber-{0}", ticks);
             model.Url = string.Format("Url-{0}", ticks);
 
             var stopWatch = new Stopwatch();
