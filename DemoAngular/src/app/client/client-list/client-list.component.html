@@ -4,50 +4,16 @@
       <h1>Client List</h1>
     </div>
     <div class="col-3">
-      <div class="filters">
-        <a class="btn btn-secondary" routerLink="/clients/internal" routerLinkActive="btn-info border border-primary">Internal</a>
-        <a class="btn btn-secondary" routerLink="/clients/external" routerLinkActive="btn-info border border-primary">External</a>
-        <a class="btn btn-secondary" routerLink="/clients/lead" routerLinkActive="btn-info border border-primary">Lead</a>
+      <div class="btn-group border" role="group" >
+        <a class="btn btn-outline-secondary" routerLink="/clients">ALL</a>
+        <a class="btn btn-outline-secondary" routerLink="/clients/internal" routerLinkActive="bg-info">Internals</a>
+        <a class="btn btn-outline-secondary" routerLink="/clients/external" routerLinkActive="bg-info">Externals</a>
+        <a class="btn btn-outline-secondary" routerLink="/clients/lead" routerLinkActive="bg-info">Leads</a>
       </div>
     </div>
-    <div class="col text-end">
+    <div class="col-1 text-end">
       <button class="btn btn-primary" (click)="addClient"><fa-icon [icon]="faAdd"></fa-icon> Add</button>
     </div>
   </div>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th scope="col">Id</th>
-        <th scope="col">Name</th>
-        <!--<th scope="col">Guid</th>-->
-        <!--<th scope="col">TypeId</th>-->
-        <th scope="col">Type</th>
-        <th scope="col">Active</th>
-        <!--<th scope="col">Deleted</th>-->
-        <th scope="col">Address</th>
-        <th scope="col">City</th>
-        <th scope="col">Region</th>
-        <th scope="col">PostalCode</th>
-        <th scope="col">Country</th>
-        <th scope="col">URL</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let client of getFilteredClients()">
-        <th scope="row">{{ client.id }}</th>
-        <td><a [routerLink]="['', 'client', client.id]">{{ client.name }}</a></td>
-        <!--<td>{{ client.guid }}</td>-->
-        <!--<td>{{ client.typeId }}</td>-->
-        <td>{{ client.type }}</td>
-        <td>{{ client.isActive }}</td>
-        <!--<td>{{ client.isDeleted }}</td>-->
-        <td>{{ client.address }}</td>
-        <td>{{ client.city }}</td>
-        <td>{{ client.region }}</td>
-        <td>{{ client.postalCode }}</td>
-        <td>{{ client.country }}</td>
-        <td><a href="{{ client.url }}" target="_blank">{{ client.url }}</a></td>
-      </tr>
-    </tbody>
-  </table>
+  <app-generic-table [headers]="headers" [data]="getFilteredClients()" (rowClicked)="handleRowClick($event)" [clickableColumns]="clickableColumns"></app-generic-table>
 </div>

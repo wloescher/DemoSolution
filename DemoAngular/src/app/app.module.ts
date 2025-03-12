@@ -12,6 +12,7 @@ import { UserListComponent } from './user/user-list/user-list.component';
 import { UserDetailComponent } from './user/user-detail/user-detail.component';
 import { WorkItemListComponent } from './workitem/workitem-list/workitem-list.component';
 import { WorkItemDetailComponent } from './workitem/workitem-detail/workitem-detail.component';
+import { GenericTableComponent } from './generic-table/generic-table.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { WorkItemDetailComponent } from './workitem/workitem-detail/workitem-det
     BrowserModule,
     FontAwesomeModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    GenericTableComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

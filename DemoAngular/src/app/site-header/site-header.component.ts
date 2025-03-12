@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'demo-site-header',
@@ -9,4 +10,5 @@ import { faCode } from '@fortawesome/free-solid-svg-icons';
 
 export class SiteHeaderComponent {
   faCode = faCode;
+  faSearch = faSearch;
 }

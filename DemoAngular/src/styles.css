@@ -1,31 +1,4 @@
-.filters {
-  display: flex;
-  justify-content: space-between;
+.card-header button.btn {
+  font-size: 1.5em;
+  font-weight: bold;
 }
-
-  .filters .btn {
-    width: 100px;
-  }
-
-.data {
-  background: whitesmoke;
-}
-
-  .data .data-row {
-    border: solid 1px silver;
-    border-bottom: none;
-  }
-
-    .data .data-row:last-child {
-      border: solid 1px silver;
-    }
-
-  .data .col-key {
-    background: whitesmoke;
-    font-weight: bold;
-  }
-
-  .data .col-value {
-    background: white;
-    font-weight: bold;
-  }

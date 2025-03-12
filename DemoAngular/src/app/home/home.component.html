@@ -1,11 +1,32 @@
-<div class="container">
-  <h1>Home</h1>
-  <ul>
-    <li><a routerLink="/clients">Client List</a></li>
-    <li><a routerLink="/client/1">Client Details</a></li>
-    <li><a routerLink="/users">User List</a></li>
-    <li><a routerLink="/user/1">User Details</a></li>
-    <li><a routerLink="/workitems">Work Item  List</a></li>
-    <li><a routerLink="/workitem/1">Work Item Details</a></li>
-  </ul>
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <button class="btn" routerLink="/clients">Clients</button>
+        </div>
+        <div class="card-body">
+          <app-generic-table [headers]="clientHeaders" [data]="clients" (rowClicked)="handleClientRowClick($event)" [clickableColumns]="clientClickableColumns"></app-generic-table>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <button class="btn" routerLink="/users">Users</button>
+        </div>
+        <div class="card-body">
+          <app-generic-table [headers]="userHeaders" [data]="users" (rowClicked)="handleUserRowClick($event)" [clickableColumns]="userClickableColumns"></app-generic-table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <button class="btn" routerLink="/workitems">Work Items</button>
+    </div>
+    <div class="card-body">
+      <app-generic-table [headers]="workItemHeaders" [data]="workItems" (rowClicked)="handleWorkItemRowClick($event)" [clickableColumns]="workItemClickableColumns"></app-generic-table>
+    </div>
+  </div>
 </div>

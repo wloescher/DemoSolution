@@ -1,0 +1,49 @@
+<div class="search-box mb-3 btn-group">
+  <input class="form-control border" type="search" placeholder="Search..." aria-label="Search">
+  <button class="btn btn-light border"><fa-icon [icon]="faSearch"></fa-icon></button>
+</div>
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th *ngFor="let header of headers" (click)="onSort(header.key)" style="cursor: pointer;">
+          {{ header.displayName }}
+          <span *ngIf="sortColumn === header.key">
+            {{ sortDirection ? '▲' : '▼' }}
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of paginatedData" (click)="clickableColumns.includes(item.key) ? onRowClick(item) : null">
+        <td *ngFor="let header of headers"
+            [ngClass]="clickableColumns.includes(header.key) ? 'text-primary text-decoration-underline cursor-pointer' : ''">
+          {{ item[header.key] }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="row py-3">
+  <div class="col">
+    <div class="btn-group me-2">
+      <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0" class="btn btn-light p-2 border"> &lt; </button>
+      <span class="pt-2 px-2 bg-white border-top border-bottom">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+      <button (click)="onPageChange(currentPage + 1)" [disabled]="(currentPage + 1) * pageSize >= filteredData.length" class="btn btn-light p-2 border">&gt;</button>
+    </div>
+    {{ totalRecords }} records
+  </div>
+  <div class="col">
+    <div style="display: flex; justify-content: end; align-items: center;">
+      <div class="btn-group">
+        <label for="pageSize" class="px-1 pt-1 px-2 bg-white rounded-start border">Rows per page:</label>
+        <select id="pageSize" [(ngModel)]="pageSize" (change)="onPageChange(0)" class="form-select btn btn-light border" style="width: 80px;">
+          <option *ngFor="let size of [5, 10, 20]" [value]="size">{{ size }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

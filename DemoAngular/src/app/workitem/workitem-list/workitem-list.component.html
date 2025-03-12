@@ -3,50 +3,19 @@
     <div class="col">
       <h1>Work Item List</h1>
     </div>
-    <div class="col-6">
-      <div class="filters">
-        <a class="btn btn-secondary" routerLink="/workitems/user-story" routerLinkActive="btn-info border border-primary">User Story</a>
-        <a class="btn btn-secondary" routerLink="/workitems/task" routerLinkActive="btn-info border border-primary">Task</a>
-        <a class="btn btn-secondary" routerLink="/workitems/bug" routerLinkActive="btn-info border border-primary">Bug</a>
-        <a class="btn btn-secondary" routerLink="/workitems/epic" routerLinkActive="btn-info border border-primary">Epic</a>
-        <a class="btn btn-secondary" routerLink="/workitems/feature" routerLinkActive="btn-info border border-primary">Feature</a>
+    <div class="col-7">
+      <div class="btn-group border" role="group">
+        <a class="btn btn-outline-secondary" routerLink="/workitems">ALL</a>
+        <a class="btn btn-outline-secondary" routerLink="/workitems/user-story" routerLinkActive="btn-info">User Stories</a>
+        <a class="btn btn-outline-secondary" routerLink="/workitems/task" routerLinkActive="btn-info">Tasks</a>
+        <a class="btn btn-outline-secondary" routerLink="/workitems/bug" routerLinkActive="btn-info">Bugs</a>
+        <a class="btn btn-outline-secondary" routerLink="/workitems/epic" routerLinkActive="btn-info">Epics</a>
+        <a class="btn btn-outline-secondary" routerLink="/workitems/feature" routerLinkActive="btn-info">Features</a>
       </div>
     </div>
-    <div class="col text-end">
+    <div class="col-1 text-end">
       <button class="btn btn-primary" (click)="addWorkItem"><fa-icon [icon]="faAdd"></fa-icon> Add</button>
     </div>
   </div>
-
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th scope="col">Id</th>
-        <th scope="col">Title</th>
-        <th scope="col">Client</th>
-        <!--<th scope="col">Guid</th>-->
-        <!--<th scope="col">TypeId</th>-->
-        <th scope="col">Type</th>
-        <!--<th scope="col">StatusId</th>-->
-        <th scope="col">Status</th>
-        <th scope="col">Active</th>
-        <!--<th scope="col">Deleted</th>-->
-        <th scope="col">Sub-Title</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let workItem of getFilteredWorkItems()">
-        <th scope="row">{{ workItem.id }}</th>
-        <td><a [routerLink]="['', 'workitem', workItem.id]">{{ workItem.title }}</a></td>
-        <td><a [routerLink]="['', 'client', workItem.clientId]">{{ workItem.clientName }}</a></td>
-        <!--<td>{{ workItem.guid }}</td>-->
-        <!--<td>{{ workItem.typeId }}</td>-->
-        <td>{{ workItem.type }}</td>
-        <!--<td>{{ workItem.statusId }}</td>-->
-        <td>{{ workItem.status }}</td>
-        <td>{{ workItem.isActive }}</td>
-        <!--<td>{{ workItem.isDeleted }}</td>-->
-        <td>{{ workItem.subTitle }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <app-generic-table [headers]="headers" [data]="getFilteredWorkItems()" (rowClicked)="handleRowClick($event)" [clickableColumns]="clickableColumns"></app-generic-table>
 </div>

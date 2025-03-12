@@ -1,57 +1,22 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h1>Client List</h1>
+      <h1>User List</h1>
     </div>
     <div class="col-6">
-      <div class="filters">
-        <a class="btn btn-secondary" routerLink="/users/admin" routerLinkActive="btn-info border border-primary">Admin</a>
-        <a class="btn btn-secondary" routerLink="/users/client" routerLinkActive="btn-info border border-primary">Client</a>
-        <a class="btn btn-secondary" routerLink="/users/sales" routerLinkActive="btn-info border border-primary">Sales</a>
-        <a class="btn btn-secondary" routerLink="/users/marketing" routerLinkActive="btn-info border border-primary">Marketing</a>
-        <a class="btn btn-secondary" routerLink="/users/accounting" routerLinkActive="btn-info border border-primary">Accounting</a>
-        <a class="btn btn-secondary" routerLink="/users/executive" routerLinkActive="btn-info border border-primary">Executive</a>
+      <div class="btn-group border" role="group">
+        <a class="btn btn-outline-secondary" routerLink="/users">ALL</a>
+        <a class="btn btn-outline-secondary" routerLink="/users/admin" routerLinkActive="btn-info">Admins</a>
+        <a class="btn btn-outline-secondary" routerLink="/users/client" routerLinkActive="btn-info">Clients</a>
+        <a class="btn btn-outline-secondary" routerLink="/users/sales" routerLinkActive="btn-info">Sales</a>
+        <a class="btn btn-outline-secondary" routerLink="/users/marketing" routerLinkActive="btn-info">Marketing</a>
+        <a class="btn btn-outline-secondary" routerLink="/users/accounting" routerLinkActive="btn-info">Accounting</a>
+        <a class="btn btn-outline-secondary" routerLink="/users/executive" routerLinkActive="btn-info">Executives</a>
       </div>
     </div>
-    <div class="col text-end">
+    <div class="col-1 text-end">
       <button class="btn btn-primary" (click)="addUser"><fa-icon [icon]="faAdd"></fa-icon> Add</button>
     </div>
   </div>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th scope="col">Id</th>
-        <th scope="col">Name</th>
-        <!--<th scope="col">Guid</th>-->
-        <!--<th scope="col">TypeId</th>-->
-        <th scope="col">Type</th>
-        <th scope="col">Active</th>
-        <!--<th scope="col">Deleted</th>-->
-        <th scope="col">Address</th>
-        <th scope="col">City</th>
-        <th scope="col">Region</th>
-        <th scope="col">PostalCode</th>
-        <th scope="col">Country</th>
-        <th scope="col">URL</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of getFilteredUsers()">
-        <th scope="row">{{ user.id }}</th>
-        <td><a [routerLink]="['', 'user', user.id]">{{ user.lastName }}, {{ user.firstName }} {{ user.middleName }}</a></td>
-        <td><a href="mailto:{{ user.emailAddress }}">{{ user.emailAddress }}</a></td>
-        <!--<td>{{ user.guid }}</td>-->
-        <!--<td>{{ user.typeId }}</td>-->
-        <td>{{ user.type }}</td>
-        <td>{{ user.isActive }}</td>
-        <!--<td>{{ user.isDeleted }}</td>-->
-        <td>{{ user.address }}</td>
-        <td>{{ user.city }}</td>
-        <td>{{ user.region }}</td>
-        <td>{{ user.postalCode }}</td>
-        <td>{{ user.country }}</td>
-        <td><a href="tel:{{ user.phoneNumber }}" target="_blank">{{ user.phoneNumber }}</a></td>
-      </tr>
-    </tbody>
-  </table>
+  <app-generic-table [headers]="headers" [data]="getFilteredUsers()" (rowClicked)="handleRowClick($event)" [clickableColumns]="clickableColumns"></app-generic-table>
 </div>

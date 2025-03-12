@@ -13,6 +13,16 @@ export class UserListComponent {
   users: any;
   filter: string = '';
   faAdd = faAdd;
+  headers = [
+    { key: 'lastName', displayName: 'Last Name' },
+    { key: 'firstName', displayName: 'First Name' },
+    { key: 'emailAddress', displayName: 'Email Address' },
+    { key: 'type', displayName: 'Type' },
+    { key: 'isActive', displayName: 'Active' },
+    { key: 'city', displayName: 'City' },
+    { key: 'region', displayName: 'Region' },
+    { key: 'phoneNumber', displayName: 'Phone Number' }  ];
+  clickableColumns = ['name'];
 
   constructor(
     private router: Router,
@@ -31,6 +41,10 @@ export class UserListComponent {
     return !this.filter
       ? this.users
       : this.users.filter((user: any) => user.type.toLowerCase().replace(' ', '-') === this.filter.toLowerCase())
+  }
+
+  handleRowClick(data: any) {
+    console.log('Row clicked:', data);
   }
 
   addUser() {

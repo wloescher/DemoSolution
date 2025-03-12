@@ -7,17 +7,25 @@ import { ClientService } from '../../../services/client.service';
 @Component({
   selector: 'demo-client-list',
   templateUrl: './client-list.component.html',
-  styleUrls: ['./client-list.component.css']
+  styleUrls: ['./client-list.component.css'],
 })
 export class ClientListComponent {
   clients: any;
   filter: string = '';
   faAdd = faAdd;
+  headers = [
+    { key: 'name', displayName: 'Name' },
+    { key: 'type', displayName: 'Type' },
+    { key: 'isActive', displayName: 'Active' },
+    { key: 'city', displayName: 'City' },
+    { key: 'region', displayName: 'Region' },
+  ];
+  clickableColumns = ['name']
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private clientSvc: ClientService
+    private clientSvc: ClientService,
   ) { }
 
   ngOnInit() {
@@ -31,6 +39,10 @@ export class ClientListComponent {
     return !this.filter
       ? this.clients
       : this.clients.filter((client: any) => client.type.toLowerCase().replace(' ', '-') === this.filter.toLowerCase())
+  }
+
+  handleRowClick(userData: any) {
+    console.log('Row clicked:', userData);
   }
 
   addClient() {

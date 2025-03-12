@@ -1,0 +1,28 @@
+.search-box {
+  margin: 0 auto;
+}
+
+.table {
+  margin: 0 auto;
+}
+
+  .table th, .table td {
+    text-align: left;
+  }
+
+  .table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+  }
+
+  .table tbody tr:hover {
+    background-color: #e9ecef;
+  }
+
+.table-bordered {
+  border: 1px solid #dee2e6;
+}
+
+  .table-bordered th, .table-bordered td {
+    border: 1px solid #dee2e6;
+  }

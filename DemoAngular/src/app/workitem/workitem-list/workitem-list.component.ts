@@ -13,6 +13,15 @@ export class WorkItemListComponent {
   workItems: any;
   filter: string = '';
   faAdd = faAdd;
+  headers = [
+    { key: 'title', displayName: 'Title' },
+    { key: 'clientName', displayName: 'Client' },
+    { key: 'type', displayName: 'Type' },
+    { key: 'status', displayName: 'Status' },
+    { key: 'isActive', displayName: 'Active' },
+    { key: 'subTitle', displayName: 'Sub-Title' },
+  ];
+  clickableColumns = ['name'];
 
   constructor(
     private router: Router,
@@ -31,6 +40,10 @@ export class WorkItemListComponent {
     return !this.filter
       ? this.workItems
       : this.workItems.filter((workItem: any) => workItem.type.toLowerCase().replace(' ', '-') === this.filter.toLowerCase());
+  }
+
+  handleRowClick(data: any) {
+    console.log('Row clicked:', data);
   }
 
   addWorkItem() {
