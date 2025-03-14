@@ -11,7 +11,7 @@ declare var bootbox: any;
 @Component({
   selector: 'demo-workitem-edit',
   templateUrl: './workitem-edit.component.html',
-  styleUrls: ['./workitem-edit.component.css']
+  styleUrls: ['./workitem-edit.component.css'],
 })
 export class WorkItemEditComponent {
   id: number = 0;
@@ -20,11 +20,32 @@ export class WorkItemEditComponent {
   faX = faX;
   faSave = faSave;
 
+  workItemTypes = [
+    { value: '0', label: 'Select...' },
+    { value: '1', label: 'User Story' },
+    { value: '2', label: 'Task' },
+    { value: '3', label: 'Bug' },
+    { value: '4', label: 'Epic' },
+    { value: '5', label: 'Feature' },
+  ];
+
+  workItemStatuses = [
+    { value: '0', label: 'Select...' },
+    { value: '1', label: 'New' },
+    { value: '2', label: 'In Planning' },
+    { value: '3', label: 'In Progress' },
+    { value: '4', label: 'Approved' },
+    { value: '5', label: 'Rejected' },
+    { value: '6', label: 'Staged' },
+    { value: '7', label: 'Completed' },
+    { value: '8', label: 'On Hold' },
+  ];
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private workItemSvc: WorkItemService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
@@ -46,11 +67,14 @@ export class WorkItemEditComponent {
         subTitle: '',
         summary: '',
         body: '',
-      }
-    }
-    else {
+      };
+    } else {
       // Get WorkItem
-      this.workItemSvc.getWorkItem(this.id).subscribe((workItem: IWorkItem | undefined) => this.workItem = workItem);
+      this.workItemSvc
+        .getWorkItem(this.id)
+        .subscribe(
+          (workItem: IWorkItem | undefined) => (this.workItem = workItem)
+        );
     }
   }
 
@@ -59,10 +83,13 @@ export class WorkItemEditComponent {
   }
 
   deleteWorkItem() {
-    bootbox.confirm('Are you sure you want to delete this Work Item?', (result: boolean) => {
-      if (result) {
-        bootbox.alert('TODO: Delete WorkItem');
+    bootbox.confirm(
+      'Are you sure you want to delete this Work Item?',
+      (result: boolean) => {
+        if (result) {
+          bootbox.alert('TODO: Delete WorkItem');
+        }
       }
-    });
+    );
   }
 }

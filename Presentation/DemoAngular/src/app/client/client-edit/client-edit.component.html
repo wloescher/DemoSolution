@@ -1,11 +1,15 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h1>{{ id === 0 ? 'Add' : 'Edit' }} Client</h1>
+      <h1>{{ id === 0 ? "Add" : "Edit" }} Client</h1>
     </div>
     <div class="col text-end mt-2">
-      <button class="btn btn-light border me-2" routerLink="/clients"><fa-icon [icon]="faX"></fa-icon> Cancel</button>
-      <button type="submit" class="btn btn-primary" (click)="saveClient()"><fa-icon [icon]="faSave"></fa-icon> Save</button>
+      <button class="btn btn-light border me-2" routerLink="/clients">
+        <fa-icon [icon]="faX"></fa-icon> Cancel
+      </button>
+      <button type="submit" class="btn btn-primary" (click)="saveClient()">
+        <fa-icon [icon]="faSave"></fa-icon> Save
+      </button>
     </div>
   </div>
   <form>
@@ -13,148 +17,151 @@
       <div class="col">
         <div class="mb-3">
           <label for="name" class="form-label">Company Name</label>
-          <input class="form-control required" required id="name" value="{{ client.name }}">
+          <input
+            type="text"
+            class="form-control required"
+            required
+            id="name"
+            name="name"
+            [(ngModel)]="client.name"
+            #name="ngModel"
+          />
         </div>
         <div class="mb-3">
           <label for="typeId" class="form-label">Client Type</label>
-          <select class="form-select required" required aria-label="Type" id="typeId" name="typeId" [(ngModel)]="client.typeId">
-            <option selected>Select...</option>
-            <option value="1">Internal</option>
-            <option value="2">External</option>
-            <option value="3">Lead</option>
+          <select
+            class="form-select required"
+            required
+            aria-label="Type"
+            id="typeId"
+            name="typeId"
+            [(ngModel)]="client.TypeId"
+          >
+            <option
+              *ngFor="let clientType of clientTypes"
+              [value]="client.value"
+            >
+              {{ clientType.label }}
+            </option>
           </select>
         </div>
         <div class="mb-3">
           <label for="phoneNumber" class="form-label">Phone Number</label>
-          <input type="tel" class="form-control" id="phoneNumber" value="{{ client.phoneNumber }}">
+          <input
+            type="tel"
+            class="form-control"
+            id="phoneNumber"
+            name="phoneNumber"
+            [(ngModel)]="client.phoneNumber"
+          />
         </div>
         <div class="mb-3">
           <label for="url" class="form-label">URL / Website</label>
-          <input type="url" class="form-control" id="url" value="{{ client.url }}">
+          <input
+            type="url"
+            class="form-control"
+            id="url"
+            name="url"
+            [(ngModel)]="client.url"
+          />
         </div>
         <div class="mb-3">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="isActive" checked="{{ client.isActive }}">
-            <label class="form-check-label" for="isActive">
-              Active
-            </label>
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="isActive"
+              name="isActive"
+              [(ngModel)]="client.isActive"
+            />
+            <label class="form-check-label" for="isActive"> Active </label>
           </div>
         </div>
       </div>
       <div class="col">
         <div class="card">
-          <div class="card-header">
-            Address
-          </div>
+          <div class="card-header">Address</div>
           <div class="card-body">
             <div class="mb-3">
               <label for="address1" class="form-label">Address</label>
-              <input class="form-control mb-3" id="addressLine1" placeholder="Line 1..." value="{{ client.addressLine1 }}">
-              <input class="form-control" id="addressLine2" placeholder="Line 2..." value="{{ client.addressLine2 }}">
+              <input
+                type="text"
+                class="form-control mb-3"
+                id="addressLine1"
+                name="addressLine1"
+                placeholder="Line 1..."
+                [(ngModel)]="client.addressLine1"
+              />
+              <input
+                type="text"
+                class="form-control"
+                id="addressLine2"
+                name="addressLine2"
+                placeholder="Line 2..."
+                [(ngModel)]="client.addressLine2"
+              />
             </div>
             <div class="mb-3">
               <label for="city" class="form-label">City</label>
-              <input class="form-control" id="city" value="{{ client.city }}">
+              <input
+                type="text"
+                class="form-control"
+                id="city"
+                name="city"
+                [(ngModel)]="client.city"
+              />
             </div>
             <div class="row">
               <div class="col">
                 <div class="mb-3">
                   <label for="region" class="form-label">Region</label>
-                  <input class="form-control" list="datalistOptions" id="region" name="region" placeholder="Type to search..." [(ngModel)]="client.region">
-                  <datalist id="datalistOptions">
-                    <option value="AL">Alabama</option>
-                    <option value="AB">Alberta</option>
-                    <option value="BC">British Columbia</option>
-                    <option value="MB">Manitoba</option>
-                    <option value="NB">New Brunswick</option>
-                    <option value="NL">Newfoundland and Labrador</option>
-                    <option value="NS">Nova Scotia</option>
-                    <option value="NT">Northwest Territories</option>
-                    <option value="NU">Nunavut</option>
-                    <option value="ON">Ontario</option>
-                    <option value="PE">Prince Edward Island</option>
-                    <option value="QC">Quebec</option>
-                    <option value="SK">Saskatchewan</option>
-                    <option value="YT">Yukon</option>
-                    <hr />
-                    <option value="ENG">England</option>
-                    <option value="NIR">Northern Ireland</option>
-                    <option value="SCT">Scotland</option>
-                    <option value="WLS">Wales</option>
-                    <option value="IOM">Isle of Man</option>
-                    <option value="GIB">Gibraltar</option>
-                    <option value="GGY">Guernsey</option>
-                    <option value="JEY">Jersey</option>
-                    <hr />
-                    <option value="AK">Alaska</option>
-                    <option value="AZ">Arizona</option>
-                    <option value="AR">Arkansas</option>
-                    <option value="CA">California</option>
-                    <option value="CO">Colorado</option>
-                    <option value="CT">Connecticut</option>
-                    <option value="DE">Delaware</option>
-                    <option value="FL">Florida</option>
-                    <option value="GA">Georgia</option>
-                    <option value="HI">Hawaii</option>
-                    <option value="ID">Idaho</option>
-                    <option value="IL">Illinois</option>
-                    <option value="IN">Indiana</option>
-                    <option value="IA">Iowa</option>
-                    <option value="KS">Kansas</option>
-                    <option value="KY">Kentucky</option>
-                    <option value="LA">Louisiana</option>
-                    <option value="ME">Maine</option>
-                    <option value="MD">Maryland</option>
-                    <option value="MA">Massachusetts</option>
-                    <option value="MI">Michigan</option>
-                    <option value="MN">Minnesota</option>
-                    <option value="MS">Mississippi</option>
-                    <option value="MO">Missouri</option>
-                    <option value="MT">Montana</option>
-                    <option value="NE">Nebraska</option>
-                    <option value="NV">Nevada</option>
-                    <option value="NH">New Hampshire</option>
-                    <option value="NJ">New Jersey</option>
-                    <option value="NM">New Mexico</option>
-                    <option value="NY">New York</option>
-                    <option value="NC">North Carolina</option>
-                    <option value="ND">North Dakota</option>
-                    <option value="OH">Ohio</option>
-                    <option value="OK">Oklahoma</option>
-                    <option value="OR">Oregon</option>
-                    <option value="PA">Pennsylvania</option>
-                    <option value="RI">Rhode Island</option>
-                    <option value="SC">South Carolina</option>
-                    <option value="SD">South Dakota</option>
-                    <option value="TN">Tennessee</option>
-                    <option value="TX">Texas</option>
-                    <option value="UT">Utah</option>
-                    <option value="VT">Vermont</option>
-                    <option value="VA">Virginia</option>
-                    <option value="WA">Washington</option>
-                    <option value="WV">West Virginia</option>
-                    <option value="WI">Wisconsin</option>
-                    <option value="WY">Wyoming</option>
-
+                  <input
+                    type="text"
+                    class="form-control"
+                    list="datalistOptions"
+                    id="region"
+                    name="region"
+                    placeholder="Type to search..."
+                    [(ngModel)]="client.region"
+                  />
+                  <datalist id="region">
+                    <option
+                      *ngFor="let region of regions"
+                      [value]="region.value"
+                    >
+                      {{ region.label }}
+                    </option>
                   </datalist>
                 </div>
-
               </div>
               <div class="col">
                 <div class="mb-3">
                   <label for="postalCode" class="form-label">Postal Code</label>
-                  <input class="form-control" id="postalCode" value="{{ client.postalCode }}">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="postalCode"
+                    name="postalCode"
+                    [(ngModel)]="client.postalCode"
+                  />
                 </div>
               </div>
             </div>
-
             <div class="mb-3">
               <label for="country" class="form-label">Country</label>
-              <select class="form-select" aria-label="Country" id="country" name="country" [(ngModel)]="client.country">
-                <option selected>Select...</option>
-                <option value="Canada">Canada</option>
-                <option value="United Kingdom">United Kingdom</option>
-                <option value="United States">United States</option>
+              <select
+                class="form-select"
+                aria-label="Country"
+                id="country"
+                name="country"
+                [(ngModel)]="client.country"
+              >
+                <option
+                  *ngFor="let country of countries"
+                  [value]="country.value"
+                >
+                  {{ country.label }}
+                </option>
               </select>
             </div>
           </div>
@@ -164,7 +171,9 @@
   </form>
   <div *ngIf="id != 0" class="row">
     <div class="col text-end">
-      <button class="btn btn-danger" (click)="deleteClient()"><fa-icon [icon]="faTrash"></fa-icon> Delete</button>
+      <button class="btn btn-danger" (click)="deleteClient()">
+        <fa-icon [icon]="faTrash"></fa-icon> Delete
+      </button>
     </div>
   </div>
 </div>
