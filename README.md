@@ -1,18 +1,26 @@
 WORK IN PROGRESS
 
 Full-Stack Visual Studio 2022 solution
+
+DATA LAYER
 - SQL 2019 Database
 - Repository (Entity Framework)
 - Models
-- Services (.NET Core / Dependency Injection / Interfaces)
+
+SERVICES LAYER
+- Services (C# / .NET Core / Dependency Injection / Interfaces)
 - Utilities
-- Tests
 - Web API
-- Multiple UI Frameworks
-  - Angular (Work in Progress)
+- Tests
+
+PRESENTATION LAYER
+- Angular v16 (Work in Progress)
+  - Bootstrap
+  - FontAwesome
+  - Bootbox.js
 
 Still to come...
-  - Blazor
-  - Razor
   - React
   - Vue
+  - Blazor
+  - Razor
