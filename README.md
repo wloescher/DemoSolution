@@ -4,7 +4,7 @@ Full-Stack Visual Studio 2022 solution
 
 DATA LAYER
 - SQL 2019 Database
-- Repository (Entity Framework)
+- Repository (Entity Framework, EF Core Power Tools)
 - Models
 
 SERVICES LAYER
