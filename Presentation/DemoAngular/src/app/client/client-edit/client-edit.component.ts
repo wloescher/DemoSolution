@@ -107,7 +107,12 @@ export class ClientEditComponent {
     { value: 'UK', label: 'United Kingdom' },
     { value: 'USA', label: 'United State of America' },
   ];
-  ) {}
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private clientSvc: ClientService
+  ) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
