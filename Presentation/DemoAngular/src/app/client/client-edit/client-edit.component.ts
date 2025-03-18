@@ -107,6 +107,11 @@ export class ClientEditComponent {
     { value: 'UK', label: 'United Kingdom' },
     { value: 'USA', label: 'United State of America' },
   ];
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private clientSvc: ClientService
   ) {}
 
   ngOnInit() {
@@ -138,7 +143,6 @@ export class ClientEditComponent {
       this.clientSvc
         .getClient(this.id)
         .subscribe((client: IClient | undefined) => (this.client = client));
-
     }
   }
 
