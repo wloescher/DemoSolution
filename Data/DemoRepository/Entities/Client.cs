@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace DemoRepository.Entities;
 
@@ -13,7 +11,7 @@ public partial class Client
     [Key]
     public int ClientId { get; set; }
 
-    public Guid ClienttGuid { get; set; }
+    public Guid ClientGuid { get; set; }
 
     public int ClientTypeId { get; set; }
 

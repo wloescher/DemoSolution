@@ -1,7 +1,7 @@
 ﻿CREATE VIEW ClientView AS
 	
 	SELECT ClientId
-		, [Guid] = ClienttGuid
+		, [Guid] = ClientGuid
 		, TypeId = ClientTypeId
 		, [Type] = ClientType.DataDictionaryKey
 		, IsActive = ClientIsActive

@@ -357,7 +357,7 @@ namespace DemoServices
             var model = new ClientModel
             {
                 ClientId = entity.ClientId,
-                ClientGuid = entity.ClienttGuid,
+                ClientGuid = entity.ClientGuid,
                 Type = (ClientType)entity.ClientTypeId,
                 IsActive = entity.ClientIsActive,
                 IsDeleted = entity.ClientIsDeleted,

@@ -161,4 +161,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="ClientUserAuditAffectedColumns" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="0556ed37-59a6-41ba-924d-1f2672dcd39f" ChangeDateTime="03/26/2025 22:02:26">
+    <Property Name="ElementName" Value="[dbo].[Client].[ClientGuid]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Client]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ClientGuid" />
+  </Operation>
 </Operations>

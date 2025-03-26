@@ -61,7 +61,7 @@ public partial class DemoSqlContext : DbContext
         {
             entity.HasKey(e => e.ClientId).HasName("PK__tmp_ms_x__E67E1A24AC0A634A");
 
-            entity.Property(e => e.ClienttGuid).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.ClientGuid).HasDefaultValueSql("(newid())");
 
             entity.HasOne(d => d.ClientType).WithMany(p => p.Clients)
                 .OnDelete(DeleteBehavior.ClientSetNull)

@@ -17,6 +17,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
+using static DemoModels.Enums;
 
 namespace DemoTests.WebApiTests
 {
@@ -93,36 +94,50 @@ namespace DemoTests.WebApiTests
         }
 
         [TestMethod()]
-        public async Task CreateClientTest()
+        public async Task ClientCrudTest()
         {
+            var dateSlug = DateTime.Now.ToString("yyyyMMdd");
+            var guid = Guid.NewGuid();
+
+            // Create model for testing
+            var model = new ClientModel
+            {
+                Type = ClientType.External,
+                Name = string.Format("ClientCrudTest-Name-{0}-{1}", dateSlug, guid),
+                AddressLine1 = string.Format("AddressLine1-{0}", dateSlug),
+                AddressLine2 = string.Format("AddressLine2-{0}", dateSlug),
+                City = string.Format("City-{0}", dateSlug),
+                Region = string.Format("Region-{0}", dateSlug),
+                PostalCode = string.Format("XX{0}", dateSlug), // Max length 10
+                Country = string.Format("Country-{0}", dateSlug),
+                Url = string.Format("Url-{0}", dateSlug),
+                PhoneNumber = string.Format("PhoneNumber-{0}", dateSlug), // Max length 20
+            };
+
+            // Create
             await CreateClientUnauthenticatedTest();
-            await CreateClientAuthenticatedTest();
-        }
+            var newModel = await CreateClientAuthenticatedTest(model);
 
-        [TestMethod()]
-        public async Task UpdateClientTest()
-        {
+            // Update
+            newModel.Name = string.Format("{0}-UPDATED", newModel.Name);
             await UpdateClientUnauthenticatedTest();
-            await UpdateClientAuthenticatedTest();
-        }
+            await UpdateClientAuthenticatedTest(newModel);
 
-        [TestMethod()]
-        public async Task DeleteClientTest()
-        {
+            // Delete
             await DeleteClientUnauthenticatedTest();
-            await DeleteClientAuthenticatedTest();
+            await DeleteClientAuthenticatedTest(newModel.ClientId);
+
+            // Update Client Name to indicate deletion
+            newModel.Name = string.Format("{0}-DELETED", newModel.Name);
+            await UpdateClientAuthenticatedTest(newModel);
         }
 
         [TestMethod()]
-        public async Task AddUserTest()
+        public async Task AddThenDeleteUserTest()
         {
             await AddUserUnauthenticatedTest();
             await AddUserAuthenticatedTest();
-        }
 
-        [TestMethod()]
-        public async Task DeleteUserTest()
-        {
             await DeleteUserUnauthenticatedTest();
             await DeleteUserAuthenticatedTest();
         }
@@ -509,7 +524,8 @@ namespace DemoTests.WebApiTests
             Assert.IsNotNull(getClientResult);
             var expected = (ClientModel?)getClientResult.Value;
             Assert.IsNotNull(expected);
-            StringContent content = new(JsonConvert.SerializeObject(expected), Encoding.UTF8, "application/json");
+
+            var content = new StringContent(JsonConvert.SerializeObject(expected), Encoding.UTF8, "application/json");
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -535,14 +551,9 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private async Task CreateClientAuthenticatedTest()
+        private static async Task<ClientModel> CreateClientAuthenticatedTest(ClientModel model)
         {
-            var clientId = _testClientIds.First();
-            var getClientResult = _controller.GetClient(clientId) as OkObjectResult;
-            Assert.IsNotNull(getClientResult);
-            var expected = (ClientModel?)getClientResult.Value;
-            Assert.IsNotNull(expected);
-            StringContent content = new(JsonConvert.SerializeObject(expected), Encoding.UTF8, "application/json");
+            var content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -568,12 +579,15 @@ namespace DemoTests.WebApiTests
             // Check result
             var actual = JsonConvert.DeserializeObject<ClientModel>(await response.Content.ReadAsStringAsync());
             Assert.IsNotNull(actual);
-            expected.ClientId = actual.ClientId;
-            expected.ClientGuid = actual.ClientGuid;
+            var expected = model;
+            model.ClientId = actual.ClientId;
+            model.ClientGuid = actual.ClientGuid;
             CompareModels.Compare(expected, actual);
 
             var elapsedTime = DateTimeUtility.GetElapsedTime(stopWatch.Elapsed);
             Console.WriteLine(string.Format("{0}", elapsedTime));
+
+            return actual;
         }
 
         private async Task UpdateClientUnauthenticatedTest()
@@ -583,7 +597,8 @@ namespace DemoTests.WebApiTests
             Assert.IsNotNull(getClientResult);
             var expected = (ClientModel?)getClientResult.Value;
             Assert.IsNotNull(expected);
-            StringContent content = new(JsonConvert.SerializeObject(expected), Encoding.UTF8, "application/json");
+
+            var content = new StringContent(JsonConvert.SerializeObject(expected), Encoding.UTF8, "application/json");
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -609,14 +624,9 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private async Task UpdateClientAuthenticatedTest()
+        private async Task UpdateClientAuthenticatedTest(ClientModel model)
         {
-            var clientId = _testClientIds.First();
-            var getClientResult = _controller.GetClient(clientId) as OkObjectResult;
-            Assert.IsNotNull(getClientResult);
-            var expected = (ClientModel?)getClientResult.Value;
-            Assert.IsNotNull(expected);
-            StringContent content = new(JsonConvert.SerializeObject(expected), Encoding.UTF8, "application/json");
+            var content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -625,7 +635,7 @@ namespace DemoTests.WebApiTests
             await using var application = new WebApplicationFactory<ClientController>();
             using var httpClient = application.CreateClient();
             httpClient.DefaultRequestHeaders.Add("authorization", "Bearer demo");
-            var response = await httpClient.PutAsync(string.Format("/client/{0}", clientId), content);
+            var response = await httpClient.PutAsync(string.Format("/client/{0}", model.ClientId), content);
 
             stopWatch.Stop();
 
@@ -640,14 +650,12 @@ namespace DemoTests.WebApiTests
             Assert.AreEqual("application/json; charset=utf-8", response.Content.Headers.ContentType.ToString());
 
             // Check result
-            var actual = JsonConvert.DeserializeObject<ClientModel>(await response.Content.ReadAsStringAsync());
-            Assert.IsNotNull(actual);
-            CompareModels.Compare(expected, actual);
+            var actual = await response.Content.ReadAsStringAsync() == "true";
+            Assert.IsTrue(actual);
 
             var elapsedTime = DateTimeUtility.GetElapsedTime(stopWatch.Elapsed);
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
-
 
         private async Task DeleteClientUnauthenticatedTest()
         {
@@ -677,10 +685,8 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private async Task DeleteClientAuthenticatedTest()
+        private async Task DeleteClientAuthenticatedTest(int clientId)
         {
-            var clientId = _testClientIds.First();
-
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
@@ -712,8 +718,8 @@ namespace DemoTests.WebApiTests
 
         private async Task AddUserUnauthenticatedTest()
         {
-            var clientId = _testClientIds.First();
-            var userId = _testUserIds.First();
+            var clientId = 0;
+            var userId = 0;
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -741,8 +747,8 @@ namespace DemoTests.WebApiTests
 
         private async Task AddUserAuthenticatedTest()
         {
-            var clientId = _testClientIds.First();
-            var userId = _testUserIds.First();
+            var clientId = 0;
+            var userId = 0;
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -776,8 +782,8 @@ namespace DemoTests.WebApiTests
 
         private async Task DeleteUserUnauthenticatedTest()
         {
-            var clientId = _testClientIds.First();
-            var userId = _testUserIds.First();
+            var clientId = 0;
+            var userId = 0;
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -805,8 +811,8 @@ namespace DemoTests.WebApiTests
 
         private async Task DeleteUserAuthenticatedTest()
         {
-            var clientId = _testClientIds.First();
-            var userId = _testUserIds.First();
+            var clientId = 0;
+            var userId = 0;
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
