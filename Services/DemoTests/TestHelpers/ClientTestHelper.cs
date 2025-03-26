@@ -22,5 +22,14 @@ namespace DemoTests.TestHelpers
             Assert.AreEqual(expected.PhoneNumber, actual.PhoneNumber);
             Assert.AreEqual(expected.Url, actual.Url);
         }
+
+        public static void Compare(List<ClientModel> expected, List<ClientModel> actual)
+        {
+            Assert.AreEqual(expected.Count, actual.Count);
+            for (int i = 0; i < expected.Count; i++)
+            {
+                Compare(expected[i], actual[i]);
+            }
+        }
     }
 }

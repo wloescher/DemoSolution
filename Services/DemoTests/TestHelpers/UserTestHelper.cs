@@ -23,5 +23,14 @@ namespace DemoTests.TestHelpers
             Assert.AreEqual(expected.PostalCode, actual.PostalCode);
             Assert.AreEqual(expected.Country, actual.Country);
         }
+
+        public static void Compare(List<UserModel> expected, List<UserModel> actual)
+        {
+            Assert.AreEqual(expected.Count, actual.Count);
+            for (int i = 0; i < expected.Count; i++)
+            {
+                Compare(expected[i], actual[i]);
+            }
+        }
     }
 }

@@ -21,17 +21,17 @@ namespace DemoTests.WebApiTests
 
             stopWatch.Stop();
 
-            // Check results
+            // Check elapsed time
 #if !DEBUG
                 Assert.IsTrue(stopWatch.Elapsed.TotalSeconds <= 1);
 #endif
 
             // Check response
-            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            response.EnsureSuccessStatusCode();
             Assert.IsNotNull(response.Content.Headers.ContentType);
             Assert.AreEqual("text/plain; charset=utf-8", response.Content.Headers.ContentType.ToString());
 
-            // Check model
+            // Check result
             var actual = await response.Content.ReadAsStringAsync();
             Assert.IsNotNull(actual);
 

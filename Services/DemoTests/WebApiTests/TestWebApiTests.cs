@@ -37,24 +37,24 @@ namespace DemoTests.WebApiTests
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
-            // Get model
+            // Make Web API call
             await using var application = new WebApplicationFactory<TestController>();
             using var httpClient = application.CreateClient();
             var response = await httpClient.GetAsync("/test/client");
 
             stopWatch.Stop();
 
-            // Check results
+            // Check elapsed time
 #if !DEBUG
                 Assert.IsTrue(stopWatch.Elapsed.TotalSeconds <= 1);
 #endif
 
             // Check response
-            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            response.EnsureSuccessStatusCode();
             Assert.IsNotNull(response.Content.Headers.ContentType);
             Assert.AreEqual("application/json; charset=utf-8", response.Content.Headers.ContentType.ToString());
 
-            // Check model
+            // Check result
             var expected = clientService.GetClient(_testClientIds.First()) ?? new();
             var actual = JsonConvert.DeserializeObject<ClientModel>(await response.Content.ReadAsStringAsync());
             Assert.IsNotNull(actual);
@@ -70,24 +70,24 @@ namespace DemoTests.WebApiTests
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
-            // Get model
+            // Make Web API call
             await using var application = new WebApplicationFactory<TestController>();
             using var httpClient = application.CreateClient();
             var response = await httpClient.GetAsync("/test/user");
 
             stopWatch.Stop();
 
-            // Check results
+            // Check elapsed time
 #if !DEBUG
                 Assert.IsTrue(stopWatch.Elapsed.TotalSeconds <= 1);
 #endif
 
             // Check response
-            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            response.EnsureSuccessStatusCode();
             Assert.IsNotNull(response.Content.Headers.ContentType);
             Assert.AreEqual("application/json; charset=utf-8", response.Content.Headers.ContentType.ToString());
 
-            // Check model
+            // Check result
             var expected = userService.GetUser(_testUserIds.First()) ?? new();
             var actual = JsonConvert.DeserializeObject<UserModel>(await response.Content.ReadAsStringAsync());
             Assert.IsNotNull(actual);
@@ -103,24 +103,24 @@ namespace DemoTests.WebApiTests
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
-            // Get model
+            // Make Web API call
             await using var application = new WebApplicationFactory<TestController>();
             using var httpClient = application.CreateClient();
             var response = await httpClient.GetAsync("/test/workItem");
 
             stopWatch.Stop();
 
-            // Check results
+            // Check elapsed time
 #if !DEBUG
                 Assert.IsTrue(stopWatch.Elapsed.TotalSeconds <= 1);
 #endif
 
             // Check response
-            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            response.EnsureSuccessStatusCode();
             Assert.IsNotNull(response.Content.Headers.ContentType);
             Assert.AreEqual("application/json; charset=utf-8", response.Content.Headers.ContentType.ToString());
 
-            // Check model
+            // Check result
             var expected = workItemService.GetWorkItem(_testWorkItemIds.First()) ?? new();
             var actual = JsonConvert.DeserializeObject<WorkItemModel>(await response.Content.ReadAsStringAsync());
             Assert.IsNotNull(actual);

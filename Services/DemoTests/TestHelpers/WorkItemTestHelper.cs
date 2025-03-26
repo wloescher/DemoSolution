@@ -18,5 +18,14 @@ namespace DemoTests.TestHelpers
             Assert.AreEqual(expected.Summary, actual.Summary);
             Assert.AreEqual(expected.Body, actual.Body);
         }
+
+        public static void Compare(List<WorkItemModel> expected, List<WorkItemModel> actual)
+        {
+            Assert.AreEqual(expected.Count, actual.Count);
+            for (int i = 0; i < expected.Count; i++)
+            {
+                Compare(expected[i], actual[i]);
+            }
+        }
     }
 }
