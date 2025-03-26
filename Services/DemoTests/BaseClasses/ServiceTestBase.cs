@@ -32,7 +32,7 @@ namespace DemoTests.BaseClasses
                 configurationBuilder.AddJsonFile("appsettings.json");
                 var configuration = configurationBuilder.Build();
                 var optionsBuilder = new DbContextOptionsBuilder<DemoSqlContext>();
-                optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), x => x.UseCompatibilityLevel(100));
+                optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
                 return new DemoSqlContext(optionsBuilder.Options);
             });
 

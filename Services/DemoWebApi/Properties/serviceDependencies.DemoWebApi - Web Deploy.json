@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "apis1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/wloescher-DemoWebApi/apis/DemoWebApi",
+      "type": "apis.azure"
+    }
+  }
+}

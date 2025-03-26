@@ -31,7 +31,7 @@ namespace DemoTests.ServiceTests
 
             // Dependencies
             var optionsBuilder = new DbContextOptionsBuilder<DemoSqlContext>();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), x => x.UseCompatibilityLevel(100));
+            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             _dbContext = new DemoSqlContext(optionsBuilder.Options);
 
             // Configuration Values
