@@ -12,7 +12,7 @@ using static DemoModels.Enums;
 namespace DemoTests.ServiceTests
 {
     [TestClass()]
-    public class UserServiceTests : ServiceTestBase
+    public class UserServiceTests : TestBase
     {
         // Dependencies
         private readonly DemoSqlContext _dbContext;
@@ -192,7 +192,7 @@ namespace DemoTests.ServiceTests
             Assert.IsNotNull(result);
             model.UserId = result.UserId;
             model.UserGuid = result.UserGuid;
-            UserTestHelper.Compare(model, result);
+            CompareModels.Compare(model, result);
 #if !DEBUG
             Assert.IsTrue(stopWatch.Elapsed.TotalSeconds <= 1);
 #endif
@@ -214,7 +214,7 @@ namespace DemoTests.ServiceTests
             stopWatch.Stop();
 
             // Check results
-            UserTestHelper.Compare(model, getUserResult);
+            CompareModels.Compare(model, getUserResult);
 #if !DEBUG
             Assert.IsTrue(stopWatch.Elapsed.TotalSeconds <= 1);
 #endif
@@ -247,7 +247,7 @@ namespace DemoTests.ServiceTests
             Assert.IsTrue(updateUserResult);
             var getUpdatedUserResult = userService.GetUser(newUserId);
             Assert.IsNotNull(getUpdatedUserResult);
-            UserTestHelper.Compare(model, getUpdatedUserResult);
+            CompareModels.Compare(model, getUpdatedUserResult);
 #if !DEBUG
             Assert.IsTrue(stopWatch.Elapsed.TotalSeconds <= 1);
 #endif

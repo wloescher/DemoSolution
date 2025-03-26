@@ -15,5 +15,7 @@ namespace DemoServices.Interfaces
 
         bool CheckForUniqueUserEmailAddress(int userId, string emailAddress);
         List<KeyValuePair<int, string>> GetUserKeyValuePairs(bool activeOnly = true, bool excludeInternal = true);
+
+        UserModel? GetUser(string emailAddress, string password);
     }
 }

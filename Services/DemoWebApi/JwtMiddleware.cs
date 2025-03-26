@@ -21,7 +21,7 @@ namespace DemoWebApi
                     if (user != null)
                     {
                         token = JwtTokenUtility.GenerateToken(_configuration, user.UserId, user.EmailAddress, user.FirstName, user.LastName);
-                        context.Items["User"] = userService.GetUser(1);
+                        context.Items["User"] = user;
                     }
                 }
 

@@ -24,7 +24,7 @@ namespace DemoModels
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["Jwt:Key"] ?? string.Empty)),
                 ValidIssuer = configuration["Jwt:Issuer"] ?? string.Empty,
-                ValidAudience = configuration["Jwt:Audience"],
+                ValidAudiences = (configuration["Jwt:Audiences"] ?? string.Empty).Split(','),
                 ClockSkew = TimeSpan.Zero,
             }, out SecurityToken validatedToken);
 
@@ -58,14 +58,14 @@ namespace DemoModels
 
             var key = Encoding.ASCII.GetBytes(configuration["Jwt:Key"] ?? string.Empty);
             var issuer = configuration["Jwt:Issuer"] ?? string.Empty;
-            var audience = configuration["Jwt:Audience"] ?? string.Empty;
+            var audiences = (configuration["Jwt:Audiences"] ?? string.Empty).Split(',');
             var expirationInMinutes = int.Parse(configuration["Jwt:ExpirationInMinutes"] ?? string.Empty);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 Issuer = issuer,
-                Audience = audience,
+                Audience = audiences[0],
                 Expires = DateTime.UtcNow.AddMinutes(expirationInMinutes),
             };
 

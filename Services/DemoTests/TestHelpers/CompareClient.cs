@@ -2,7 +2,7 @@
 
 namespace DemoTests.TestHelpers
 {
-    internal static class ClientTestHelper
+    public static partial class CompareModels
     {
         public static void Compare(ClientModel expected, ClientModel? actual)
         {

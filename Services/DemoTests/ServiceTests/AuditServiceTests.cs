@@ -8,7 +8,7 @@ using static DemoModels.Enums;
 namespace DemoTests.ServiceTests
 {
     [TestClass()]
-    public class AuditServiceTests : ServiceTestBase
+    public class AuditServiceTests : TestBase
     {
         // Dependencies
         private readonly DemoSqlContext _dbContext;

@@ -13,7 +13,7 @@ namespace DemoTests
             if (nParameters != 0)
             {
                 object?[] injectedArgs = new object[nParameters];
-                var serviceProvider = ServiceTestBase._serviceProvider;
+                var serviceProvider = TestBase._serviceProvider;
                 using (var scope = serviceProvider!.CreateScope())
                 {
                     for (var i = 0; i < nParameters; i++)

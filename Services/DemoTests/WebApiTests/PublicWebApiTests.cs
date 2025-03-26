@@ -1,4 +1,5 @@
-﻿using DemoUtilities;
+﻿using DemoTests.BaseClasses;
+using DemoUtilities;
 using DemoWebApi.Controllers;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Diagnostics;
@@ -6,7 +7,7 @@ using System.Diagnostics;
 namespace DemoTests.WebApiTests
 {
     [TestClass()]
-    public class PublicWebApiTests
+    public class PublicWebApiTests : TestBase
     {
         [TestMethod]
         public async Task GenerateSecretKey()
@@ -14,7 +15,7 @@ namespace DemoTests.WebApiTests
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
-            // Get model
+            // Make Web API call
             await using var application = new WebApplicationFactory<PublicController>();
             using var httpClient = application.CreateClient();
             var response = await httpClient.GetAsync("/public/secretkey");

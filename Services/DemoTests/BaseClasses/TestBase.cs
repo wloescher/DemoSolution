@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace DemoTests.BaseClasses
 {
     [TestClass]
-    public abstract class ServiceTestBase
+    public abstract class TestBase
     {
         internal static ServiceProvider? _serviceProvider;
 

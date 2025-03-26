@@ -12,7 +12,7 @@ using static DemoModels.Enums;
 namespace DemoTests.ServiceTests
 {
     [TestClass()]
-    public class WorkItemServiceTests : ServiceTestBase
+    public class WorkItemServiceTests : TestBase
     {
         // Dependencies
         private readonly DemoSqlContext _dbContext;
@@ -192,7 +192,7 @@ namespace DemoTests.ServiceTests
             Assert.IsNotNull(result);
             model.WorkItemId = result.WorkItemId;
             model.WorkItemGuid = result.WorkItemGuid;
-            WorkItemTestHelper.Compare(model, result);
+            CompareModels.Compare(model, result);
 #if !DEBUG
             Assert.IsTrue(stopWatch.Elapsed.TotalSeconds <= 1);
 #endif
@@ -214,7 +214,7 @@ namespace DemoTests.ServiceTests
             stopWatch.Stop();
 
             // Check results
-            WorkItemTestHelper.Compare(model, getWorkItemResult);
+            CompareModels.Compare(model, getWorkItemResult);
 #if !DEBUG
             Assert.IsTrue(stopWatch.Elapsed.TotalSeconds <= 1);
 #endif
@@ -242,7 +242,7 @@ namespace DemoTests.ServiceTests
             Assert.IsTrue(updateWorkItemResult);
             var getUpdatedWorkItemResult = workItemService.GetWorkItem(newWorkItemId);
             Assert.IsNotNull(getUpdatedWorkItemResult);
-            WorkItemTestHelper.Compare(model, getUpdatedWorkItemResult);
+            CompareModels.Compare(model, getUpdatedWorkItemResult);
 #if !DEBUG
             Assert.IsTrue(stopWatch.Elapsed.TotalSeconds <= 1);
 #endif

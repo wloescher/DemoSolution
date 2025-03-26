@@ -2,7 +2,7 @@
 
 namespace DemoTests.TestHelpers
 {
-    internal static class WorkItemTestHelper
+    public static partial class CompareModels
     {
         public static void Compare(WorkItemModel expected, WorkItemModel? actual)
         {

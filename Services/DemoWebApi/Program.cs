@@ -58,7 +58,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? string.Empty)),
             ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? string.Empty,
-            ValidAudiences = (builder.Configuration["Jwt:Audience"] ?? string.Empty).Split(','),
+            ValidAudiences = (builder.Configuration["Jwt:Audiences"] ?? string.Empty).Split(','),
             ClockSkew = TimeSpan.Zero
         };
     });
@@ -114,6 +114,7 @@ builder.Services.AddDbContext<DemoSqlContext>(options => options.UseSqlServer(bu
 builder.Services.AddMemoryCache();
 
 // Register services
+builder.Services.AddTransient<IJwtTokenService, JwtTokenService>();
 builder.Services.AddTransient<IAuditService, AuditService>();
 builder.Services.AddTransient<IClientService, ClientService>();
 builder.Services.AddTransient<IUserService, UserService>();

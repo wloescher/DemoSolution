@@ -20,6 +20,25 @@ namespace DemoServices
         #region Public Methods
 
         /// <summary>
+        /// Get a user by username and password.
+        /// </summary>
+        /// <param name="emailAddress"></param>
+        /// <param name="password"></param>
+        /// <returns>null if not found or password is incorrect.</returns>
+        public UserModel? GetUser(string emailAddress, string password)
+        {
+            var entity = _dbContext.Users.FirstOrDefault(x => x.UserEmailAddress == emailAddress && !x.UserIsDeleted && x.UserIsActive);
+
+            // Check password
+            if (entity != null && SecurityUtility.PasswordHashVerify(password, entity.UserPasswordHash))
+            {
+                return GetModel(entity);
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Get the currently logged in user's UserId.
         /// </summary>
         /// <returns>UserId of logged in User</returns>

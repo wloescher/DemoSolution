@@ -1,5 +1,6 @@
 ﻿using DemoModels;
 using DemoServices.Interfaces;
+using DemoTests.BaseClasses;
 using DemoTests.TestHelpers;
 using DemoUtilities;
 using DemoWebApi.Controllers;
@@ -11,7 +12,7 @@ using System.Diagnostics;
 namespace DemoTests.WebApiTests
 {
     [TestClass()]
-    public class TestWebApiTests
+    public class TestWebApiTests : TestBase
     {
         // Configuration Values
         private readonly List<int> _testClientIds = new();
@@ -58,7 +59,7 @@ namespace DemoTests.WebApiTests
             var expected = clientService.GetClient(_testClientIds.First()) ?? new();
             var actual = JsonConvert.DeserializeObject<ClientModel>(await response.Content.ReadAsStringAsync());
             Assert.IsNotNull(actual);
-            ClientTestHelper.Compare(expected, actual);
+            CompareModels.Compare(expected, actual);
 
             var elapsedTime = DateTimeUtility.GetElapsedTime(stopWatch.Elapsed);
             Console.WriteLine(string.Format("{0}, {1}, {2}", expected.ClientId, expected.Type, elapsedTime));
@@ -91,7 +92,7 @@ namespace DemoTests.WebApiTests
             var expected = userService.GetUser(_testUserIds.First()) ?? new();
             var actual = JsonConvert.DeserializeObject<UserModel>(await response.Content.ReadAsStringAsync());
             Assert.IsNotNull(actual);
-            UserTestHelper.Compare(expected, actual);
+            CompareModels.Compare(expected, actual);
 
             var elapsedTime = DateTimeUtility.GetElapsedTime(stopWatch.Elapsed);
             Console.WriteLine(string.Format("{0}, {1}, {2}", expected.UserId, expected.Type, elapsedTime));
@@ -124,7 +125,7 @@ namespace DemoTests.WebApiTests
             var expected = workItemService.GetWorkItem(_testWorkItemIds.First()) ?? new();
             var actual = JsonConvert.DeserializeObject<WorkItemModel>(await response.Content.ReadAsStringAsync());
             Assert.IsNotNull(actual);
-            WorkItemTestHelper.Compare(expected, actual);
+            CompareModels.Compare(expected, actual);
 
             var elapsedTime = DateTimeUtility.GetElapsedTime(stopWatch.Elapsed);
             Console.WriteLine(string.Format("{0}, {1}, {2}", expected.WorkItemId, expected.Type, elapsedTime));
