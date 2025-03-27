@@ -110,13 +110,13 @@ namespace DemoTests.WebApiTests
         }
 
         [TestMethod()]
-        public async Task AddThenDeleteUserTest()
+        public async Task AddThenRemoveUserTest()
         {
             await AddUserUnauthenticatedTest();
             await AddUserAuthenticatedTest();
 
-            await DeleteUserUnauthenticatedTest();
-            await DeleteUserAuthenticatedTest();
+            await RemoveUserUnauthenticatedTest();
+            await RemoveUserAuthenticatedTest();
         }
 
         #endregion
@@ -757,7 +757,7 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private static async Task DeleteUserUnauthenticatedTest()
+        private static async Task RemoveUserUnauthenticatedTest()
         {
             var clientId = 0;
             var userId = 0;
@@ -786,7 +786,7 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private static async Task DeleteUserAuthenticatedTest()
+        private static async Task RemoveUserAuthenticatedTest()
         {
             var clientId = 0;
             var userId = 0;

@@ -110,7 +110,11 @@ builder.Services.AddHttpClient<HttpClient>("AllowRedirect", x => { x.Timeout = T
         }
     });
 
-builder.Services.AddDbContext<DemoSqlContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Add db context
+builder.Services.AddDbContextFactory<DemoSqlContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Scoped
+);
+
 builder.Services.AddMemoryCache();
 
 // Register services

@@ -1,15 +1,13 @@
 ﻿using DemoModels;
-using DemoRepository.Entities;
 using DemoServices.BaseClasses;
 using DemoServices.Interfaces;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DemoServices
 {
-    public class JwtTokenService(IConfiguration configuration, DemoSqlContext dbContext, IMemoryCache memoryCache, IServiceProvider serviceProvider)
-        : DbContextService(configuration, dbContext, memoryCache, serviceProvider), IJwtTokenService
+    public class JwtTokenService(IServiceProvider serviceProvider, IConfiguration configuration)
+        : ServiceProviderService(serviceProvider, configuration), IJwtTokenService
     {
         public string GenerateToken(string emailAddress, string password)
         {

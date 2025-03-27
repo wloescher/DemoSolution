@@ -2,6 +2,7 @@
 using DemoRepository.Entities;
 using DemoServices.BaseClasses;
 using DemoServices.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,8 +10,8 @@ using static DemoModels.Enums;
 
 namespace DemoServices
 {
-    public class ClientService(IConfiguration configuration, DemoSqlContext dbContext, IMemoryCache memoryCache, IServiceProvider serviceProvider)
-        : DbContextService(configuration, dbContext, memoryCache, serviceProvider), IClientService
+    public class ClientService(IDbContextFactory<DemoSqlContext> dbContextFactory, IMemoryCache memoryCache, IServiceProvider serviceProvider, IConfiguration configuration)
+        : DbContextService(dbContextFactory, memoryCache, serviceProvider, configuration), IClientService
     {
         #region Public Methods
 
@@ -36,17 +37,19 @@ namespace DemoServices
                 ClientUrl = model.Url?.Trim(),
             };
 
-            _dbContext.Clients.Add(entity);
-            bool dbUpdated = _dbContext.SaveChanges() > 0;
+            bool dbUpdated;
+            using (var dbContext = _dbContextFactory.CreateDbContext())
+            {
+                dbContext.Clients.Add(entity);
+                dbUpdated = dbContext.SaveChanges() > 0;
+            }
 
             if (dbUpdated)
             {
-                using (var scope = _serviceProvider.CreateScope())
-                {
-                    // Create audit record
-                    var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
-                    auditService.CreateClient(entity, userId);
-                }
+                // Create audit record
+                using var scope = _serviceProvider.CreateScope();
+                var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
+                auditService.CreateClient(entity, userId);
             }
 
             return GetModel(entity);
@@ -59,7 +62,8 @@ namespace DemoServices
         /// <returns>ClientModel object.</returns>
         public ClientModel? GetClient(int clientId)
         {
-            var entity = _dbContext.Clients.Find(clientId);
+            using var dbContext = _dbContextFactory.CreateDbContext();
+            var entity = dbContext.Clients.Find(clientId);
             return GetModel(entity);
         }
 
@@ -68,34 +72,44 @@ namespace DemoServices
         /// </summary>
         /// <param name="activeOnly"></param>
         /// <param name="excludeInternal"></param>
+        /// <param name="resetCache"></param>
         /// <returns>Collection of ClientModel objects.</returns>
-        public List<ClientModel> GetClients(bool activeOnly = true, bool excludeInternal = true)
+        public List<ClientModel> GetClients(bool activeOnly = true, bool excludeInternal = true, bool resetCache = false)
         {
-            var entities = new List<ClientView>();
-            // Check for active
-            if (activeOnly)
+            // Get model from cache
+            var cacheKey = string.Format("DemoClients{0}", !activeOnly ? "IncludingInactive" : string.Empty);
+            var models = _memoryCache.Get(cacheKey) as List<ClientModel>;
+            if (models == null || resetCache)
             {
-                entities = _dbContext.ClientViews.Where(x => x.IsActive).ToList();
-            }
-            else
-            {
-                entities = _dbContext.ClientViews.ToList();
-            }
+                List<ClientView> entities;
 
-            // Check for internal
-            if (excludeInternal)
-            {
-                entities = entities.Where(x => x.TypeId != (int)ClientType.Internal).ToList();
-            }
-
-            var models = new List<ClientModel>();
-            foreach (var entity in entities.OrderBy(x => x.Name))
-            {
-                var model = GetModel(entity);
-                if (model != null)
+                // Check for active
+                using (var dbContext = _dbContextFactory.CreateDbContext())
                 {
-                    models.Add(model);
+                    entities = activeOnly
+                        ? dbContext.ClientViews.Where(x => x.IsActive).ToList()
+                        : dbContext.ClientViews.ToList();
                 }
+
+                // Check for internal
+                if (excludeInternal)
+                {
+                    entities = entities.Where(x => x.TypeId != (int)ClientType.Internal).ToList();
+                }
+
+                // Convert to models
+                models = new List<ClientModel>();
+                foreach (var entity in entities.OrderBy(x => x.Name))
+                {
+                    var model = GetModel(entity);
+                    if (model != null)
+                    {
+                        models.Add(model);
+                    }
+                }
+
+                // Update cache
+                _memoryCache.Set(cacheKey, models, _cacheOptions);
             }
 
             return models;
@@ -110,47 +124,49 @@ namespace DemoServices
         public bool UpdateClient(ClientModel model, int userId)
         {
             var dbUpdated = false;
+            Client entityBefore = new();
+            Client entityAfter = new();
 
-            var entity = _dbContext.Clients.Find(model.ClientId);
-            if (entity != null)
+            using (var dbContext = _dbContextFactory.CreateDbContext())
             {
-                // Check for a name change
-                if (entity.ClientName.ToLower().Trim() != model.Name.ToLower().Trim())
+                // Get entity
+                entityBefore = dbContext.Clients.Find(model.ClientId) ?? new();
+                if (entityBefore.ClientId != 0)
                 {
-                    // Check for unique client name
-                    var clientNameIsUnique = CheckForUniqueClientName(model.ClientId, model.Name);
-                    if (!clientNameIsUnique)
+                    // Check for a name change
+                    if (entityBefore.ClientName.ToLower().Trim() != model.Name.ToLower().Trim())
                     {
-                        throw new ApplicationException("Client Name already exists - must be unique.");
+                        // Check for unique client name
+                        var clientNameIsUnique = CheckForUniqueClientName(model.ClientId, model.Name);
+                        if (!clientNameIsUnique)
+                        {
+                            throw new ApplicationException("Client Name already exists - must be unique.");
+                        }
                     }
+
+                    // Update entity property values
+                    entityAfter = entityBefore;
+                    entityAfter.ClientIsActive = model.IsActive;
+                    entityAfter.ClientName = model.Name.Trim();
+                    entityAfter.ClientAddressLine1 = model.AddressLine1?.Trim();
+                    entityAfter.ClientAddressLine2 = model.AddressLine2?.Trim();
+                    entityAfter.ClientCity = model.City?.Trim();
+                    entityAfter.ClientRegion = model.Region?.Trim();
+                    entityAfter.ClientPostalCode = model.PostalCode?.Trim();
+                    entityAfter.ClientCountry = model.Country?.Trim();
+                    entityAfter.ClientPhoneNumber = model.PhoneNumber?.Trim();
+                    entityAfter.ClientUrl = model.Url?.Trim();
+
+                    dbUpdated = dbContext.SaveChanges() > 0;
                 }
+            }
 
-                // Get entity before update
-                var entityBefore = entity;
-
-                // Update entity property values
-                entity.ClientIsActive = model.IsActive;
-                entity.ClientName = model.Name.Trim();
-                entity.ClientAddressLine1 = model.AddressLine1?.Trim();
-                entity.ClientAddressLine2 = model.AddressLine2?.Trim();
-                entity.ClientCity = model.City?.Trim();
-                entity.ClientRegion = model.Region?.Trim();
-                entity.ClientPostalCode = model.PostalCode?.Trim();
-                entity.ClientCountry = model.Country?.Trim();
-                entity.ClientPhoneNumber = model.PhoneNumber?.Trim();
-                entity.ClientUrl = model.Url?.Trim();
-
-                dbUpdated = _dbContext.SaveChanges() > 0;
-
-                if (dbUpdated)
-                {
-                    using (var scope = _serviceProvider.CreateScope())
-                    {
-                        // Create audit record
-                        var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
-                        auditService.UpdateClient(entityBefore, entity, userId);
-                    }
-                }
+            if (dbUpdated)
+            {
+                // Create audit record
+                using var scope = _serviceProvider.CreateScope();
+                var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
+                auditService.UpdateClient(entityBefore, entityAfter, userId);
             }
 
             return dbUpdated;
@@ -165,27 +181,30 @@ namespace DemoServices
         public bool DeleteClient(int clientId, int userId)
         {
             var dbUpdated = false;
+            Client entityBefore = new();
+            Client entityAfter = new();
 
-            var entity = _dbContext.Clients.Find(clientId);
-            if (entity != null)
+            using (var dbContext = _dbContextFactory.CreateDbContext())
             {
-                // Get entity before update
-                var entityBefore = entity;
-
-                // Update entity property values
-                entity.ClientIsDeleted = true;
-
-                dbUpdated = _dbContext.SaveChanges() > 0;
-
-                if (dbUpdated)
+                // Get entity
+                entityBefore = dbContext.Clients.Find(clientId) ?? new();
+                if (entityBefore.ClientId != 0)
                 {
-                    using (var scope = _serviceProvider.CreateScope())
-                    {
-                        // Create audit record
-                        var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
-                        auditService.DeleteClient(entityBefore, entity, userId);
-                    }
+                    // Update entity property values
+                    entityAfter = entityBefore;
+                    entityAfter.ClientIsDeleted = true;
+
+                    dbUpdated = dbContext.SaveChanges() > 0;
+
                 }
+            }
+
+            if (dbUpdated)
+            {
+                // Create audit record
+                using var scope = _serviceProvider.CreateScope();
+                var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
+                auditService.DeleteClient(entityBefore, entityAfter, userId);
             }
 
             return dbUpdated;
@@ -199,7 +218,8 @@ namespace DemoServices
         /// <returns><c>true</c> if unique, otherwise <c>false</c>.</returns>
         public bool CheckForUniqueClientName(int clientId, string clientName)
         {
-            return !_dbContext.Clients.Any(x => x.ClientName.ToLower() == clientName.ToLower().Trim() && x.ClientId != clientId);
+            using var dbContext = _dbContextFactory.CreateDbContext();
+            return !dbContext.Clients.Any(x => x.ClientId != clientId && x.ClientName.ToLower() == clientName.ToLower().Trim());
         }
 
         /// <summary>
@@ -228,15 +248,25 @@ namespace DemoServices
         /// <returns>Collection of UserModel objects.</returns>
         public List<UserModel> GetClientUsers(int clientId)
         {
-            var entities = (from clientUserView in _dbContext.ClientUserViews
-                            join userView in _dbContext.UserViews on clientUserView.UserId equals userView.UserId
-                            where clientUserView.ClientId == clientId
-                            select new { User = userView });
-
-            var models = new List<UserModel>();
-            foreach (var entity in entities.OrderBy(x => x.User.FullName))
+            // Get entities
+            List<UserView> entities;
+            using (var dbContext = _dbContextFactory.CreateDbContext())
             {
-                var model = UserService.GetModel(entity.User);
+                entities = dbContext.ClientUserViews
+                    .Join(dbContext.UserViews,
+                        clientUserView => clientUserView.UserId,
+                        userView => userView.UserId,
+                        (clientUserView, userView) => new { ClientUserView = clientUserView, UserView = userView })
+                    .Where(x => x.ClientUserView.ClientId == clientId)
+                    .Select(x => x.UserView)
+                    .ToList();
+            }
+
+            // Convert to models
+            var models = new List<UserModel>();
+            foreach (var entity in entities.OrderBy(x => x.FullName))
+            {
+                var model = UserService.GetModel(entity);
                 if (model != null)
                 {
                     models.Add(model);
@@ -255,34 +285,36 @@ namespace DemoServices
         public bool CreateClientUser(int clientId, int userId, int userId_Source)
         {
             var dbUpdated = false;
+            ClientUser entity = new();
 
             // Check for existing client user
-            var entity = _dbContext.ClientUsers.FirstOrDefault(x => x.ClientUserClientId == clientId && x.ClientUserUserId == userId);
-            if (entity == null)
+            using (var dbContext = _dbContextFactory.CreateDbContext())
             {
-                entity = new ClientUser
+                entity = dbContext.ClientUsers.FirstOrDefault(x => x.ClientUserClientId == clientId && x.ClientUserUserId == userId) ?? new();
+                if (entity.ClientUserId == 0)
                 {
-                    ClientUserClientId = clientId,
-                    ClientUserUserId = userId,
-                };
+                    entity = new ClientUser
+                    {
+                        ClientUserClientId = clientId,
+                        ClientUserUserId = userId,
+                    };
 
-                _dbContext.ClientUsers.Add(entity);
-            }
-            else
-            {
-                entity.ClientUserIsDeleted = false;
-            }
+                    dbContext.ClientUsers.Add(entity);
+                }
+                else
+                {
+                    entity.ClientUserIsDeleted = false;
+                }
 
-            dbUpdated = _dbContext.SaveChanges() > 0;
+                dbUpdated = dbContext.SaveChanges() > 0;
+            }
 
             if (dbUpdated)
             {
-                using (var scope = _serviceProvider.CreateScope())
-                {
-                    // Create audit record
-                    var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
-                    auditService.CreateClientUser(entity, userId_Source);
-                }
+                // Create audit record
+                using var scope = _serviceProvider.CreateScope();
+                var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
+                auditService.CreateClientUser(entity, userId_Source);
             }
 
             return true;
@@ -298,22 +330,25 @@ namespace DemoServices
         public bool DeleteClientUser(int clientId, int userId, int userId_Source)
         {
             var dbUpdated = false;
+            ClientUser entity = new();
 
-            var entity = _dbContext.ClientUsers.FirstOrDefault(x => x.ClientUserClientId == clientId && x.ClientUserUserId == userId);
-            if (entity != null)
+            // Check for existing client user
+            using (var dbContext = _dbContextFactory.CreateDbContext())
             {
-                entity.ClientUserIsDeleted = true;
-                dbUpdated = _dbContext.SaveChanges() > 0;
-
-                if (dbUpdated)
+                entity = dbContext.ClientUsers.FirstOrDefault(x => x.ClientUserClientId == clientId && x.ClientUserUserId == userId) ?? new();
+                if (entity.ClientUserId != 0)
                 {
-                    using (var scope = _serviceProvider.CreateScope())
-                    {
-                        // Create audit record
-                        var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
-                        auditService.DeleteClientUser(entity, userId_Source);
-                    }
+                    entity.ClientUserIsDeleted = true;
+                    dbUpdated = dbContext.SaveChanges() > 0;
                 }
+            }
+
+            if (dbUpdated)
+            {
+                // Create audit record
+                using var scope = _serviceProvider.CreateScope();
+                var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
+                auditService.DeleteClientUser(entity, userId_Source);
             }
 
             return dbUpdated;
@@ -327,12 +362,16 @@ namespace DemoServices
         /// <returns>Collection of WorkItemModel objects.</returns>
         public List<WorkItemModel> GetClientWorkItems(int clientId, bool includeActiveOnly = true)
         {
-            var entities = _dbContext.WorkItemViews.Where(x => x.ClientId == clientId);
-            if (includeActiveOnly)
+            // Get entities
+            List<WorkItemView> entities;
+            using (var dbContext = _dbContextFactory.CreateDbContext())
             {
-                entities = entities.Where(x => x.IsActive);
+                entities = includeActiveOnly
+                    ? dbContext.WorkItemViews.Where(x => x.ClientId == clientId && x.IsActive).ToList()
+                    : dbContext.WorkItemViews.Where(x => x.ClientId == clientId).ToList();
             }
 
+            // Convert to models
             var models = new List<WorkItemModel>();
             foreach (var entity in entities.OrderBy(x => x.Title))
             {

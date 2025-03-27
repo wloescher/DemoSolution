@@ -2,6 +2,7 @@
 using DemoRepository.Entities;
 using DemoServices.BaseClasses;
 using DemoServices.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,8 +10,8 @@ using static DemoModels.Enums;
 
 namespace DemoServices
 {
-    public class WorkItemService(IConfiguration configuration, DemoSqlContext dbContext, IMemoryCache memoryCache, IServiceProvider serviceProvider)
-        : DbContextService(configuration, dbContext, memoryCache, serviceProvider), IWorkItemService
+    public class WorkItemService(IDbContextFactory<DemoSqlContext> dbContextFactory, IMemoryCache memoryCache, IServiceProvider serviceProvider, IConfiguration configuration)
+        : DbContextService(dbContextFactory, memoryCache, serviceProvider, configuration), IWorkItemService
     {
         #region Public Methods
 
@@ -33,17 +34,19 @@ namespace DemoServices
                 WorkItemBody = model.Body,
             };
 
-            _dbContext.WorkItems.Add(entity);
-            bool dbUpdated = _dbContext.SaveChanges() > 0;
+            bool dbUpdated;
+            using (var dbContext = _dbContextFactory.CreateDbContext())
+            {
+                dbContext.WorkItems.Add(entity);
+                dbUpdated = dbContext.SaveChanges() > 0;
+            }
 
             if (dbUpdated)
             {
-                using (var scope = _serviceProvider.CreateScope())
-                {
-                    // Create audit record
-                    var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
-                    auditService.CreateWorkItem(entity, userId);
-                }
+                // Create audit record
+                using var scope = _serviceProvider.CreateScope();
+                var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
+                auditService.CreateWorkItem(entity, userId);
             }
 
             return GetModel(entity);
@@ -56,7 +59,11 @@ namespace DemoServices
         /// <returns>WorkItemModel object.</returns>
         public WorkItemModel? GetWorkItem(int workItemId)
         {
-            var entity = _dbContext.WorkItems.Find(workItemId);
+            WorkItem? entity = null;
+            using (var dbContext = _dbContextFactory.CreateDbContext())
+            {
+                entity = dbContext.WorkItems.Find(workItemId);
+            }
             return GetModel(entity);
         }
 
@@ -65,35 +72,46 @@ namespace DemoServices
         /// </summary>
         /// <param name="activeOnly"></param>
         /// <param name="excludeInternal"></param>
+        /// <param name="resetCache"></param>
         /// <returns>Collection of WorkItemModel objects.</returns>
-        public List<WorkItemModel> GetWorkItems(bool activeOnly = true, bool excludeCompleted = true)
+        public List<WorkItemModel> GetWorkItems(bool activeOnly = true, bool excludeCompleted = true, bool resetCache = false)
         {
-            var entities = new List<WorkItemView>();
-            // Check for active
-            if (activeOnly)
+            // Get model from cache
+            var cacheKey = string.Format("DemoWorkItems{0}", !activeOnly ? "IncludingInactive" : string.Empty);
+            var models = _memoryCache.Get(cacheKey) as List<WorkItemModel>;
+            if (models == null || resetCache)
             {
-                entities = _dbContext.WorkItemViews.Where(x => x.IsActive).ToList();
-            }
-            else
-            {
-                entities = _dbContext.WorkItemViews.ToList();
-            }
+                var entities = new List<WorkItemView>();
 
-            // Check for completed
-            if (excludeCompleted)
-            {
-                entities = entities.Where(x => x.TypeId != (int)WorkItemStatus.Completed).ToList();
-            }
-
-            var models = new List<WorkItemModel>();
-            foreach (var entity in entities.OrderBy(x => x.Title))
-            {
-                var model = GetModel(entity);
-                if (model != null)
+                // Check for active
+                using (var dbContext = _dbContextFactory.CreateDbContext())
                 {
-                    models.Add(model);
+                    entities = activeOnly
+                        ? dbContext.WorkItemViews.Where(x => x.IsActive).ToList()
+                        : dbContext.WorkItemViews.ToList();
                 }
+
+                // Check for completed
+                if (excludeCompleted)
+                {
+                    entities = entities.Where(x => x.TypeId != (int)WorkItemStatus.Completed).ToList();
+                }
+
+                // Convert to models
+                models = new List<WorkItemModel>();
+                foreach (var entity in entities.OrderBy(x => x.Title))
+                {
+                    var model = GetModel(entity);
+                    if (model != null)
+                    {
+                        models.Add(model);
+                    }
+                }
+
+                // Update cache
+                _memoryCache.Set(cacheKey, models, _cacheOptions);
             }
+
             return models;
         }
 
@@ -106,44 +124,45 @@ namespace DemoServices
         public bool UpdateWorkItem(WorkItemModel model, int userId)
         {
             var dbUpdated = false;
+            WorkItem entityBefore = new();
+            WorkItem entityAfter = new();
 
-            var entity = _dbContext.WorkItems.Find(model.WorkItemId);
-            if (entity != null)
+            using (var dbContext = _dbContextFactory.CreateDbContext())
             {
-                // Check for a name change
-                if (entity.WorkItemTitle.ToLower().Trim() != model.Title.ToLower().Trim())
+                entityBefore = dbContext.WorkItems.Find(model.WorkItemId) ?? new();
+                if (entityBefore.WorkItemId != 0)
                 {
-                    // Check for unique title
-                    var titleIsUnique = CheckForUniqueTitle(model.WorkItemId, model.Title);
-                    if (!titleIsUnique)
+                    // Check for a name change
+                    if (entityBefore.WorkItemTitle.ToLower().Trim() != model.Title.ToLower().Trim())
                     {
-                        throw new ApplicationException("Work Item Title already exists - must be unique.");
+                        // Check for unique title
+                        var titleIsUnique = CheckForUniqueTitle(model.WorkItemId, model.Title);
+                        if (!titleIsUnique)
+                        {
+                            throw new ApplicationException("Work Item Title already exists - must be unique.");
+                        }
                     }
+
+                    // Update entity property values
+                    entityAfter = entityBefore;
+                    entityAfter.WorkItemTypeId = (int)model.Type;
+                    entityAfter.WorkItemStatusId = (int)model.Status;
+                    entityAfter.WorkItemIsActive = model.IsActive;
+                    entityAfter.WorkItemTitle = model.Title.Trim();
+                    entityAfter.WorkItemSubTitle = model.SubTitle.Trim();
+                    entityAfter.WorkItemSummary = model.Summary.Trim();
+                    entityAfter.WorkItemBody = model.Body.Trim();
+
+                    dbUpdated = dbContext.SaveChanges() > 0;
                 }
+            }
 
-                // Get entity before update
-                var entityBefore = entity;
-
-                // Update entity property values
-                entity.WorkItemTypeId = (int)model.Type;
-                entity.WorkItemStatusId = (int)model.Status;
-                entity.WorkItemIsActive = model.IsActive;
-                entity.WorkItemTitle = model.Title.Trim();
-                entity.WorkItemSubTitle = model.SubTitle.Trim();
-                entity.WorkItemSummary = model.Summary.Trim();
-                entity.WorkItemBody = model.Body.Trim();
-
-                dbUpdated = _dbContext.SaveChanges() > 0;
-
-                if (dbUpdated)
-                {
-                    using (var scope = _serviceProvider.CreateScope())
-                    {
-                        // Create audit record
-                        var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
-                        auditService.UpdateWorkItem(entityBefore, entity, userId);
-                    }
-                }
+            if (dbUpdated)
+            {
+                // Create audit record
+                using var scope = _serviceProvider.CreateScope();
+                var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
+                auditService.UpdateWorkItem(entityBefore, entityAfter, userId);
             }
 
             return dbUpdated;
@@ -158,27 +177,29 @@ namespace DemoServices
         public bool DeleteWorkItem(int workItemId, int userId)
         {
             var dbUpdated = false;
+            WorkItem entityBefore = new();
+            WorkItem entityAfter = new();
 
-            var entity = _dbContext.WorkItems.Find(workItemId);
-            if (entity != null)
+            using (var dbContext = _dbContextFactory.CreateDbContext())
             {
-                // Get entity before update
-                var entityBefore = entity;
-
-                // Update entity property values
-                entity.WorkItemIsDeleted = true;
-
-                dbUpdated = _dbContext.SaveChanges() > 0;
-
-                if (dbUpdated)
+                // Get entity
+                entityBefore = dbContext.WorkItems.Find(workItemId) ?? new();
+                if (entityBefore.WorkItemId != 0)
                 {
-                    using (var scope = _serviceProvider.CreateScope())
-                    {
-                        // Create audit record
-                        var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
-                        auditService.DeleteWorkItem(entityBefore, entity, userId);
-                    }
+                    // Update entity property values
+                    entityAfter = entityBefore;
+                    entityAfter.WorkItemIsDeleted = true;
+
+                    dbUpdated = dbContext.SaveChanges() > 0;
                 }
+            }
+
+            if (dbUpdated)
+            {
+                // Create audit record
+                using var scope = _serviceProvider.CreateScope();
+                var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
+                auditService.DeleteWorkItem(entityBefore, entityAfter, userId);
             }
 
             return dbUpdated;
@@ -192,8 +213,8 @@ namespace DemoServices
         /// <returns><c>true</c> if unique, otherwise <c>false</c>.</returns>
         public bool CheckForUniqueTitle(int workItemId, string title)
         {
-            var entities = _dbContext.WorkItems.Where(x => x.WorkItemClientId != workItemId && x.WorkItemTitle.ToLower() == title.ToLower().Trim());
-            return !entities.Any();
+            using var dbContext = _dbContextFactory.CreateDbContext();
+            return !dbContext.WorkItems.Any(x => x.WorkItemClientId != workItemId && x.WorkItemTitle.ToLower() == title.ToLower().Trim());
         }
 
         /// <summary>
@@ -222,15 +243,25 @@ namespace DemoServices
         /// <returns>Collection of UserModel objects.</returns>
         public List<UserModel> GetWorkItemUsers(int workItemId)
         {
-            var entities = (from workItemUserView in _dbContext.WorkItemUserViews
-                            join userView in _dbContext.UserViews on workItemUserView.UserId equals userView.UserId
-                            where workItemUserView.WorkItemId == workItemId
-                            select new { User = userView });
-
-            var models = new List<UserModel>();
-            foreach (var entity in entities.OrderBy(x => x.User.FullName))
+            // Get entities
+            List<UserView> entities;
+            using (var dbContext = _dbContextFactory.CreateDbContext())
             {
-                var model = UserService.GetModel(entity.User);
+                entities = dbContext.WorkItemUserViews
+                    .Join(dbContext.UserViews,
+                        workItemUserView => workItemUserView.UserId,
+                        userView => userView.UserId,
+                        (workItemUserViews, userView) => new { WorkItemUserViews = workItemUserViews, UserView = userView })
+                    .Where(x => x.WorkItemUserViews.WorkItemId == workItemId)
+                    .Select(x => x.UserView)
+                    .ToList();
+            }
+
+            // Convert to models
+            var models = new List<UserModel>();
+            foreach (var entity in entities.OrderBy(x => x.FullName))
+            {
+                var model = UserService.GetModel(entity);
                 if (model != null)
                 {
                     models.Add(model);
@@ -249,34 +280,36 @@ namespace DemoServices
         public bool CreateWorkItemUser(int workItemId, int userId, int userId_Source)
         {
             var dbUpdated = false;
+            WorkItemUser? entity;
 
             // Check for existing work item user
-            var entity = _dbContext.WorkItemUsers.FirstOrDefault(x => x.WorkItemUserWorkItemId == workItemId && x.WorkItemUserUserId == userId);
-            if (entity == null)
+            using (var dbContext = _dbContextFactory.CreateDbContext())
             {
-                entity = new WorkItemUser
+                entity = dbContext.WorkItemUsers.FirstOrDefault(x => x.WorkItemUserWorkItemId == workItemId && x.WorkItemUserUserId == userId);
+                if (entity == null)
                 {
-                    WorkItemUserWorkItemId = workItemId,
-                    WorkItemUserUserId = userId,
-                };
+                    entity = new WorkItemUser
+                    {
+                        WorkItemUserWorkItemId = workItemId,
+                        WorkItemUserUserId = userId,
+                    };
 
-                _dbContext.WorkItemUsers.Add(entity);
-            }
-            else
-            {
-                entity.WorkItemUserIsDeleted = false;
-            }
+                    dbContext.WorkItemUsers.Add(entity);
+                }
+                else
+                {
+                    entity.WorkItemUserIsDeleted = false;
+                }
 
-            dbUpdated = _dbContext.SaveChanges() > 0;
+                dbUpdated = dbContext.SaveChanges() > 0;
+            }
 
             if (dbUpdated)
             {
-                using (var scope = _serviceProvider.CreateScope())
-                {
-                    // Create audit record
-                    var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
-                    auditService.CreateWorkItemUser(entity, userId_Source);
-                }
+                // Create audit record
+                using var scope = _serviceProvider.CreateScope();
+                var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
+                auditService.CreateWorkItemUser(entity, userId_Source);
             }
 
             return true;
@@ -292,22 +325,24 @@ namespace DemoServices
         public bool DeleteWorkItemUser(int workItemId, int userId, int userId_Source)
         {
             var dbUpdated = false;
+            WorkItemUser entity;
 
-            var entity = _dbContext.WorkItemUsers.FirstOrDefault(x => x.WorkItemUserWorkItemId == workItemId && x.WorkItemUserUserId == userId);
-            if (entity != null)
+            using (var dbContext = _dbContextFactory.CreateDbContext())
             {
-                entity.WorkItemUserIsDeleted = true;
-                dbUpdated = _dbContext.SaveChanges() > 0;
-
-                if (dbUpdated)
+                entity = dbContext.WorkItemUsers.FirstOrDefault(x => x.WorkItemUserWorkItemId == workItemId && x.WorkItemUserUserId == userId) ?? new();
+                if (entity.WorkItemUserId != 0)
                 {
-                    using (var scope = _serviceProvider.CreateScope())
-                    {
-                        // Create audit record
-                        var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
-                        auditService.DeleteWorkItemUser(entity, userId_Source);
-                    }
+                    entity.WorkItemUserIsDeleted = true;
+                    dbUpdated = dbContext.SaveChanges() > 0;
                 }
+            }
+
+            if (dbUpdated)
+            {
+                // Create audit record
+                using var scope = _serviceProvider.CreateScope();
+                var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
+                auditService.DeleteWorkItemUser(entity, userId_Source);
             }
 
             return dbUpdated;

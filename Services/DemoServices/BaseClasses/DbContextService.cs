@@ -1,27 +1,24 @@
 ﻿using DemoRepository.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 
 namespace DemoServices.BaseClasses
 {
-    public abstract class DbContextService : ConfigurationService
+    public abstract class DbContextService : ServiceProviderService
     {
-        internal readonly DemoSqlContext _dbContext;
+        internal readonly IDbContextFactory<DemoSqlContext> _dbContextFactory;
         internal readonly IMemoryCache _memoryCache;
         internal readonly MemoryCacheEntryOptions _cacheOptions;
-        internal readonly IServiceProvider _serviceProvider;
-
         internal readonly string _dbConnectionString = string.Empty;
 
-        public DemoSqlContext DbContext => _dbContext;
         public IMemoryCache MemoryCache => _memoryCache;
 
-        public DbContextService(IConfiguration configuration, DemoSqlContext dbContext, IMemoryCache memoryCache, IServiceProvider serviceProvider)
-            : base(configuration)
+        public DbContextService(IDbContextFactory<DemoSqlContext> dbContextFactory, IMemoryCache memoryCache, IServiceProvider serviceProvider, IConfiguration configuration)
+            : base(serviceProvider, configuration)
         {
-            _dbContext = dbContext;
+            _dbContextFactory = dbContextFactory;
             _memoryCache = memoryCache;
-            _serviceProvider = serviceProvider;
 
             var cacheSeconds = Convert.ToInt32(GetConfigurationKeyValue("CacheSeconds"));
             _cacheOptions = new MemoryCacheEntryOptions

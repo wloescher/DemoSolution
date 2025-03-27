@@ -21,8 +21,8 @@ namespace DemoTests.ServiceTests
         [TestMethodDependencyInjection]
         public void ClientCrudTest(IAuditService auditService)
         {
+            var entity = new Client();
             var userId = _testUserIds.First();
-            var entity = _dbContext.Clients.First();
 
             CreateClientTest(auditService, entity, userId);
             UpdateClientTest(auditService, entity, userId);
@@ -40,11 +40,9 @@ namespace DemoTests.ServiceTests
         [TestMethodDependencyInjection]
         public void ClientUserCrudTest(IAuditService auditService)
         {
-            var userId = _testUserIds.First();
-            var clientId = _testClientIds.First();
-
-            CreateClientUserTest(auditService, clientId, userId);
-            DeleteClientUserTest(auditService, clientId, userId);
+            var entity = new ClientUser { ClientUserId = 1, ClientUserClientId = 1, ClientUserUserId = 2 };
+            Assert.IsTrue(auditService.CreateClientUser(entity, entity.ClientUserUserId));
+            Assert.IsTrue(auditService.DeleteClientUser(entity, entity.ClientUserUserId));
         }
 
         [TestMethodDependencyInjection]
@@ -59,7 +57,7 @@ namespace DemoTests.ServiceTests
         public void UserCrudTest(IAuditService auditService)
         {
             var userId = _testUserIds.First();
-            var entity = _dbContext.Users.First();
+            var entity = new User();
 
             CreateUserTest(auditService, entity, userId);
             UpdateUserTest(auditService, entity, userId);
@@ -78,7 +76,7 @@ namespace DemoTests.ServiceTests
         public void WorkItemCrudTest(IAuditService auditService)
         {
             var userId = _testUserIds.First();
-            var entity = _dbContext.WorkItems.First();
+            var entity = new WorkItem();
 
             CreateWorkItemTest(auditService, entity, userId);
             UpdateWorkItemTest(auditService, entity, userId);
@@ -96,13 +94,10 @@ namespace DemoTests.ServiceTests
         [TestMethodDependencyInjection]
         public void WorkitemUserCrudTest(IAuditService auditService)
         {
-            var userId = _testUserIds.First();
-            var workItemId = _testWorkItemIds.First();
-
-            CreateWorkItemUserTest(auditService, workItemId, userId);
-            DeleteWorkItemUserTest(auditService, workItemId, userId);
+            var entity = new WorkItemUser { WorkItemUserId = 1, WorkItemUserWorkItemId = 1, WorkItemUserUserId = 2 };
+            Assert.IsTrue(auditService.CreateWorkItemUser(entity, entity.WorkItemUserUserId));
+            Assert.IsTrue(auditService.DeleteWorkItemUser(entity, entity.WorkItemUserUserId));
         }
-
 
         #endregion
 
@@ -152,24 +147,6 @@ namespace DemoTests.ServiceTests
             entityAfter.ClientIsDeleted = true;
 
             Assert.IsTrue(auditService.DeleteClient(entityBefore, entityAfter, userId));
-        }
-
-        private void CreateClientUserTest(IAuditService auditService, int clientId, int userId)
-        {
-            var entity = _dbContext.ClientUsers.First();
-            Assert.IsTrue(auditService.CreateClientUser(entity, userId));
-        }
-
-        private void DeleteClientUserTest(IAuditService auditService, int clientId, int userId)
-        {
-            var entity = new ClientUser
-            {
-                ClientUserId = _dbContext.ClientUsers.First().ClientUserId,
-                ClientUserClientId = clientId,
-                ClientUserUserId = userId,
-            };
-
-            Assert.IsTrue(auditService.DeleteClientUser(entity, userId));
         }
 
         private static void CreateUserTest(IAuditService auditService, User entity, int userId)
@@ -254,24 +231,6 @@ namespace DemoTests.ServiceTests
             entityAfter.WorkItemIsDeleted = true;
 
             Assert.IsTrue(auditService.DeleteWorkItem(entityBefore, entityAfter, userId));
-        }
-
-        private void CreateWorkItemUserTest(IAuditService auditService, int workItemId, int userId)
-        {
-            var entity = _dbContext.WorkItemUsers.First();
-            Assert.IsTrue(auditService.CreateWorkItemUser(entity, userId));
-        }
-
-        private void DeleteWorkItemUserTest(IAuditService auditService, int workItemId, int userId)
-        {
-            var entity = new WorkItemUser
-            {
-                WorkItemUserId = _dbContext.WorkItemUsers.First().WorkItemUserId,
-                WorkItemUserWorkItemId = workItemId,
-                WorkItemUserUserId = userId,
-            };
-
-            Assert.IsTrue(auditService.DeleteWorkItemUser(entity, userId));
         }
 
         #endregion

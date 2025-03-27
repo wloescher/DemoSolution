@@ -6,7 +6,7 @@ namespace DemoServices.Interfaces
     {
         ClientModel? CreateClient(ClientModel model, int userId);
         ClientModel? GetClient(int clientId);
-        List<ClientModel> GetClients(bool activeOnly = true, bool excludeInternal = true);
+        List<ClientModel> GetClients(bool activeOnly = true, bool excludeInternal = true, bool resetCache = false);
         bool UpdateClient(ClientModel model, int userId);
         bool DeleteClient(int clientId, int userId);
 

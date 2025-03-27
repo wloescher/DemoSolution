@@ -4,6 +4,7 @@ using DemoServices.BaseClasses;
 using DemoServices.Interfaces;
 using DemoUtilities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,8 +14,8 @@ using static DemoModels.Enums;
 
 namespace DemoServices
 {
-    public class UserService(IConfiguration configuration, DemoSqlContext dbContext, IMemoryCache memoryCache, IServiceProvider serviceProvider)
-        : DbContextService(configuration, dbContext, memoryCache, serviceProvider), IUserService
+    public class UserService(IDbContextFactory<DemoSqlContext> dbContextFactory, IMemoryCache memoryCache, IServiceProvider serviceProvider, IConfiguration configuration)
+        : DbContextService(dbContextFactory, memoryCache, serviceProvider, configuration), IUserService
     {
         #region Public Methods
 
@@ -26,7 +27,11 @@ namespace DemoServices
         /// <returns>null if not found or password is incorrect.</returns>
         public UserModel? GetUser(string emailAddress, string password)
         {
-            var entity = _dbContext.Users.FirstOrDefault(x => x.UserEmailAddress == emailAddress && !x.UserIsDeleted && x.UserIsActive);
+            User? entity = null;
+            using (var dbContext = _dbContextFactory.CreateDbContext())
+            {
+                entity = dbContext.Users.FirstOrDefault(x => x.UserEmailAddress == emailAddress && !x.UserIsDeleted && x.UserIsActive);
+            }
 
             // Check password
             if (entity != null && SecurityUtility.PasswordHashVerify(password, entity.UserPasswordHash))
@@ -59,7 +64,12 @@ namespace DemoServices
             errorMessage = string.Empty;
 
             // Check for existing User record
-            var userEntity = _dbContext.Users.FirstOrDefault(x => x.UserEmailAddress == model.EmailAddress.Trim());
+            User? userEntity = null;
+            using (var dbContext = _dbContextFactory.CreateDbContext())
+            {
+                userEntity = dbContext.Users.FirstOrDefault(x => x.UserEmailAddress == model.EmailAddress.Trim());
+            }
+
             if (userEntity != null)
             {
                 errorMessage = "User already exists - please try a different Email Address.";
@@ -88,8 +98,12 @@ namespace DemoServices
                 UserPasswordHash = SecurityUtility.PasswordHash(password),
             };
 
-            _dbContext.Users.Add(entity);
-            bool dbUpdated = _dbContext.SaveChanges() > 0;
+            bool dbUpdated;
+            using (var dbContext = _dbContextFactory.CreateDbContext())
+            {
+                dbContext.Users.Add(entity);
+                dbUpdated = dbContext.SaveChanges() > 0;
+            }
 
             if (dbUpdated)
             {
@@ -105,12 +119,6 @@ namespace DemoServices
                 var returnMessage = string.Empty;
                 var emailUtility = new EmailUtility(_configuration);
                 emailUtility.SendMail(model.EmailAddress, "Access Information", emailBody, out returnMessage, true);
-
-                //using (var scope = _serviceProvider.CreateScope())
-                //{
-                //    var emailUtility = scope.ServiceProvider.GetRequiredService<IEmailUtility>();
-                //    emailUtility.SendMail(model.EmailAddress, "Access Information", emailBody, out returnMessage, true);
-                //}
             }
 
             // Update cached data
@@ -126,7 +134,12 @@ namespace DemoServices
         /// <returns>UserModel object.</returns>
         public UserModel? GetUser(int userId)
         {
-            var entity = _dbContext.Users.Find(userId);
+            User? entity;
+            using (var dbContext = _dbContextFactory.CreateDbContext())
+            {
+                entity = dbContext.Users.Find(userId);
+            }
+
             return GetModel(entity);
         }
 
@@ -145,14 +158,13 @@ namespace DemoServices
             if (models == null || resetCache)
             {
                 var entities = new List<UserView>();
+
                 // Check for active
-                if (activeOnly)
+                using (var dbContext = _dbContextFactory.CreateDbContext())
                 {
-                    entities = _dbContext.UserViews.Where(x => x.IsActive).ToList();
-                }
-                else
-                {
-                    entities = _dbContext.UserViews.ToList();
+                    entities = activeOnly
+                        ? dbContext.UserViews.Where(x => x.IsActive).ToList()
+                        : dbContext.UserViews.ToList();
                 }
 
                 // Check for internal
@@ -161,6 +173,7 @@ namespace DemoServices
                     entities = entities.Where(x => x.TypeId != (int)UserType.Client).ToList();
                 }
 
+                // Convert to models
                 models = new List<UserModel>();
                 foreach (var entity in entities.OrderBy(x => x.LastName).ThenBy(x => x.FirstName))
                 {
@@ -192,61 +205,64 @@ namespace DemoServices
             errorMessage = string.Empty;
 
             var dbUpdated = false;
+            User entityBefore = new();
+            User entityAfter = new();
 
             // Check for duplicate real name
-            var userEntity = _dbContext.Users.FirstOrDefault(x => x.UserEmailAddress == model.EmailAddress.Trim() && x.UserId != userId);
-            if (userEntity != null)
+            using (var dbContext = _dbContextFactory.CreateDbContext())
             {
-                errorMessage = "User already exists - please try a different Email Address.";
-                return false;
+                entityBefore = dbContext.Users.FirstOrDefault(x => x.UserEmailAddress == model.EmailAddress.Trim() && x.UserId != userId) ?? new();
+                if (entityBefore.UserId != 0)
+                {
+                    errorMessage = "User already exists - please try a different Email Address.";
+                    return false;
+                }
+
+                entityBefore = dbContext.Users.Find(model.UserId) ?? new();
+                if (entityBefore.UserId != 0)
+                {
+                    // Check for an email address change
+                    if (entityBefore.UserEmailAddress != model.EmailAddress.ToLower().Trim())
+                    {
+                        // Check for unique email address
+                        var emailAddressIsUnique = CheckForUniqueUserEmailAddress(model.UserId, model.EmailAddress);
+                        if (!emailAddressIsUnique)
+                        {
+                            throw new ApplicationException("Email Address already exists - must be unique.");
+                        }
+                    }
+
+                    // Update entity property values
+                    entityAfter = entityBefore;
+                    entityAfter.UserTypeId = (int)model.Type;
+                    entityAfter.UserIsActive = model.IsActive;
+                    entityAfter.UserEmailAddress = model.EmailAddress.Trim();
+                    entityAfter.UserFirstName = model.FirstName?.Trim();
+                    entityAfter.UserMiddleName = model.MiddleName?.Trim();
+                    entityAfter.UserLastName = model.LastName?.Trim();
+                    entityAfter.UserAddressLine1 = model.AddressLine1?.Trim();
+                    entityAfter.UserAddressLine2 = model.AddressLine2?.Trim();
+                    entityAfter.UserCity = model.City?.Trim();
+                    entityAfter.UserRegion = model.Region?.Trim();
+                    entityAfter.UserPostalCode = model.PostalCode?.Trim();
+                    entityAfter.UserCountry = model.Country?.Trim();
+                    entityAfter.UserPhoneNumber = model.PhoneNumber?.Trim();
+
+                    dbUpdated = dbContext.SaveChanges() > 0;
+                }
             }
 
-            var entity = _dbContext.Users.Find(model.UserId);
-            if (entity != null)
+            if (dbUpdated)
             {
-                // Check for an email address change
-                if (entity.UserEmailAddress != model.EmailAddress.ToLower().Trim())
+                using (var scope = _serviceProvider.CreateScope())
                 {
-                    // Check for unique email address
-                    var emailAddressIsUnique = CheckForUniqueUserEmailAddress(model.UserId, model.EmailAddress);
-                    if (!emailAddressIsUnique)
-                    {
-                        throw new ApplicationException("Email Address already exists - must be unique.");
-                    }
+                    // Create audit record
+                    var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
+                    auditService.UpdateUser(entityBefore, entityAfter, userId);
                 }
 
-                // Get entity before update
-                var entityBefore = entity;
-
-                // Update entity property values
-                entity.UserTypeId = (int)model.Type;
-                entity.UserIsActive = model.IsActive;
-                entity.UserEmailAddress = model.EmailAddress.Trim();
-                entity.UserFirstName = model.FirstName?.Trim();
-                entity.UserMiddleName = model.MiddleName?.Trim();
-                entity.UserLastName = model.LastName?.Trim();
-                entity.UserAddressLine1 = model.AddressLine1?.Trim();
-                entity.UserAddressLine2 = model.AddressLine2?.Trim();
-                entity.UserCity = model.City?.Trim();
-                entity.UserRegion = model.Region?.Trim();
-                entity.UserPostalCode = model.PostalCode?.Trim();
-                entity.UserCountry = model.Country?.Trim();
-                entity.UserPhoneNumber = model.PhoneNumber?.Trim();
-
-                dbUpdated = _dbContext.SaveChanges() > 0;
-
-                if (dbUpdated)
-                {
-                    using (var scope = _serviceProvider.CreateScope())
-                    {
-                        // Create audit record
-                        var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
-                        auditService.UpdateUser(entityBefore, entity, userId);
-                    }
-
-                    // Update cached data
-                    GetUsers(true, false, true);
-                }
+                // Update cached data
+                GetUsers(true, false, true);
             }
 
             return dbUpdated;
@@ -261,27 +277,28 @@ namespace DemoServices
         public bool DeleteUser(int userId, int userId_Source)
         {
             var dbUpdated = false;
+            User entityBefore = new();
+            User entityAfter = new();
 
-            var entity = _dbContext.Users.Find(userId);
-            if (entity != null)
+            using (var dbContext = _dbContextFactory.CreateDbContext())
             {
-                // Get entity before update
-                var entityBefore = entity;
-
-                // Update entity property values
-                entity.UserIsDeleted = true;
-
-                dbUpdated = _dbContext.SaveChanges() > 0;
-
-                if (dbUpdated)
+                entityBefore = dbContext.Users.Find(userId) ?? new();
+                if (entityBefore.UserId != 0)
                 {
-                    using (var scope = _serviceProvider.CreateScope())
-                    {
-                        // Create audit record
-                        var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
-                        auditService.DeleteUser(entityBefore, entity, userId_Source);
-                    }
+                    // Update entity property values
+                    entityAfter = entityBefore;
+                    entityAfter.UserIsDeleted = true;
+
+                    dbUpdated = dbContext.SaveChanges() > 0;
                 }
+            }
+
+            if (dbUpdated)
+            {
+                // Create audit record
+                using var scope = _serviceProvider.CreateScope();
+                var auditService = scope.ServiceProvider.GetRequiredService<IAuditService>();
+                auditService.DeleteUser(entityBefore, entityAfter, userId_Source);
             }
 
             return dbUpdated;
@@ -295,8 +312,8 @@ namespace DemoServices
         /// <returns><c>true</c> if unique, otherwise <c>false</c>.</returns>
         public bool CheckForUniqueUserEmailAddress(int userId, string emailAddress)
         {
-            var entities = _dbContext.Users.Where(x => x.UserEmailAddress.ToLower() == emailAddress.ToLower().Trim() && x.UserId != userId);
-            return !entities.Any();
+            using var dbContext = _dbContextFactory.CreateDbContext();
+            return !dbContext.Users.Any(x => x.UserId != userId && x.UserEmailAddress.ToLower() == emailAddress.ToLower().Trim());
         }
 
         /// <summary>
@@ -325,15 +342,25 @@ namespace DemoServices
         /// <returns>Collection of ClientModel objects.</returns>
         public List<ClientModel> GetUserClients(int userId)
         {
-            var entities = (from clientUserView in _dbContext.ClientUserViews
-                            join client in _dbContext.ClientViews on clientUserView.ClientId equals client.ClientId
-                            where clientUserView.UserId == userId
-                            select new { Client = client });
-
-            var models = new List<ClientModel>();
-            foreach (var entity in entities.OrderBy(x => x.Client.Name))
+            // Get entities
+            List<ClientView> entities;
+            using (var dbContext = _dbContextFactory.CreateDbContext())
             {
-                var model = ClientService.GetModel(entity.Client);
+                entities = dbContext.ClientUserViews
+                    .Join(dbContext.ClientViews,
+                        clientUserView => clientUserView.ClientId,
+                        clientView => clientView.ClientId,
+                        (clientUserView, clientView) => new { ClientUserView = clientUserView, ClientView = clientView })
+                    .Where(x => x.ClientUserView.UserId == userId)
+                    .Select(x => x.ClientView)
+                    .ToList();
+            }
+
+            // Convert to models
+            var models = new List<ClientModel>();
+            foreach (var entity in entities.OrderBy(x => x.Name))
+            {
+                var model = ClientService.GetModel(entity);
                 if (model != null)
                 {
                     models.Add(model);

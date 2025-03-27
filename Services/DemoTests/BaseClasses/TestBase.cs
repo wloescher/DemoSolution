@@ -14,9 +14,9 @@ namespace DemoTests.BaseClasses
     public abstract class TestBase
     {
         // Dependencies
-        internal static IConfiguration? _configuration;
-        internal readonly DemoSqlContext _dbContext;
+        private DbContextOptions<DemoSqlContext> _dbContextOptions;
         internal static ServiceProvider? _serviceProvider;
+        internal static IConfiguration? _configuration;
         internal static Mock<HttpContext> _mockHttpContext = new();
 
         // Configuration Values
@@ -28,15 +28,13 @@ namespace DemoTests.BaseClasses
 
         protected TestBase()
         {
+            _dbContextOptions = new DbContextOptionsBuilder<DemoSqlContext>()
+                .UseInMemoryDatabase("DemoSql").Options;
+
             // Configuration
             var configurationBuilder = new ConfigurationBuilder();
             configurationBuilder.AddJsonFile("appsettings.json");
             _configuration = configurationBuilder.Build();
-
-            // DbContext
-            var optionsBuilder = new DbContextOptionsBuilder<DemoSqlContext>();
-            optionsBuilder.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
-            _dbContext = new DemoSqlContext(optionsBuilder.Options);
 
             // Configuration Values
             _testClientIds = (_configuration.GetValue<string>("Demo:TestClientIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
@@ -54,24 +52,17 @@ namespace DemoTests.BaseClasses
         {
             var serviceCollection = new ServiceCollection();
 
+            var configurationBuilder = new ConfigurationBuilder();
+            configurationBuilder.AddJsonFile("appsettings.json");
+            var configuration = configurationBuilder.Build();
+
             // Add configuration
-            serviceCollection.AddSingleton<IConfiguration>(sp =>
-            {
-                var configurationBuilder = new ConfigurationBuilder();
-                configurationBuilder.AddJsonFile("appsettings.json");
-                return configurationBuilder.Build();
-            });
+            serviceCollection.AddSingleton<IConfiguration>(configuration);
 
             // Add db context
-            serviceCollection.AddTransient(static sp =>
-            {
-                var configurationBuilder = new ConfigurationBuilder();
-                configurationBuilder.AddJsonFile("appsettings.json");
-                var configuration = configurationBuilder.Build();
-                var optionsBuilder = new DbContextOptionsBuilder<DemoSqlContext>();
-                optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-                return new DemoSqlContext(optionsBuilder.Options);
-            });
+            serviceCollection.AddDbContextFactory<DemoSqlContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Scoped
+            );
 
             serviceCollection.AddMemoryCache();
             serviceCollection.AddHttpClient();
@@ -89,6 +80,11 @@ namespace DemoTests.BaseClasses
         public static void AssemblyCleanup()
         {
             _serviceProvider?.Dispose();
+        }
+
+        internal DemoSqlContext CreateDbContext()
+        {
+            return new DemoSqlContext(_dbContextOptions);
         }
     }
 }

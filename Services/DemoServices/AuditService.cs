@@ -2,6 +2,7 @@
 using DemoRepository.Entities;
 using DemoServices.BaseClasses;
 using DemoServices.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -10,8 +11,8 @@ using static DemoModels.Enums;
 
 namespace DemoServices
 {
-    public class AuditService(IConfiguration configuration, DemoSqlContext dbContext, IMemoryCache memoryCache, IServiceProvider serviceProvider)
-        : DbContextService(configuration, dbContext, memoryCache, serviceProvider), IAuditService
+    public class AuditService(IDbContextFactory<DemoSqlContext> dbContextFactory, IMemoryCache memoryCache, IServiceProvider serviceProvider, IConfiguration configuration)
+        : DbContextService(dbContextFactory, memoryCache, serviceProvider, configuration), IAuditService
     {
         #region Public Methods
 
@@ -19,7 +20,10 @@ namespace DemoServices
         {
             var models = new List<AuditModel>();
 
-            var entities = _dbContext.ClientAudits.Where(a => a.ClientAuditClientId == workitemId);
+            // Get entities
+            var entities = _dbContextFactory.CreateDbContext().ClientAudits.Where(a => a.ClientAuditClientId == workitemId);
+
+            // Convert to models
             foreach (var entity in entities)
             {
                 models.Add(GetModel(entity));
@@ -57,7 +61,14 @@ namespace DemoServices
         {
             var models = new List<AuditModel>();
 
-            var entities = _dbContext.ClientUserAudits.Where(a => a.ClientUserAuditClientUserId == workitemUserId);
+            // Get entities
+            List<ClientUserAudit> entities;
+            using (var dbContext = _dbContextFactory.CreateDbContext())
+            {
+                entities = dbContext.ClientUserAudits.Where(a => a.ClientUserAuditClientUserId == workitemUserId).ToList();
+            }
+
+            // Convert to models
             foreach (var entity in entities)
             {
                 models.Add(GetModel(entity));
@@ -86,7 +97,14 @@ namespace DemoServices
         {
             var models = new List<AuditModel>();
 
-            var entities = _dbContext.UserAudits.Where(a => a.UserAuditUserId == userId);
+            // Get entities
+            List<UserAudit> entities;
+            using (var dbContext = _dbContextFactory.CreateDbContext())
+            {
+                entities = dbContext.UserAudits.Where(a => a.UserAuditUserId == userId).ToList();
+            }
+
+            // Convert to models
             foreach (var entity in entities)
             {
                 models.Add(GetModel(entity));
@@ -124,7 +142,14 @@ namespace DemoServices
         {
             var models = new List<AuditModel>();
 
-            var entities = _dbContext.WorkItemAudits.Where(a => a.WorkItemAuditWorkItemId == workItemId);
+            // Get entities
+            List<WorkItemAudit> entities;
+            using (var dbContext = _dbContextFactory.CreateDbContext())
+            {
+                entities = dbContext.WorkItemAudits.Where(a => a.WorkItemAuditWorkItemId == workItemId).ToList();
+            }
+
+            // Convert to models
             foreach (var entity in entities)
             {
                 models.Add(GetModel(entity));
@@ -162,7 +187,14 @@ namespace DemoServices
         {
             var models = new List<AuditModel>();
 
-            var entities = _dbContext.WorkItemUserAudits.Where(a => a.WorkItemUserAuditWorkItemUserId == workItemUserId);
+            // Get entities
+            List<WorkItemUserAudit> entities;
+            using (var dbContext = _dbContextFactory.CreateDbContext())
+            {
+                entities = dbContext.WorkItemUserAudits.Where(a => a.WorkItemUserAuditWorkItemUserId == workItemUserId).ToList();
+            }
+
+            // Convert to models
             foreach (var entity in entities)
             {
                 models.Add(GetModel(entity));
@@ -237,7 +269,8 @@ namespace DemoServices
         private bool CreateClientAudit(int workitemId, int userId, AuditAction action, string beforeJson, string afterJson, List<string> affectedColumns)
         {
             // Create audit record
-            _dbContext.ClientAudits.Add(new ClientAudit
+            using var dbContext = _dbContextFactory.CreateDbContext();
+            dbContext.ClientAudits.Add(new ClientAudit
             {
                 ClientAuditClientId = workitemId,
                 ClientAuditUserId = userId,
@@ -248,15 +281,16 @@ namespace DemoServices
                 ClientAuditAffectedColumns = string.Join(",", affectedColumns),
             });
 
-            return _dbContext.SaveChanges() > 0;
+            return dbContext.SaveChanges() > 0;
         }
 
-        private bool CreateClientUserAudit(int workitemUserId, int userId, AuditAction action, string beforeJson, string afterJson)
+        private bool CreateClientUserAudit(int clientUserId, int userId, AuditAction action, string beforeJson, string afterJson)
         {
             // Create audit record
-            _dbContext.ClientUserAudits.Add(new ClientUserAudit
+            using var dbContext = _dbContextFactory.CreateDbContext();
+            dbContext.ClientUserAudits.Add(new ClientUserAudit
             {
-                ClientUserAuditClientUserId = workitemUserId,
+                ClientUserAuditClientUserId = clientUserId,
                 ClientUserAuditUserId = userId,
                 ClientUserAuditDate = DateTime.Now,
                 ClientUserAuditActionId = (int)action,
@@ -265,13 +299,14 @@ namespace DemoServices
                 ClientUserAuditAffectedColumns = string.Empty,
             });
 
-            return _dbContext.SaveChanges() > 0;
+            return dbContext.SaveChanges() > 0;
         }
 
         private bool CreateUserAudit(int userId, int userId_Source, AuditAction action, string beforeJson, string afterJson, List<string> affectedColumns)
         {
             // Create audit record
-            _dbContext.UserAudits.Add(new UserAudit
+            using var dbContext = _dbContextFactory.CreateDbContext();
+            dbContext.UserAudits.Add(new UserAudit
             {
                 UserAuditUserId = userId,
                 UserAuditUserIdSource = userId_Source,
@@ -282,13 +317,14 @@ namespace DemoServices
                 UserAuditAffectedColumns = string.Join(",", affectedColumns),
             });
 
-            return _dbContext.SaveChanges() > 0;
+            return dbContext.SaveChanges() > 0;
         }
 
         private bool CreateWorkItemAudit(int workItemId, int userId, AuditAction action, string beforeJson, string afterJson, List<string> affectedColumns)
         {
             // Create audit record
-            _dbContext.WorkItemAudits.Add(new WorkItemAudit
+            using var dbContext = _dbContextFactory.CreateDbContext();
+            dbContext.WorkItemAudits.Add(new WorkItemAudit
             {
                 WorkItemAuditWorkItemId = workItemId,
                 WorkItemAuditUserId = userId,
@@ -299,13 +335,14 @@ namespace DemoServices
                 WorkItemAuditAffectedColumns = string.Join(",", affectedColumns),
             });
 
-            return _dbContext.SaveChanges() > 0;
+            return dbContext.SaveChanges() > 0;
         }
 
         private bool CreateWorkItemUserAudit(int workItemUserId, int userId, AuditAction action, string beforeJson, string afterJson)
         {
             // Create audit record
-            _dbContext.WorkItemUserAudits.Add(new WorkItemUserAudit
+            using var dbContext = _dbContextFactory.CreateDbContext();
+            dbContext.WorkItemUserAudits.Add(new WorkItemUserAudit
             {
                 WorkItemUserAuditWorkItemUserId = workItemUserId,
                 WorkItemUserAuditUserId = userId,
@@ -316,7 +353,7 @@ namespace DemoServices
                 WorkItemUserAuditAffectedColumns = string.Empty,
             });
 
-            return _dbContext.SaveChanges() > 0;
+            return dbContext.SaveChanges() > 0;
         }
 
         private static AuditModel GetModel(ClientAudit entity)
