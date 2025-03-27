@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+Presentation/DemoAngular/obj/Debug//package.g.props
+Presentation/DemoReact/obj/Debug//package.g.props
+Presentation/DemoVue/obj/Debug//package.g.props
+Presentation/DemoAngular/obj/Debug//package.g.props

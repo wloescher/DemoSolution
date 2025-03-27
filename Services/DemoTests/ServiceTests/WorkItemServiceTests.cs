@@ -75,10 +75,10 @@ namespace DemoTests.ServiceTests
         public void CheckForUniqueWorkItemNameTest(IWorkItemService workItemService)
         {
             var entity = _dbContext.WorkItemViews.First();
-            Assert.IsTrue(workItemService.CheckForUniqueWorkItemTitle(entity.ClientId, entity.Title));
-            Assert.IsTrue(workItemService.CheckForUniqueWorkItemTitle(entity.ClientId, new Guid().ToString()));
-            Assert.IsTrue(workItemService.CheckForUniqueWorkItemTitle(entity.ClientId + 1, new Guid().ToString()));
-            Assert.IsFalse(workItemService.CheckForUniqueWorkItemTitle(entity.WorkItemId + 1, entity.Title));
+            Assert.IsTrue(workItemService.CheckForUniqueTitle(entity.ClientId, entity.Title));
+            Assert.IsTrue(workItemService.CheckForUniqueTitle(entity.ClientId, new Guid().ToString()));
+            Assert.IsTrue(workItemService.CheckForUniqueTitle(entity.ClientId + 1, new Guid().ToString()));
+            Assert.IsFalse(workItemService.CheckForUniqueTitle(entity.WorkItemId + 1, entity.Title));
         }
 
         [TestMethodDependencyInjection]
@@ -106,6 +106,32 @@ namespace DemoTests.ServiceTests
             {
                 Console.WriteLine(string.Format("{0}, {1}", keyValuePair.Key, keyValuePair.Value));
             }
+        }
+
+        [TestMethodDependencyInjection]
+        public void GetWorkItemUsersTest(IWorkItemService workItemService)
+        {
+            var workItemId = _testWorkItemIds.First();
+            var result = workItemService.GetWorkItemUsers(workItemId);
+            Assert.AreNotEqual(0, result.Count);
+        }
+
+        [TestMethodDependencyInjection]
+        public void CreateWorkItemUserTest(IWorkItemService workItemService)
+        {
+            var workItemId = _testWorkItemIds.First();
+            var userId = _testUserIds.First();
+            var result = workItemService.CreateWorkItemUser(workItemId, userId, userId);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethodDependencyInjection]
+        public void DeleteWorkItemUserTest(IWorkItemService workItemService)
+        {
+            var workItemId = _testWorkItemIds.First();
+            var userId = _testUserIds.First();
+            var result = workItemService.DeleteWorkItemUser(workItemId, userId, userId);
+            Assert.IsTrue(result);
         }
 
         #endregion

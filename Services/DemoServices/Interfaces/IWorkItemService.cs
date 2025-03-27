@@ -10,7 +10,11 @@ namespace DemoServices.Interfaces
         bool UpdateWorkItem(WorkItemModel model, int userId);
         bool DeleteWorkItem(int workItemId, int userId);
 
-        bool CheckForUniqueWorkItemTitle(int workItemId, string clientName);
+        bool CheckForUniqueTitle(int workItemId, string clientName);
         List<KeyValuePair<int, string>> GetWorkItemKeyValuePairs(bool activeOnly = true, bool excludeInternal = true);
+ 
+         bool CreateWorkItemUser(int workItemId, int userId, int userId_Source);
+        List<UserModel> GetWorkItemUsers(int workItemId);
+        bool DeleteWorkItemUser(int workItemId, int userId, int userId_Source);
     }
 }

@@ -112,6 +112,14 @@ namespace DemoTests.ServiceTests
         }
 
         [TestMethodDependencyInjection]
+        public void GetClientUsersTest(IClientService clientService)
+        {
+            var clientId = _testClientIds.First();
+            var result = clientService.GetClientUsers(clientId);
+            Assert.AreNotEqual(0, result.Count);
+        }
+
+        [TestMethodDependencyInjection]
         public void CreateClientUserTest(IClientService clientService)
         {
             var clientId = _testClientIds.First();
@@ -127,14 +135,6 @@ namespace DemoTests.ServiceTests
             var userId = _testUserIds.First();
             var result = clientService.DeleteClientUser(clientId, userId, userId);
             Assert.IsTrue(result);
-        }
-
-        [TestMethodDependencyInjection]
-        public void GetClientUsersTest(IClientService clientService)
-        {
-            var clientId = _testClientIds.First();
-            var result = clientService.GetClientUsers(clientId);
-            Assert.AreNotEqual(0, result.Count);
         }
 
         [TestMethodDependencyInjection]

@@ -94,9 +94,51 @@ namespace DemoWebApi.Controllers
             using (var scope = _serviceProvider.CreateScope())
             {
                 var workItemService = scope.ServiceProvider.GetRequiredService<IWorkItemService>();
-                result = workItemService.CheckForUniqueWorkItemTitle(workItemId, title);
+                result = workItemService.CheckForUniqueTitle(workItemId, title);
             }
             return Ok(result);
+        }
+
+        [HttpGet("{workItemId}/users")]
+        public IActionResult GetUsers(int workItemId)
+        {
+            List<UserModel> models;
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var workItemService = scope.ServiceProvider.GetRequiredService<IWorkItemService>();
+                models = workItemService.GetWorkItemUsers(workItemId);
+            }
+            return Ok(models);
+        }
+
+        [HttpPut("{workItemId}/user/{userId}")]
+        public IActionResult AddUser(int workItemId, int userId)
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+                var currentUserId = userService.GetCurrentUserId(HttpContext);
+
+                var workItemService = scope.ServiceProvider.GetRequiredService<IWorkItemService>();
+                workItemService.CreateWorkItemUser(workItemId, userId, currentUserId);
+            }
+
+            return Ok(true);
+        }
+
+        [HttpDelete("{workItemId}/user/{userId}")]
+        public IActionResult DeleteUser(int workItemId, int userId)
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+                var currentUserId = userService.GetCurrentUserId(HttpContext);
+
+                var workItemService = scope.ServiceProvider.GetRequiredService<IWorkItemService>();
+                workItemService.DeleteWorkItemUser(workItemId, userId, currentUserId);
+            }
+
+            return Ok(true);
         }
     }
 }

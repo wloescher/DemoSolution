@@ -3,8 +3,8 @@
 	[ClientUserId] INT NOT NULL PRIMARY KEY IDENTITY, 
     [ClientUserClientId] INT NOT NULL, 
     [ClientUserUserId] INT NOT NULL, 
-
 	[ClientUserIsDeleted] BIT NOT NULL DEFAULT 0, 
+	
     CONSTRAINT [FK_ClientUser_Client] FOREIGN KEY ([ClientUserClientId])
 		REFERENCES [dbo].[Client]([ClientId]),
 	CONSTRAINT [FK_ClientUser_User] FOREIGN KEY ([ClientUserUserId])

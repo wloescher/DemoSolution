@@ -319,7 +319,6 @@ namespace DemoServices
             return dbUpdated;
         }
 
-
         /// <summary>
         /// Get client work items.
         /// </summary>
