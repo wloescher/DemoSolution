@@ -13,6 +13,7 @@ public partial class ClientAuditView
 
     public int ActionId { get; set; }
 
+    [Required]
     [StringLength(50)]
     public string Action { get; set; }
 
@@ -20,12 +21,11 @@ public partial class ClientAuditView
 
     public int UserId { get; set; }
 
+    [Required]
     [StringLength(100)]
     public string ClientName { get; set; }
 
-    [StringLength(101)]
-    public string UserFullName { get; set; }
-
+    [Required]
     [StringLength(100)]
     public string UserEmailAddress { get; set; }
 

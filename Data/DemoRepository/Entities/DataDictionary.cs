@@ -59,6 +59,9 @@ public partial class DataDictionary
     [InverseProperty("WorkItemAuditAction")]
     public virtual ICollection<WorkItemAudit> WorkItemAudits { get; set; } = new List<WorkItemAudit>();
 
+    [InverseProperty("WorkItemUserAuditAction")]
+    public virtual ICollection<WorkItemUserAudit> WorkItemUserAudits { get; set; } = new List<WorkItemUserAudit>();
+
     [InverseProperty("WorkItemStatus")]
     public virtual ICollection<WorkItem> WorkItemWorkItemStatuses { get; set; } = new List<WorkItem>();
 

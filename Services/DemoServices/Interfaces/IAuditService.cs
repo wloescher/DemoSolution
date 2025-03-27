@@ -23,5 +23,10 @@ namespace DemoServices.Interfaces
         bool CreateWorkItem(WorkItem entity, int userId);
         bool UpdateWorkItem(WorkItem entityBefore, WorkItem entityAfter, int userId);
         bool DeleteWorkItem(WorkItem entityBefore, WorkItem entityAfter, int userId);
+
+        List<AuditModel> GetWorkItemUserAudits(int workItemUserId);
+        bool CreateWorkItemUser(WorkItemUser entity, int userId);
+        bool DeleteWorkItemUser(WorkItemUser entity, int userId);
+
     }
 }

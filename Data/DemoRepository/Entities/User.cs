@@ -90,4 +90,10 @@ public partial class User
 
     [InverseProperty("WorkItemAuditUser")]
     public virtual ICollection<WorkItemAudit> WorkItemAudits { get; set; } = new List<WorkItemAudit>();
+
+    [InverseProperty("WorkItemUserAuditUser")]
+    public virtual ICollection<WorkItemUserAudit> WorkItemUserAudits { get; set; } = new List<WorkItemUserAudit>();
+
+    [InverseProperty("WorkItemUserUser")]
+    public virtual ICollection<WorkItemUser> WorkItemUsers { get; set; } = new List<WorkItemUser>();
 }

@@ -50,4 +50,7 @@ public partial class WorkItem
     [ForeignKey("WorkItemTypeId")]
     [InverseProperty("WorkItemWorkItemTypes")]
     public virtual DataDictionary WorkItemType { get; set; }
+
+    [InverseProperty("WorkItemUserWorkItem")]
+    public virtual ICollection<WorkItemUser> WorkItemUsers { get; set; } = new List<WorkItemUser>();
 }

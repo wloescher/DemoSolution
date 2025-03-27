@@ -229,9 +229,9 @@ namespace DemoServices
         public List<UserModel> GetClientUsers(int clientId)
         {
             var entities = (from clientUserView in _dbContext.ClientUserViews
-                            join user in _dbContext.UserViews on clientUserView.UserId equals user.UserId
+                            join userView in _dbContext.UserViews on clientUserView.UserId equals userView.UserId
                             where clientUserView.ClientId == clientId
-                            select new { User = user });
+                            select new { User = userView });
 
             var models = new List<UserModel>();
             foreach (var entity in entities.OrderBy(x => x.User.FullName))

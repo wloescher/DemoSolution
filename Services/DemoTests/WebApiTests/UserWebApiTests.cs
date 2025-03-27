@@ -482,7 +482,6 @@ namespace DemoTests.WebApiTests
 #endif
 
             // Check response
-            var result = await response.Content.ReadAsStringAsync();
             response.EnsureSuccessStatusCode();
             Assert.IsNotNull(response.Content.Headers.ContentType);
             Assert.AreEqual("application/json; charset=utf-8", response.Content.Headers.ContentType.ToString());

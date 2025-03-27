@@ -15,6 +15,7 @@ public partial class ClientView
 
     public int TypeId { get; set; }
 
+    [Required]
     [StringLength(50)]
     public string Type { get; set; }
 

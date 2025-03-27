@@ -75,7 +75,6 @@ namespace DemoTests.WebApiTests
                 ClientId = _testClientIds.First(),
                 Type = WorkItemType.Bug,
                 Status = WorkItemStatus.New,
-                IsActive = true,
                 Title = string.Format("WorkItemCrudTest-Title-{0}-{1}", dateSlug, guid),
                 SubTitle = string.Format("SubTitle-{0}", dateSlug),
                 Summary = string.Format("Summary-{0}", dateSlug),
@@ -298,9 +297,9 @@ namespace DemoTests.WebApiTests
             // Check result
             var getWorkitemsResult = _controller.GetUsers(workItemId) as OkObjectResult;
             Assert.IsNotNull(getWorkitemsResult);
-            var expected = (List<WorkItemModel>?)getWorkitemsResult.Value;
+            var expected = (List<UserModel>?)getWorkitemsResult.Value;
             Assert.IsNotNull(expected);
-            var actual = JsonConvert.DeserializeObject<List<WorkItemModel>>(await response.Content.ReadAsStringAsync());
+            var actual = JsonConvert.DeserializeObject<List<UserModel>>(await response.Content.ReadAsStringAsync());
             Assert.IsNotNull(actual);
             CompareModels.Compare(expected, actual);
 
@@ -407,7 +406,7 @@ namespace DemoTests.WebApiTests
             Assert.AreEqual("application/json; charset=utf-8", response.Content.Headers.ContentType.ToString());
 
             // Check result
-            checkForUniqueTitleResult = _controller.CheckForUniqueName(workItemId, duplicateTitle) as OkObjectResult;
+            checkForUniqueTitleResult = _controller.CheckForUniqueTitle(workItemId, duplicateTitle) as OkObjectResult;
             Assert.IsNotNull(checkForUniqueTitleResult);
             expected = checkForUniqueTitleResult.Value;
             Assert.IsNotNull(expected);

@@ -63,6 +63,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[WorkItemUser]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[WorkItemUserAudit]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[ClientAuditView]",
          "ObjectType": 3
       },
@@ -96,6 +104,10 @@
       },
       {
          "Name": "[dbo].[WorkItemAuditView]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[WorkItemUserView]",
          "ObjectType": 3
       },
       {

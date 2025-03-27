@@ -79,6 +79,9 @@
     <Build Include="Views\DataDictionaryAuditView.sql" />
     <Build Include="Tables\ClientUserAudit.sql" />
     <Build Include="Views\ClientUserAuditView.sql" />
+    <Build Include="Tables\WorkItemUser.sql" />
+    <Build Include="Tables\WorkItemUserAudit.sql" />
+    <Build Include="Views\WorkItemUserView.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DemoSql.refactorlog" />

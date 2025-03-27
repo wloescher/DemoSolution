@@ -7,17 +7,16 @@ using Microsoft.EntityFrameworkCore;
 namespace DemoRepository.Entities;
 
 [Keyless]
-public partial class ClientUserView
+public partial class WorkItemUserView
 {
-    public int ClientUserId { get; set; }
+    public int WorkItemUserId { get; set; }
 
-    public int ClientId { get; set; }
+    public int WorkItemId { get; set; }
 
     public int UserId { get; set; }
 
-    [Required]
-    [StringLength(100)]
-    public string ClientName { get; set; }
+    [StringLength(150)]
+    public string WorkItemTitle { get; set; }
 
     [Required]
     [StringLength(100)]

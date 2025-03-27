@@ -85,6 +85,25 @@ namespace DemoTests.ServiceTests
             DeleteWorkItemTest(auditService, entity, userId);
         }
 
+        [TestMethodDependencyInjection]
+        public void GetWorkitemUserAuditsTest(IAuditService auditService)
+        {
+            var workItemUserId = _testWorkItemUserIds.First();
+            var result = auditService.GetWorkItemUserAudits(workItemUserId);
+            Assert.AreNotEqual(0, result.Count);
+        }
+
+        [TestMethodDependencyInjection]
+        public void WorkitemUserCrudTest(IAuditService auditService)
+        {
+            var userId = _testUserIds.First();
+            var workItemId = _testWorkItemIds.First();
+
+            CreateWorkItemUserTest(auditService, workItemId, userId);
+            DeleteWorkItemUserTest(auditService, workItemId, userId);
+        }
+
+
         #endregion
 
         #region Private Methods
@@ -235,6 +254,24 @@ namespace DemoTests.ServiceTests
             entityAfter.WorkItemIsDeleted = true;
 
             Assert.IsTrue(auditService.DeleteWorkItem(entityBefore, entityAfter, userId));
+        }
+
+        private void CreateWorkItemUserTest(IAuditService auditService, int workItemId, int userId)
+        {
+            var entity = _dbContext.WorkItemUsers.First();
+            Assert.IsTrue(auditService.CreateWorkItemUser(entity, userId));
+        }
+
+        private void DeleteWorkItemUserTest(IAuditService auditService, int workItemId, int userId)
+        {
+            var entity = new WorkItemUser
+            {
+                WorkItemUserId = _dbContext.WorkItemUsers.First().WorkItemUserId,
+                WorkItemUserWorkItemId = workItemId,
+                WorkItemUserUserId = userId,
+            };
+
+            Assert.IsTrue(auditService.DeleteWorkItemUser(entity, userId));
         }
 
         #endregion

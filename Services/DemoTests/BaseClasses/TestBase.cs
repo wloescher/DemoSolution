@@ -24,6 +24,7 @@ namespace DemoTests.BaseClasses
         internal readonly List<int> _testClientUserIds = new();
         internal readonly List<int> _testUserIds = new();
         internal readonly List<int> _testWorkItemIds = new();
+        internal readonly List<int> _testWorkItemUserIds = new();
 
         protected TestBase()
         {
@@ -42,6 +43,7 @@ namespace DemoTests.BaseClasses
             _testClientUserIds = (_configuration.GetValue<string>("Demo:TestClientUserIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
             _testUserIds = (_configuration.GetValue<string>("Demo:TestUserIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
             _testWorkItemIds = (_configuration.GetValue<string>("Demo:TestWorkItemIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
+            _testWorkItemUserIds = (_configuration.GetValue<string>("Demo:TestWorkItemUserIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
 
             // Mock HttpContext
             _mockHttpContext.Setup(x => x.User).Returns(new ClaimsPrincipal(new ClaimsIdentity("Admin")));

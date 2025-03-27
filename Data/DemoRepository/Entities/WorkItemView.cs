@@ -15,16 +15,19 @@ public partial class WorkItemView
 
     public int ClientId { get; set; }
 
+    [Required]
     [StringLength(100)]
     public string ClientName { get; set; }
 
     public int TypeId { get; set; }
 
+    [Required]
     [StringLength(50)]
     public string Type { get; set; }
 
     public int StatusId { get; set; }
 
+    [Required]
     [StringLength(50)]
     public string Status { get; set; }
 

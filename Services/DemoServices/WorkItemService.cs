@@ -223,9 +223,9 @@ namespace DemoServices
         public List<UserModel> GetWorkItemUsers(int workItemId)
         {
             var entities = (from workItemUserView in _dbContext.WorkItemUserViews
-                            join user in _dbContext.UserViews on workItemUserView.UserId equals user.UserId
-                            where workItemUserView.WorkItemId  == workItemId
-                            select new { User = user });
+                            join userView in _dbContext.UserViews on workItemUserView.UserId equals userView.UserId
+                            where workItemUserView.WorkItemId == workItemId
+                            select new { User = userView });
 
             var models = new List<UserModel>();
             foreach (var entity in entities.OrderBy(x => x.User.FullName))
@@ -251,12 +251,12 @@ namespace DemoServices
             var dbUpdated = false;
 
             // Check for existing work item user
-            var entity = _dbContext.WorkItemUsers.FirstOrDefault(x => x.WorkItemUserClientId == workItemId && x.WorkItemUserUserId == userId);
+            var entity = _dbContext.WorkItemUsers.FirstOrDefault(x => x.WorkItemUserWorkItemId == workItemId && x.WorkItemUserUserId == userId);
             if (entity == null)
             {
                 entity = new WorkItemUser
                 {
-                    WorkItemUserClientId = workItemId,
+                    WorkItemUserWorkItemId = workItemId,
                     WorkItemUserUserId = userId,
                 };
 
@@ -293,7 +293,7 @@ namespace DemoServices
         {
             var dbUpdated = false;
 
-            var entity = _dbContext.WorkItemUsers.FirstOrDefault(x => x.WorKItemUserClientId == workItemId && x.WorkItemUserUserId == userId);
+            var entity = _dbContext.WorkItemUsers.FirstOrDefault(x => x.WorkItemUserWorkItemId == workItemId && x.WorkItemUserUserId == userId);
             if (entity != null)
             {
                 entity.WorkItemUserIsDeleted = true;
