@@ -1,8 +1,6 @@
 ﻿using DemoRepository.Entities;
 using DemoServices.Interfaces;
 using DemoTests.BaseClasses;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using static DemoModels.Enums;
 
 namespace DemoTests.ServiceTests
@@ -10,34 +8,6 @@ namespace DemoTests.ServiceTests
     [TestClass()]
     public class AuditServiceTests : TestBase
     {
-        // Dependencies
-        private readonly DemoSqlContext _dbContext;
-
-        // Configuration Values
-        private readonly List<int> _testClientIds = new();
-        private readonly List<int> _testClientUserIds = new();
-        private readonly List<int> _testUserIds = new();
-        private readonly List<int> _testWorkItemIds = new();
-
-        public AuditServiceTests()
-        {
-            // Configuration
-            var configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder.AddJsonFile("appsettings.json");
-            var configuration = configurationBuilder.Build();
-
-            // Dependencies
-            var optionsBuilder = new DbContextOptionsBuilder<DemoSqlContext>();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-            _dbContext = new DemoSqlContext(optionsBuilder.Options);
-
-            // Configuration Values
-            _testClientIds = (configuration.GetValue<string>("Demo:TestClientIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
-            _testClientUserIds = (configuration.GetValue<string>("Demo:TestClientUserIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
-            _testUserIds = (configuration.GetValue<string>("Demo:TestUserIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
-            _testWorkItemIds = (configuration.GetValue<string>("Demo:TestWorkItemIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
-        }
-
         #region Test Methods
 
         [TestMethodDependencyInjection]

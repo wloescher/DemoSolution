@@ -3,7 +3,6 @@ using DemoRepository.Entities;
 using DemoServices.BaseClasses;
 using DemoServices.Interfaces;
 using DemoUtilities;
-using DemoUtilities.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -104,11 +103,14 @@ namespace DemoServices
                 // Send access info email
                 var emailBody = GetChangePasswordEmailBody(model.EmailAddress, password);
                 var returnMessage = string.Empty;
-                using (var scope = _serviceProvider.CreateScope())
-                {
-                    var emailUtility = scope.ServiceProvider.GetRequiredService<IEmailUtility>();
-                    emailUtility.SendMail(model.EmailAddress, "Access Information", emailBody, out returnMessage, true);
-                }
+                var emailUtility = new EmailUtility(_configuration);
+                emailUtility.SendMail(model.EmailAddress, "Access Information", emailBody, out returnMessage, true);
+
+                //using (var scope = _serviceProvider.CreateScope())
+                //{
+                //    var emailUtility = scope.ServiceProvider.GetRequiredService<IEmailUtility>();
+                //    emailUtility.SendMail(model.EmailAddress, "Access Information", emailBody, out returnMessage, true);
+                //}
             }
 
             // Update cached data
@@ -314,6 +316,30 @@ namespace DemoServices
             }
 
             return keyValuePairs;
+        }
+
+        /// <summary>
+        /// Get user clients.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>Collection of ClientModel objects.</returns>
+        public List<ClientModel> GetUserClients(int userId)
+        {
+            var entities = (from clientUserView in _dbContext.ClientUserViews
+                            join client in _dbContext.ClientViews on clientUserView.ClientId equals client.ClientId
+                            where clientUserView.UserId == userId
+                            select new { Client = client });
+
+            var models = new List<ClientModel>();
+            foreach (var entity in entities.OrderBy(x => x.Client.Name))
+            {
+                var model = ClientService.GetModel(entity.Client);
+                if (model != null)
+                {
+                    models.Add(model);
+                }
+            }
+            return models;
         }
 
         #endregion

@@ -375,7 +375,7 @@ namespace DemoServices
             return model;
         }
 
-        private static ClientModel? GetModel(ClientView? entity)
+        internal static ClientModel? GetModel(ClientView? entity)
         {
             if (entity == null) return null;
 

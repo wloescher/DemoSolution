@@ -3,6 +3,7 @@ using DemoTests.BaseClasses;
 using DemoTests.TestHelpers;
 using DemoUtilities;
 using DemoWebApi.Controllers;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Logging;
@@ -16,18 +17,19 @@ using static DemoModels.Enums;
 namespace DemoTests.WebApiTests
 {
     [TestClass()]
-    public class ClientWebApiTests : TestBase
+    public class UserWebApiTests : TestBase
     {
         // Dependencies
-        private readonly ClientController _controller;
+        private readonly UserController _controller;
 
-        public ClientWebApiTests()
+        public UserWebApiTests()
         {
             // Create controller
-            var mockLogger = new Mock<ILogger<ClientController>>();
+            var mockLogger = new Mock<ILogger<UserController>>();
             Assert.IsNotNull(_configuration);
             Assert.IsNotNull(_serviceProvider);
-            _controller = new ClientController(mockLogger.Object, _configuration, _serviceProvider);
+            var webHostEnvironment = new Mock<IWebHostEnvironment>().Object;
+            _controller = new UserController(mockLogger.Object, _configuration, _serviceProvider, webHostEnvironment);
 
             // Initialize HttpContext
             _controller.ControllerContext.HttpContext = _mockHttpContext.Object;
@@ -36,38 +38,31 @@ namespace DemoTests.WebApiTests
         #region Test Methods
 
         [TestMethod()]
-        public async Task GetClientListTest()
+        public async Task GetUserListTest()
         {
-            await GetClientListUnauthenticatedTest();
-            await GetClientListAuthenticatedTest();
+            await GetUserListUnauthenticatedTest();
+            await GetUserListAuthenticatedTest();
         }
 
         [TestMethod()]
-        public async Task GetClientTest()
+        public async Task GetUserTest()
         {
-            await GetClientUnauthenticatedTest();
-            await GetClientAuthenticatedTest();
+            await GetUserUnauthenticatedTest();
+            await GetUserAuthenticatedTest();
         }
 
         [TestMethod()]
-        public async Task GetWorkItemsTest()
+        public async Task GetClientsTest()
         {
-            await GetWorkItemsUnauthenticatedTest();
-            await GetWorkItemsAuthenticatedTest();
+            await GetClientsUnauthenticatedTest();
+            await GetClientsAuthenticatedTest();
         }
 
         [TestMethod()]
-        public async Task GetUsersTest()
+        public async Task CheckForUniqueEmailAddressTest()
         {
-            await GetUsersUnauthenticatedTest();
-            await GetUsersAuthenticatedTest();
-        }
-
-        [TestMethod()]
-        public async Task CheckForUniqueClientNameTest()
-        {
-            await CheckForUniqueClientNameUnauthenticatedTest();
-            await CheckForUniqueClientNameAuthenticatedTest();
+            await CheckForUniqueEmailAddressUnauthenticatedTest();
+            await CheckForUniqueEmailAddressAuthenticatedTest();
         }
 
         [TestMethod()]
@@ -77,10 +72,14 @@ namespace DemoTests.WebApiTests
             var guid = Guid.NewGuid();
 
             // Create model for testing
-            var model = new ClientModel
+            var model = new UserModel
             {
-                Type = ClientType.External,
-                Name = string.Format("ClientCrudTest-Name-{0}-{1}", dateSlug, guid),
+                Type = UserType.Admin,
+                IsActive = true,
+                EmailAddress = string.Format("UserCrudTest-EmailAddress-{0}-{1}@demo.com", dateSlug, guid),
+                FirstName = string.Format("FirstName-{0}", dateSlug),
+                MiddleName = string.Format("MiddleName-{0}", dateSlug),
+                LastName = string.Format("LastName-{0}", dateSlug),
                 AddressLine1 = string.Format("AddressLine1-{0}", dateSlug),
                 AddressLine2 = string.Format("AddressLine2-{0}", dateSlug),
                 City = string.Format("City-{0}", dateSlug),
@@ -88,50 +87,49 @@ namespace DemoTests.WebApiTests
                 PostalCode = string.Format("XX{0}", dateSlug), // Max length 10
                 Country = string.Format("Country-{0}", dateSlug),
                 PhoneNumber = string.Format("PhoneNumber-{0}", dateSlug), // Max length 20
-                Url = string.Format("Url-{0}", dateSlug),
             };
 
             // Create
-            await CreateClientUnauthenticatedTest();
-            var newModel = await CreateClientAuthenticatedTest(model);
+            await CreateUserUnauthenticatedTest();
+            var newModel = await CreateUserAuthenticatedTest(model);
 
             // Update
-            newModel.Name = string.Format("{0}-UPDATED", newModel.Name);
-            await UpdateClientUnauthenticatedTest();
-            await UpdateClientAuthenticatedTest(newModel);
+            newModel.EmailAddress = newModel.EmailAddress.Replace("@demo.com", "-UPDATED@demo.com");
+            await UpdateUserUnauthenticatedTest();
+            await UpdateUserAuthenticatedTest(newModel);
 
             // Delete
-            await DeleteClientUnauthenticatedTest();
-            await DeleteClientAuthenticatedTest(newModel.ClientId);
+            await DeleteUserUnauthenticatedTest();
+            await DeleteUserAuthenticatedTest(newModel.UserId);
 
-            // Update Client Name to indicate deletion
-            newModel.Name = string.Format("{0}-DELETED", newModel.Name);
-            await UpdateClientAuthenticatedTest(newModel);
+            // Update EmailAddress to indicate deletion
+            newModel.EmailAddress = newModel.EmailAddress.Replace("@demo.com", "-DELETED@demo.com");
+            await UpdateUserAuthenticatedTest(newModel);
         }
 
         [TestMethod()]
-        public async Task AddThenDeleteUserTest()
+        public async Task AddThenDeleteClientTest()
         {
-            await AddUserUnauthenticatedTest();
-            await AddUserAuthenticatedTest();
+            await AddClientUnauthenticatedTest();
+            await AddClientAuthenticatedTest();
 
-            await DeleteUserUnauthenticatedTest();
-            await DeleteUserAuthenticatedTest();
+            await DeleteClientUnauthenticatedTest();
+            await DeleteClientAuthenticatedTest();
         }
 
         #endregion
 
         #region Private Methods
 
-        private static async Task GetClientListUnauthenticatedTest()
+        private static async Task GetUserListUnauthenticatedTest()
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
             // Make Web API call
-            await using var application = new WebApplicationFactory<ClientController>();
+            await using var application = new WebApplicationFactory<UserController>();
             using var httpClient = application.CreateClient();
-            var response = await httpClient.GetAsync("/client");
+            var response = await httpClient.GetAsync("/user");
 
             stopWatch.Stop();
 
@@ -149,16 +147,16 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private async Task GetClientListAuthenticatedTest()
+        private async Task GetUserListAuthenticatedTest()
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
             // Make Web API call
-            await using var application = new WebApplicationFactory<ClientController>();
+            await using var application = new WebApplicationFactory<UserController>();
             using var httpClient = application.CreateClient();
             httpClient.DefaultRequestHeaders.Add("authorization", "Bearer demo");
-            var response = await httpClient.GetAsync("/client");
+            var response = await httpClient.GetAsync("/user/list");
 
             stopWatch.Stop();
 
@@ -173,7 +171,7 @@ namespace DemoTests.WebApiTests
             Assert.AreEqual("application/json; charset=utf-8", response.Content.Headers.ContentType.ToString());
 
             // Check result
-            var getClientListResult = _controller.GetClientList() as OkObjectResult;
+            var getClientListResult = _controller.GetUserList() as OkObjectResult;
             Assert.IsNotNull(getClientListResult);
             var expected = (List<GenericListItemModel>?)getClientListResult.Value;
             Assert.IsNotNull(expected);
@@ -185,17 +183,17 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private async Task GetClientUnauthenticatedTest()
+        private async Task GetUserUnauthenticatedTest()
         {
-            var clientId = _testClientIds.First();
+            var userId = _testUserIds.First();
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
             // Make Web API call
-            await using var application = new WebApplicationFactory<ClientController>();
+            await using var application = new WebApplicationFactory<UserController>();
             using var httpClient = application.CreateClient();
-            var response = await httpClient.GetAsync(string.Format("/client/{0}", clientId));
+            var response = await httpClient.GetAsync(string.Format("/user/{0}", userId));
 
             stopWatch.Stop();
 
@@ -213,18 +211,18 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private async Task GetClientAuthenticatedTest()
+        private async Task GetUserAuthenticatedTest()
         {
-            var clientId = _testClientIds.First();
+            var userId = _testUserIds.First();
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
             // Make Web API call
-            await using var application = new WebApplicationFactory<ClientController>();
+            await using var application = new WebApplicationFactory<UserController>();
             using var httpClient = application.CreateClient();
             httpClient.DefaultRequestHeaders.Add("authorization", "Bearer demo");
-            var response = await httpClient.GetAsync(string.Format("/client/{0}", clientId));
+            var response = await httpClient.GetAsync(string.Format("/user/{0}", userId));
 
             stopWatch.Stop();
 
@@ -239,11 +237,11 @@ namespace DemoTests.WebApiTests
             Assert.AreEqual("application/json; charset=utf-8", response.Content.Headers.ContentType.ToString());
 
             // Check result
-            var getClientResult = _controller.GetClient(clientId) as OkObjectResult;
+            var getClientResult = _controller.GetUser(userId) as OkObjectResult;
             Assert.IsNotNull(getClientResult);
-            var expected = (ClientModel?)getClientResult.Value;
+            var expected = (UserModel?)getClientResult.Value;
             Assert.IsNotNull(expected);
-            var actual = JsonConvert.DeserializeObject<ClientModel>(await response.Content.ReadAsStringAsync());
+            var actual = JsonConvert.DeserializeObject<UserModel>(await response.Content.ReadAsStringAsync());
             Assert.IsNotNull(actual);
             CompareModels.Compare(expected, actual);
 
@@ -251,17 +249,17 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private async Task GetWorkItemsUnauthenticatedTest()
+        private async Task GetClientsUnauthenticatedTest()
         {
-            var clientId = _testClientIds.First();
+            var userId = _testUserIds.First();
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
             // Make Web API call
-            await using var application = new WebApplicationFactory<ClientController>();
+            await using var application = new WebApplicationFactory<UserController>();
             using var httpClient = application.CreateClient();
-            var response = await httpClient.GetAsync(string.Format("/client/{0}/workitems", clientId));
+            var response = await httpClient.GetAsync(string.Format("/user/{0}/clients", userId));
 
             stopWatch.Stop();
 
@@ -279,18 +277,18 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private async Task GetWorkItemsAuthenticatedTest()
+        private async Task GetClientsAuthenticatedTest()
         {
-            var clientId = _testClientIds.First();
+            var userId = _testUserIds.First();
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
             // Make Web API call
-            await using var application = new WebApplicationFactory<ClientController>();
+            await using var application = new WebApplicationFactory<UserController>();
             using var httpClient = application.CreateClient();
             httpClient.DefaultRequestHeaders.Add("authorization", "Bearer demo");
-            var response = await httpClient.GetAsync(string.Format("/client/{0}/workitems", clientId));
+            var response = await httpClient.GetAsync(string.Format("/user/{0}/clients", userId));
 
             stopWatch.Stop();
 
@@ -305,11 +303,11 @@ namespace DemoTests.WebApiTests
             Assert.AreEqual("application/json; charset=utf-8", response.Content.Headers.ContentType.ToString());
 
             // Check result
-            var getWorkitemsResult = _controller.GetWorkItems(clientId) as OkObjectResult;
-            Assert.IsNotNull(getWorkitemsResult);
-            var expected = (List<WorkItemModel>?)getWorkitemsResult.Value;
+            var getClientsResult = _controller.GetClients(userId) as OkObjectResult;
+            Assert.IsNotNull(getClientsResult);
+            var expected = (List<ClientModel>?)getClientsResult.Value;
             Assert.IsNotNull(expected);
-            var actual = JsonConvert.DeserializeObject<List<WorkItemModel>>(await response.Content.ReadAsStringAsync());
+            var actual = JsonConvert.DeserializeObject<List<ClientModel>>(await response.Content.ReadAsStringAsync());
             Assert.IsNotNull(actual);
             CompareModels.Compare(expected, actual);
 
@@ -317,17 +315,17 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private async Task GetUsersUnauthenticatedTest()
+        private async Task CheckForUniqueEmailAddressUnauthenticatedTest()
         {
-            var clientId = _testClientIds.First();
+            var userId = _testUserIds.First();
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
             // Make Web API call
-            await using var application = new WebApplicationFactory<ClientController>();
+            await using var application = new WebApplicationFactory<UserController>();
             using var httpClient = application.CreateClient();
-            var response = await httpClient.GetAsync(string.Format("/client/{0}/users", clientId));
+            var response = await httpClient.GetAsync(string.Format("/user/{0}/checkemailaddress", userId));
 
             stopWatch.Stop();
 
@@ -345,89 +343,23 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private async Task GetUsersAuthenticatedTest()
+        private async Task CheckForUniqueEmailAddressAuthenticatedTest()
         {
-            var clientId = _testClientIds.First();
-
-            var stopWatch = new Stopwatch();
-            stopWatch.Start();
-
-            // Make Web API call
-            await using var application = new WebApplicationFactory<ClientController>();
-            using var httpClient = application.CreateClient();
-            httpClient.DefaultRequestHeaders.Add("authorization", "Bearer demo");
-            var response = await httpClient.GetAsync(string.Format("/client/{0}/users", clientId));
-
-            stopWatch.Stop();
-
-            // Check elapsed time
-#if !DEBUG
-                Assert.IsTrue(stopWatch.Elapsed.TotalSeconds <= 1);
-#endif
-
-            // Check response
-            response.EnsureSuccessStatusCode();
-            Assert.IsNotNull(response.Content.Headers.ContentType);
-            Assert.AreEqual("application/json; charset=utf-8", response.Content.Headers.ContentType.ToString());
-
-            // Check result
-            var getUsersResult = _controller.GetUsers(clientId) as OkObjectResult;
-            Assert.IsNotNull(getUsersResult);
-            var expected = (List<UserModel>?)getUsersResult.Value;
-            Assert.IsNotNull(expected);
-            var actual = JsonConvert.DeserializeObject<List<UserModel>>(await response.Content.ReadAsStringAsync());
-            Assert.IsNotNull(actual);
-            CompareModels.Compare(expected, actual);
-
-            var elapsedTime = DateTimeUtility.GetElapsedTime(stopWatch.Elapsed);
-            Console.WriteLine(string.Format("{0}", elapsedTime));
-        }
-
-        private async Task CheckForUniqueClientNameUnauthenticatedTest()
-        {
-            var clientId = _testClientIds.First();
-
-            var stopWatch = new Stopwatch();
-            stopWatch.Start();
-
-            // Make Web API call
-            await using var application = new WebApplicationFactory<ClientController>();
-            using var httpClient = application.CreateClient();
-            var response = await httpClient.GetAsync(string.Format("/client/{0}/checkname", clientId));
-
-            stopWatch.Stop();
-
-            // Check elapsed time
-#if !DEBUG
-                Assert.IsTrue(stopWatch.Elapsed.TotalSeconds <= 1);
-#endif
-
-            // Check response
-            Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-            Assert.IsNotNull(response.Content.Headers.ContentType);
-            Assert.AreEqual("application/json; charset=utf-8", response.Content.Headers.ContentType.ToString());
-
-            var elapsedTime = DateTimeUtility.GetElapsedTime(stopWatch.Elapsed);
-            Console.WriteLine(string.Format("{0}", elapsedTime));
-        }
-
-        private async Task CheckForUniqueClientNameAuthenticatedTest()
-        {
-            var clientId = _testClientIds.First();
-            var uniqueClientname = Guid.NewGuid().ToString();
-            await using var application = new WebApplicationFactory<ClientController>();
+            var userId = _testUserIds.First();
+            var uniqueEmailAddress = Guid.NewGuid().ToString();
+            await using var application = new WebApplicationFactory<UserController>();
             using var httpClient = application.CreateClient();
             httpClient.DefaultRequestHeaders.Add("authorization", "Bearer demo");
 
             // ------------------------------------------------------------
-            // Client name IS unique
+            // Email Address IS unique
             // ------------------------------------------------------------
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
             // Make Web API call
-            var response = await httpClient.GetAsync(string.Format("/client/{0}/checkname?name={1}", clientId, uniqueClientname));
+            var response = await httpClient.GetAsync(string.Format("/user/{0}/checkemailaddress?emailAddress={1}", userId, uniqueEmailAddress));
 
             stopWatch.Stop();
 
@@ -442,9 +374,9 @@ namespace DemoTests.WebApiTests
             Assert.AreEqual("application/json; charset=utf-8", response.Content.Headers.ContentType.ToString());
 
             // Check result
-            var checkForUniqueNameResult = _controller.CheckForUniqueName(clientId, uniqueClientname) as OkObjectResult;
-            Assert.IsNotNull(checkForUniqueNameResult);
-            var expected = checkForUniqueNameResult.Value;
+            var checkEmailAddressDuplicateResult = _controller.CheckForUniqueEmailAddress(userId, uniqueEmailAddress) as OkObjectResult;
+            Assert.IsNotNull(checkEmailAddressDuplicateResult);
+            var expected = checkEmailAddressDuplicateResult.Value;
             Assert.IsNotNull(expected);
             var actual = JsonConvert.DeserializeObject<bool>(await response.Content.ReadAsStringAsync());
             Assert.AreEqual(expected, actual);
@@ -453,21 +385,21 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
 
             // ------------------------------------------------------------
-            // Client name is NOT unique
+            // Email Address is NOT unique
             // ------------------------------------------------------------
 
-            var testClientId = _testClientIds.Skip(1).First();
-            var getClientResult = _controller.GetClient(testClientId) as OkObjectResult;
-            Assert.IsNotNull(getClientResult);
-            var client = (ClientModel?)getClientResult.Value;
-            Assert.IsNotNull(client);
-            var duplicateClientname = client.Name;
+            var testUserId = _testUserIds.Skip(1).First();
+            var getUserResult = _controller.GetUser(testUserId) as OkObjectResult;
+            Assert.IsNotNull(getUserResult);
+            var user = (UserModel?)getUserResult.Value;
+            Assert.IsNotNull(user);
+            var duplicateEmailAddress = user.EmailAddress;
 
             stopWatch = new Stopwatch();
             stopWatch.Start();
 
             // Make Web API call
-            response = await httpClient.GetAsync(string.Format("/client/{0}/checkname?name={1}", clientId, duplicateClientname));
+            response = await httpClient.GetAsync(string.Format("/user/{0}/checkemailaddress?emailAddress={1}", userId, duplicateEmailAddress));
 
             stopWatch.Stop();
 
@@ -482,9 +414,9 @@ namespace DemoTests.WebApiTests
             Assert.AreEqual("application/json; charset=utf-8", response.Content.Headers.ContentType.ToString());
 
             // Check result
-            checkForUniqueNameResult = _controller.CheckForUniqueName(clientId, duplicateClientname) as OkObjectResult;
-            Assert.IsNotNull(checkForUniqueNameResult);
-            expected = checkForUniqueNameResult.Value;
+            checkEmailAddressDuplicateResult = _controller.CheckForUniqueEmailAddress(userId, duplicateEmailAddress) as OkObjectResult;
+            Assert.IsNotNull(checkEmailAddressDuplicateResult);
+            expected = checkEmailAddressDuplicateResult.Value;
             Assert.IsNotNull(expected);
             actual = JsonConvert.DeserializeObject<bool>(await response.Content.ReadAsStringAsync());
             Assert.AreEqual(expected, actual);
@@ -495,12 +427,12 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private async Task CreateClientUnauthenticatedTest()
+        private async Task CreateUserUnauthenticatedTest()
         {
-            var clientId = _testClientIds.First();
-            var getClientResult = _controller.GetClient(clientId) as OkObjectResult;
+            var userId = _testUserIds.First();
+            var getClientResult = _controller.GetUser(userId) as OkObjectResult;
             Assert.IsNotNull(getClientResult);
-            var expected = (ClientModel?)getClientResult.Value;
+            var expected = (UserModel?)getClientResult.Value;
             Assert.IsNotNull(expected);
 
             var content = new StringContent(JsonConvert.SerializeObject(expected), Encoding.UTF8, "application/json");
@@ -509,9 +441,9 @@ namespace DemoTests.WebApiTests
             stopWatch.Start();
 
             // Make Web API call
-            await using var application = new WebApplicationFactory<ClientController>();
+            await using var application = new WebApplicationFactory<UserController>();
             using var httpClient = application.CreateClient();
-            var response = await httpClient.PostAsync("/client", content);
+            var response = await httpClient.PostAsync("/user", content);
 
             stopWatch.Stop();
 
@@ -529,7 +461,7 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private static async Task<ClientModel> CreateClientAuthenticatedTest(ClientModel model)
+        private static async Task<UserModel> CreateUserAuthenticatedTest(UserModel model)
         {
             var content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
 
@@ -537,10 +469,10 @@ namespace DemoTests.WebApiTests
             stopWatch.Start();
 
             // Make Web API call
-            await using var application = new WebApplicationFactory<ClientController>();
+            await using var application = new WebApplicationFactory<UserController>();
             using var httpClient = application.CreateClient();
             httpClient.DefaultRequestHeaders.Add("authorization", "Bearer demo");
-            var response = await httpClient.PostAsync("/client", content);
+            var response = await httpClient.PostAsync("/user", content);
 
             stopWatch.Stop();
 
@@ -550,16 +482,17 @@ namespace DemoTests.WebApiTests
 #endif
 
             // Check response
+            var result = await response.Content.ReadAsStringAsync();
             response.EnsureSuccessStatusCode();
             Assert.IsNotNull(response.Content.Headers.ContentType);
             Assert.AreEqual("application/json; charset=utf-8", response.Content.Headers.ContentType.ToString());
 
             // Check result
-            var actual = JsonConvert.DeserializeObject<ClientModel>(await response.Content.ReadAsStringAsync());
+            var actual = JsonConvert.DeserializeObject<UserModel>(await response.Content.ReadAsStringAsync());
             Assert.IsNotNull(actual);
             var expected = model;
-            model.ClientId = actual.ClientId;
-            model.ClientGuid = actual.ClientGuid;
+            model.UserId = actual.UserId;
+            model.UserGuid = actual.UserGuid;
             CompareModels.Compare(expected, actual);
 
             var elapsedTime = DateTimeUtility.GetElapsedTime(stopWatch.Elapsed);
@@ -568,12 +501,12 @@ namespace DemoTests.WebApiTests
             return actual;
         }
 
-        private async Task UpdateClientUnauthenticatedTest()
+        private async Task UpdateUserUnauthenticatedTest()
         {
-            var clientId = _testClientIds.First();
-            var getClientResult = _controller.GetClient(clientId) as OkObjectResult;
-            Assert.IsNotNull(getClientResult);
-            var expected = (ClientModel?)getClientResult.Value;
+            var userId = _testUserIds.First();
+            var getUserResult = _controller.GetUser(userId) as OkObjectResult;
+            Assert.IsNotNull(getUserResult);
+            var expected = (UserModel?)getUserResult.Value;
             Assert.IsNotNull(expected);
 
             var content = new StringContent(JsonConvert.SerializeObject(expected), Encoding.UTF8, "application/json");
@@ -582,9 +515,9 @@ namespace DemoTests.WebApiTests
             stopWatch.Start();
 
             // Make Web API call
-            await using var application = new WebApplicationFactory<ClientController>();
+            await using var application = new WebApplicationFactory<UserController>();
             using var httpClient = application.CreateClient();
-            var response = await httpClient.PutAsync(string.Format("/client/{0}", clientId), content);
+            var response = await httpClient.PutAsync(string.Format("/user/{0}", userId), content);
 
             stopWatch.Stop();
 
@@ -602,7 +535,7 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private static async Task UpdateClientAuthenticatedTest(ClientModel model)
+        private static async Task UpdateUserAuthenticatedTest(UserModel model)
         {
             var content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
 
@@ -610,10 +543,10 @@ namespace DemoTests.WebApiTests
             stopWatch.Start();
 
             // Make Web API call
-            await using var application = new WebApplicationFactory<ClientController>();
+            await using var application = new WebApplicationFactory<UserController>();
             using var httpClient = application.CreateClient();
             httpClient.DefaultRequestHeaders.Add("authorization", "Bearer demo");
-            var response = await httpClient.PutAsync(string.Format("/client/{0}", model.ClientId), content);
+            var response = await httpClient.PutAsync(string.Format("/user/{0}", model.UserId), content);
 
             stopWatch.Stop();
 
@@ -635,17 +568,17 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private async Task DeleteClientUnauthenticatedTest()
+        private async Task DeleteUserUnauthenticatedTest()
         {
-            var clientId = _testClientIds.First();
+            var userId = _testUserIds.First();
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
             // Make Web API call
-            await using var application = new WebApplicationFactory<ClientController>();
+            await using var application = new WebApplicationFactory<UserController>();
             using var httpClient = application.CreateClient();
-            var response = await httpClient.DeleteAsync(string.Format("/client/{0}", clientId));
+            var response = await httpClient.DeleteAsync(string.Format("/user/{0}", userId));
 
             stopWatch.Stop();
 
@@ -663,16 +596,16 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private static async Task DeleteClientAuthenticatedTest(int clientId)
+        private static async Task DeleteUserAuthenticatedTest(int userId)
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
             // Make Web API call
-            await using var application = new WebApplicationFactory<ClientController>();
+            await using var application = new WebApplicationFactory<UserController>();
             using var httpClient = application.CreateClient();
             httpClient.DefaultRequestHeaders.Add("authorization", "Bearer demo");
-            var response = await httpClient.DeleteAsync(string.Format("/client/{0}", clientId));
+            var response = await httpClient.DeleteAsync(string.Format("/user/{0}", userId));
 
             stopWatch.Stop();
 
@@ -694,18 +627,18 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private static async Task AddUserUnauthenticatedTest()
+        private static async Task AddClientUnauthenticatedTest()
         {
-            var clientId = 0;
             var userId = 0;
+            var clientId = 0;
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
             // Make Web API call
-            await using var application = new WebApplicationFactory<ClientController>();
+            await using var application = new WebApplicationFactory<UserController>();
             using var httpClient = application.CreateClient();
-            var response = await httpClient.PutAsync(string.Format("/client/{0}/user/{1}", clientId, userId), null);
+            var response = await httpClient.PutAsync(string.Format("/user/{0}/client/{1}", userId, clientId), null);
 
             stopWatch.Stop();
 
@@ -723,19 +656,19 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private static async Task AddUserAuthenticatedTest()
+        private static async Task AddClientAuthenticatedTest()
         {
-            var clientId = 0;
             var userId = 0;
+            var clientId = 0;
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
             // Make Web API call
-            await using var application = new WebApplicationFactory<ClientController>();
+            await using var application = new WebApplicationFactory<UserController>();
             using var httpClient = application.CreateClient();
             httpClient.DefaultRequestHeaders.Add("authorization", "Bearer demo");
-            var response = await httpClient.PutAsync(string.Format("/client/{0}/user/{1}", clientId, userId), null);
+            var response = await httpClient.PutAsync(string.Format("/user/{0}/client/{1}", userId, clientId), null);
 
             stopWatch.Stop();
 
@@ -757,18 +690,18 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private static async Task DeleteUserUnauthenticatedTest()
+        private static async Task DeleteClientUnauthenticatedTest()
         {
-            var clientId = 0;
             var userId = 0;
+            var clientId = 0;
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
             // Make Web API call
-            await using var application = new WebApplicationFactory<ClientController>();
+            await using var application = new WebApplicationFactory<UserController>();
             using var httpClient = application.CreateClient();
-            var response = await httpClient.DeleteAsync(string.Format("/client/{0}/user/{1}", clientId, userId));
+            var response = await httpClient.DeleteAsync(string.Format("/user/{0}/client/{1}", userId, clientId));
 
             stopWatch.Stop();
 
@@ -786,19 +719,19 @@ namespace DemoTests.WebApiTests
             Console.WriteLine(string.Format("{0}", elapsedTime));
         }
 
-        private static async Task DeleteUserAuthenticatedTest()
+        private static async Task DeleteClientAuthenticatedTest()
         {
-            var clientId = 0;
             var userId = 0;
+            var clientId = 0;
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
             // Make Web API call
-            await using var application = new WebApplicationFactory<ClientController>();
+            await using var application = new WebApplicationFactory<UserController>();
             using var httpClient = application.CreateClient();
             httpClient.DefaultRequestHeaders.Add("authorization", "Bearer demo");
-            var response = await httpClient.DeleteAsync(string.Format("/client/{0}/user/{1}", clientId, userId));
+            var response = await httpClient.DeleteAsync(string.Format("/user/{0}/client/{1}", userId, clientId));
 
             stopWatch.Stop();
 

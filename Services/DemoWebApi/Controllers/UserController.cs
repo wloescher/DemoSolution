@@ -64,8 +64,20 @@ namespace DemoWebApi.Controllers
             return Ok(userList);
         }
 
-        [HttpGet("{userId}/checkemailaddressduplicate")]
-        public IActionResult CheckEmailAddressDuplicate(int userId, string emailAddress)
+        [HttpGet("{userId}/clients")]
+        public IActionResult GetClients(int userId)
+        {
+            List<ClientModel> models;
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+                models = userService.GetUserClients(userId);
+            }
+            return Ok(models);
+        }
+
+        [HttpGet("{userId}/checkemailaddress")]
+        public IActionResult CheckForUniqueEmailAddress(int userId, string emailAddress)
         {
             List<UserModel> users;
             using (var scope = _serviceProvider.CreateScope())
@@ -79,40 +91,71 @@ namespace DemoWebApi.Controllers
         }
 
         [HttpPost()]
-        public IActionResult CreateUser([FromBody] UserModel user)
+        public IActionResult CreateUser([FromBody] UserModel model)
         {
-            string errorMessage;
+            UserModel? user;
             using (var scope = _serviceProvider.CreateScope())
             {
                 var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
                 var currentUserId = userService.GetCurrentUserId(HttpContext);
-                userService.CreateUser(user, currentUserId, out errorMessage);
+                user = userService.CreateUser(model, currentUserId, out string errorMessage);
             }
-            return Ok(errorMessage);
+            return Ok(user);
         }
 
         [HttpPut("{userId}")]
-        public IActionResult UpdateUser(int userId, [FromBody] UserModel user)
+        public IActionResult UpdateUser(int userId, [FromBody] UserModel model)
         {
-            string errorMessage;
+            bool result;
             using (var scope = _serviceProvider.CreateScope())
             {
                 var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
                 var currentUserId = userService.GetCurrentUserId(HttpContext);
-                userService.UpdateUser(user, currentUserId, out errorMessage);
+                result = userService.UpdateUser(model, currentUserId, out string errorMessage);
             }
-            return Ok(errorMessage);
+            return Ok(result);
         }
 
         [HttpDelete("{userId}")]
         public IActionResult DeleteUser(int userId)
         {
+            bool result;
             using (var scope = _serviceProvider.CreateScope())
             {
                 var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
                 var currentUserId = userService.GetCurrentUserId(HttpContext);
-                userService.DeleteUser(userId, currentUserId);
+                result = userService.DeleteUser(userId, currentUserId);
             }
+            return Ok(result);
+        }
+
+        [HttpPut("{userId}/client/{clientId}")]
+        public IActionResult AddClient(int userId, int clientId)
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+                var currentUserId = userService.GetCurrentUserId(HttpContext);
+
+                var clientService = scope.ServiceProvider.GetRequiredService<IClientService>();
+                clientService.CreateClientUser(clientId, userId, currentUserId);
+            }
+
+            return Ok(true);
+        }
+
+        [HttpDelete("{userId}/client/{clientId}")]
+        public IActionResult DeleteClient(int userId, int clientId)
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+                var currentUserId = userService.GetCurrentUserId(HttpContext);
+
+                var clientService = scope.ServiceProvider.GetRequiredService<IClientService>();
+                clientService.DeleteClientUser(clientId, userId, currentUserId);
+            }
+
             return Ok(true);
         }
     }

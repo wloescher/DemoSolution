@@ -9,6 +9,8 @@ namespace DemoTests.WebApiTests
     [TestClass()]
     public class PublicWebApiTests : TestBase
     {
+        #region Test Methods
+
         [TestMethod]
         public async Task GenerateSecretKey()
         {
@@ -39,5 +41,7 @@ namespace DemoTests.WebApiTests
             var elapsedTime = DateTimeUtility.GetElapsedTime(stopWatch.Elapsed);
             Console.WriteLine(string.Format("{0}, {1}", actual, elapsedTime));
         }
+
+        #endregion
     }
 }

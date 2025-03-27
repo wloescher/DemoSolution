@@ -5,7 +5,6 @@ using DemoTests.TestHelpers;
 using DemoUtilities;
 using DemoWebApi.Controllers;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Diagnostics;
 
@@ -14,23 +13,7 @@ namespace DemoTests.WebApiTests
     [TestClass()]
     public class TestWebApiTests : TestBase
     {
-        // Configuration Values
-        private readonly List<int> _testClientIds = new();
-        private readonly List<int> _testUserIds = new();
-        private readonly List<int> _testWorkItemIds = new();
-
-        public TestWebApiTests()
-        {
-            // Configuration
-            var configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder.AddJsonFile("appsettings.json");
-            var configuration = configurationBuilder.Build();
-
-            // Configuration Values
-            _testClientIds = (configuration.GetValue<string>("Demo:TestClientIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
-            _testUserIds = (configuration.GetValue<string>("Demo:TestUserIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
-            _testWorkItemIds = (configuration.GetValue<string>("Demo:TestWorkItemIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
-        }
+        #region Test Methods
 
         [TestMethodDependencyInjection]
         public async Task GetClient(IClientService clientService)
@@ -130,5 +113,7 @@ namespace DemoTests.WebApiTests
             var elapsedTime = DateTimeUtility.GetElapsedTime(stopWatch.Elapsed);
             Console.WriteLine(string.Format("{0}, {1}, {2}", expected.WorkItemId, expected.Type, elapsedTime));
         }
+
+        #endregion
     }
 }

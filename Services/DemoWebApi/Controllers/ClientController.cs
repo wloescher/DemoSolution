@@ -42,18 +42,6 @@ namespace DemoWebApi.Controllers
             return Ok(client);
         }
 
-        [HttpGet("{clientId}/workitems")]
-        public IActionResult GetWorkItems(int clientId)
-        {
-            List<WorkItemModel> models;
-            using (var scope = _serviceProvider.CreateScope())
-            {
-                var clientService = scope.ServiceProvider.GetRequiredService<IClientService>();
-                models = clientService.GetClientWorkItems(clientId);
-            }
-            return Ok(models);
-        }
-
         [HttpGet("{clientId}/users")]
         public IActionResult GetUsers(int clientId)
         {
@@ -62,6 +50,18 @@ namespace DemoWebApi.Controllers
             {
                 var clientService = scope.ServiceProvider.GetRequiredService<IClientService>();
                 models = clientService.GetClientUsers(clientId);
+            }
+            return Ok(models);
+        }
+
+        [HttpGet("{clientId}/workitems")]
+        public IActionResult GetWorkItems(int clientId)
+        {
+            List<WorkItemModel> models;
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var clientService = scope.ServiceProvider.GetRequiredService<IClientService>();
+                models = clientService.GetClientWorkItems(clientId);
             }
             return Ok(models);
         }

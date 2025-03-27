@@ -17,5 +17,7 @@ namespace DemoServices.Interfaces
         List<KeyValuePair<int, string>> GetUserKeyValuePairs(bool activeOnly = true, bool excludeInternal = true);
 
         UserModel? GetUser(string emailAddress, string password);
+
+        List<ClientModel> GetUserClients(int userId);
     }
 }

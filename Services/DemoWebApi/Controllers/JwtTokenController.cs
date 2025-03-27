@@ -39,7 +39,7 @@ namespace DemoWebApi.Controllers
                 return BadRequest(new { message = "Incorrect username or password." });
             }
 
-            var token = JwtTokenUtility.GenerateToken(_configuration, user.UserId, user.EmailAddress, user.FirstName, user.LastName);
+            var token = JwtTokenUtility.GenerateToken(_configuration, user.UserId, user.EmailAddress, user.FirstName ?? string.Empty, user.LastName ?? string.Empty);
             return Ok(token);
         }
     }

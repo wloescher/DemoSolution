@@ -12,7 +12,6 @@ namespace DemoWebApi.Controllers
         internal readonly ILogger _logger;
         internal readonly IConfiguration _configuration;
         internal readonly IServiceProvider _serviceProvider;
-        internal readonly EmailUtility _emailUtility;
 
         // Configuration Values
         public readonly List<int> TestClientIds = new();
@@ -31,7 +30,6 @@ namespace DemoWebApi.Controllers
             _logger = logger;
             _configuration = configuration;
             _serviceProvider = serviceProvider;
-            _emailUtility = new(configuration);
 
             // Configuration Values
             TestClientIds = (configuration.GetValue<string>("Demo:TestClientIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();

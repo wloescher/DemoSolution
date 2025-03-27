@@ -1,11 +1,8 @@
 ﻿using DemoModels;
-using DemoRepository.Entities;
 using DemoServices.Interfaces;
 using DemoTests.BaseClasses;
 using DemoTests.TestHelpers;
 using DemoUtilities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
 using static DemoModels.Enums;
 
@@ -14,28 +11,6 @@ namespace DemoTests.ServiceTests
     [TestClass()]
     public class UserServiceTests : TestBase
     {
-        // Dependencies
-        private readonly DemoSqlContext _dbContext;
-
-        // Configuration Values
-        private readonly List<int> _testUserIds = new();
-
-        public UserServiceTests()
-        {
-            // Configuration
-            var configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder.AddJsonFile("appsettings.json");
-            var configuration = configurationBuilder.Build();
-
-            // Dependencies
-            var optionsBuilder = new DbContextOptionsBuilder<DemoSqlContext>();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-            _dbContext = new DemoSqlContext(optionsBuilder.Options);
-
-            // Configuration Values
-            _testUserIds = (configuration.GetValue<string>("Demo:TestUserIds") ?? string.Empty).Split(',').Select(int.Parse).ToList();
-        }
-
         #region Test Methods
 
         [TestMethodDependencyInjection]
@@ -93,6 +68,7 @@ namespace DemoTests.ServiceTests
                 Region = string.Format("Region-{0}", ticks),
                 PostalCode = string.Format("Zip-{0}", ticks.ToString().Substring(ticks.ToString().Length - 6)),
                 Country = string.Format("Country-{0}", ticks),
+                PhoneNumber = string.Format("PhoneNumber-{0}", ticks.ToString().Substring(ticks.ToString().Length - 8)),
             };
 
             var testUserId = CreateUserTest(userService, model, userId);
@@ -135,6 +111,35 @@ namespace DemoTests.ServiceTests
             foreach (var keyValuePair in keyValuePairs)
             {
                 Console.WriteLine(string.Format("{0}, {1}", keyValuePair.Key, keyValuePair.Value));
+            }
+        }
+
+        [TestMethodDependencyInjection]
+        public void GetUserClientsTest(IUserService userService)
+        {
+            var userId = _testUserIds.First();
+
+            // Get models
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+
+            var models = userService.GetUserClients(userId);
+
+            stopWatch.Stop();
+            var elapsedTime = DateTimeUtility.GetElapsedTime(stopWatch.Elapsed);
+            Console.WriteLine(string.Format("{0} Clients, {1} elapsed", models.Count, elapsedTime));
+
+            // Check results
+            Assert.AreNotEqual(0, models.Count);
+#if !DEBUG
+            Assert.IsTrue(stopWatch.Elapsed.TotalSeconds <= 2);
+#endif
+
+            // Display results
+            Console.WriteLine("ClientId, Name");
+            foreach (var model in models)
+            {
+                Console.WriteLine(string.Format("{0}, {1}", model.ClientId, model.Name));
             }
         }
 
@@ -238,6 +243,7 @@ namespace DemoTests.ServiceTests
             model.Region = string.Format("Region-{0}", ticks);
             model.PostalCode = string.Format("Zip-{0}", ticks.ToString().Substring(ticks.ToString().Length - 6));
             model.Country = string.Format("Country-{0}", ticks);
+            model.PhoneNumber = string.Format("PhoneNumber-{0}", ticks.ToString().Substring(ticks.ToString().Length - 8));
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();

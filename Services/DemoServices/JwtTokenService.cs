@@ -25,7 +25,7 @@ namespace DemoServices
                 return string.Empty;
             }
 
-            return JwtTokenUtility.GenerateToken(_configuration, user.UserId, user.EmailAddress, user.FirstName, user.LastName);
+            return JwtTokenUtility.GenerateToken(_configuration, user.UserId, user.EmailAddress, user.FirstName ?? string.Empty, user.LastName ?? string.Empty);
         }
     }
 }
