@@ -31,6 +31,10 @@ namespace DemoModels
         public string? Country { get; set; }
         [MaxLength(20)]
         public string? PhoneNumber { get; set; }
+        public DateTime CreatedDate { get; set; } = new DateTime(1900, 1, 1);
+        public string? CreatedBy { get; set; }
+        public DateTime ModifiedDate { get; set; } = new DateTime(1900, 1, 1);
+        public string? ModifiedBy { get; set; }
 
         public string FullName
         {

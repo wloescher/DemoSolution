@@ -86,7 +86,7 @@ namespace DemoTests.ServiceTests
         }
 
         [TestMethodDependencyInjection]
-        public void GetWorkitemUserAuditsTest(IAuditService auditService)
+        public void GetWorkItemUserAuditsTest(IAuditService auditService)
         {
             var workItemUserId = _testWorkItemUserIds.First();
             var result = auditService.GetWorkItemUserAudits(workItemUserId);
