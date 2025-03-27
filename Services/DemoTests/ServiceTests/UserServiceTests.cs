@@ -82,6 +82,7 @@ namespace DemoTests.ServiceTests
             var model = new UserModel
             {
                 Type = UserType.Admin,
+                IsActive = true,
                 EmailAddress = string.Format("{0}@demo.com", ticks),
                 FirstName = string.Format("First-{0}", ticks),
                 MiddleName = string.Format("Middle-{0}", ticks),

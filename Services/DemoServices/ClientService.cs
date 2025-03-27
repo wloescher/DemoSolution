@@ -26,14 +26,14 @@ namespace DemoServices
             {
                 ClientTypeId = (int)model.Type,
                 ClientName = model.Name.Trim(),
-                ClientAddressLine1 = model.AddressLine1.Trim(),
-                ClientAddressLine2 = model.AddressLine2.Trim(),
-                ClientCity = model.City.Trim(),
-                ClientRegion = model.Region.Trim(),
-                ClientPostalCode = model.PostalCode.Trim(),
-                ClientCountry = model.Country.Trim(),
-                ClientPhoneNumber = model.PhoneNumber.Trim(),
-                ClientUrl = model.Url.Trim(),
+                ClientAddressLine1 = model.AddressLine1?.Trim(),
+                ClientAddressLine2 = model.AddressLine2?.Trim(),
+                ClientCity = model.City?.Trim(),
+                ClientRegion = model.Region?.Trim(),
+                ClientPostalCode = model.PostalCode?.Trim(),
+                ClientCountry = model.Country?.Trim(),
+                ClientPhoneNumber = model.PhoneNumber?.Trim(),
+                ClientUrl = model.Url?.Trim(),
             };
 
             _dbContext.Clients.Add(entity);
@@ -131,14 +131,14 @@ namespace DemoServices
                 // Update entity property values
                 entity.ClientIsActive = model.IsActive;
                 entity.ClientName = model.Name.Trim();
-                entity.ClientAddressLine1 = model.AddressLine1.Trim();
-                entity.ClientAddressLine1 = model.AddressLine2.Trim();
-                entity.ClientCity = model.City.Trim();
-                entity.ClientRegion = model.Region.Trim();
-                entity.ClientPostalCode = model.PostalCode.Trim();
-                entity.ClientCountry = model.Country.Trim();
-                entity.ClientPhoneNumber = model.PhoneNumber.Trim();
-                entity.ClientUrl = model.Url.Trim();
+                entity.ClientAddressLine1 = model.AddressLine1?.Trim();
+                entity.ClientAddressLine2 = model.AddressLine2?.Trim();
+                entity.ClientCity = model.City?.Trim();
+                entity.ClientRegion = model.Region?.Trim();
+                entity.ClientPostalCode = model.PostalCode?.Trim();
+                entity.ClientCountry = model.Country?.Trim();
+                entity.ClientPhoneNumber = model.PhoneNumber?.Trim();
+                entity.ClientUrl = model.Url?.Trim();
 
                 dbUpdated = _dbContext.SaveChanges() > 0;
 

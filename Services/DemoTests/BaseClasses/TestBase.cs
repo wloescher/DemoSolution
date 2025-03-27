@@ -1,6 +1,8 @@
 ﻿using DemoRepository.Entities;
 using DemoServices;
 using DemoServices.Interfaces;
+using DemoUtilities;
+using DemoUtilities.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,6 +46,7 @@ namespace DemoTests.BaseClasses
             serviceCollection.AddSingleton<IClientService, ClientService>();
             serviceCollection.AddSingleton<IUserService, UserService>();
             serviceCollection.AddSingleton<IWorkItemService, WorkItemService>();
+            serviceCollection.AddSingleton<IEmailUtility, EmailUtility>();
 
             _serviceProvider = serviceCollection.BuildServiceProvider();
         }

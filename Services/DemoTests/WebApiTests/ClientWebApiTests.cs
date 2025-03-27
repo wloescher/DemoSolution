@@ -94,7 +94,7 @@ namespace DemoTests.WebApiTests
         }
 
         [TestMethod()]
-        public async Task ClientCrudTest()
+        public async Task CrudTest()
         {
             var dateSlug = DateTime.Now.ToString("yyyyMMdd");
             var guid = Guid.NewGuid();

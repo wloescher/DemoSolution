@@ -89,9 +89,9 @@ namespace DemoTests.ServiceTests
                 AddressLine2 = string.Format("AddressLine2-{0}", ticks),
                 City = string.Format("City-{0}", ticks),
                 Region = string.Format("Region-{0}", ticks),
-                PostalCode = string.Format("Zip-{0}", ticks.ToString().Substring(ticks.ToString().Length - 6)),
+                PostalCode = string.Format("Zip-{0}", ticks.ToString().Substring(ticks.ToString().Length - 6)), // Max length 10
                 Country = string.Format("Country-{0}", ticks),
-                PhoneNumber = string.Format("PhoneNumber-{0}", ticks),
+                PhoneNumber = string.Format("PhoneNumber-{0}", ticks.ToString().Substring(ticks.ToString().Length - 8)), // Max length 20
                 Url = string.Format("Url-{0}", ticks),
             };
 
@@ -265,9 +265,9 @@ namespace DemoTests.ServiceTests
             model.AddressLine2 = string.Format("AddressLine2-{0}", ticks);
             model.City = string.Format("City-{0}", ticks);
             model.Region = string.Format("Region-{0}", ticks);
-            model.PostalCode = string.Format("Zip-{0}", ticks.ToString().Substring(ticks.ToString().Length - 6));
+            model.PostalCode = string.Format("Zip-{0}", ticks.ToString().Substring(ticks.ToString().Length - 6)); // Max length 10
             model.Country = string.Format("Country-{0}", ticks);
-            model.PhoneNumber = string.Format("PhoneNumber-{0}", ticks);
+            model.PhoneNumber = string.Format("PhoneNumber-{0}", ticks.ToString().Substring(ticks.ToString().Length - 8)); // Max length 20
             model.Url = string.Format("Url-{0}", ticks);
 
             var stopWatch = new Stopwatch();

@@ -76,16 +76,16 @@ namespace DemoServices
                 UserIsActive = true,
                 UserEmailAddress = model.EmailAddress.Trim(),
                 UserPassword = password,
-                UserFirstName = model.FirstName.Trim(),
-                UserMiddleName = model.MiddleName.Trim(),
-                UserLastName = model.LastName.Trim(),
-                UserAddressLine1 = model.AddressLine1.Trim(),
-                UserAddressLine2 = model.AddressLine2.Trim(),
-                UserCity = model.City.Trim(),
-                UserRegion = model.Region.Trim(),
-                UserPostalCode = model.PostalCode.Trim(),
-                UserCountry = model.Country.Trim(),
-                UserPhoneNumber = model.PhoneNumber.Trim(),
+                UserFirstName = model.FirstName?.Trim(),
+                UserMiddleName = model.MiddleName?.Trim(),
+                UserLastName = model.LastName?.Trim(),
+                UserAddressLine1 = model.AddressLine1?.Trim(),
+                UserAddressLine2 = model.AddressLine2?.Trim(),
+                UserCity = model.City?.Trim(),
+                UserRegion = model.Region?.Trim(),
+                UserPostalCode = model.PostalCode?.Trim(),
+                UserCountry = model.Country?.Trim(),
+                UserPhoneNumber = model.PhoneNumber?.Trim(),
                 UserPasswordHash = SecurityUtility.PasswordHash(password),
             };
 
@@ -220,16 +220,16 @@ namespace DemoServices
                 entity.UserTypeId = (int)model.Type;
                 entity.UserIsActive = model.IsActive;
                 entity.UserEmailAddress = model.EmailAddress.Trim();
-                entity.UserFirstName = model.FirstName.Trim();
-                entity.UserMiddleName = model.MiddleName.Trim();
-                entity.UserLastName = model.LastName.Trim();
-                entity.UserAddressLine1 = model.AddressLine1.Trim();
-                entity.UserAddressLine2 = model.AddressLine2.Trim();
-                entity.UserCity = model.City.Trim();
-                entity.UserRegion = model.Region.Trim();
-                entity.UserPostalCode = model.PostalCode.Trim();
-                entity.UserCountry = model.Country.Trim();
-                entity.UserPhoneNumber = model.PhoneNumber.Trim();
+                entity.UserFirstName = model.FirstName?.Trim();
+                entity.UserMiddleName = model.MiddleName?.Trim();
+                entity.UserLastName = model.LastName?.Trim();
+                entity.UserAddressLine1 = model.AddressLine1?.Trim();
+                entity.UserAddressLine2 = model.AddressLine2?.Trim();
+                entity.UserCity = model.City?.Trim();
+                entity.UserRegion = model.Region?.Trim();
+                entity.UserPostalCode = model.PostalCode?.Trim();
+                entity.UserCountry = model.Country?.Trim();
+                entity.UserPhoneNumber = model.PhoneNumber?.Trim();
 
                 dbUpdated = _dbContext.SaveChanges() > 0;
 
