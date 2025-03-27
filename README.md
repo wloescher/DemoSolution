@@ -8,11 +8,11 @@ DATA LAYER
 - Models
 
 SERVICES LAYER
-- Services (C# / .NET Core / Dependency Injection / Interfaces)
-- Utilities
-- Web API
+- Services (C# / .NET Core (v8) / Dependency Injection / Interfaces)
+- Web API (JWT Authentication)
 - Tests
-
+- Utilities
+  
 PRESENTATION LAYER
 - Angular v16 (Work in Progress)
   - Bootstrap
