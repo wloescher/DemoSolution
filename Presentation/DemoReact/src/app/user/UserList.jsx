@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ErrorBoundary from "../../components/ErrorBoundary";
 import Spinner from 'react-bootstrap/Spinner';
+import { useNavigate } from 'react-router-dom';
 
 // AgGrid
 import { AgGridReact } from 'ag-grid-react';
@@ -18,6 +19,19 @@ const UserList = ({ isLoading, setIsLoading, recordCount, setRecordCount }) => {
     const paginationPageSize = 10;
     const paginationPageSizeSelector = [10, 20, 50, 100];
     const [filterText, setFilterText] = useState('');
+    const autoSizeStrategy = {
+        type: 'fitGridWidth'
+    };
+    const navigate = useNavigate();
+
+    const gridOptions = {
+        rowSelection: 'single',
+        onRowClicked: (event) => {
+            navigate({
+                pathname: '/user/' + event.data.id
+            });
+        },
+    };
 
     // ------------------------------------------------------------
     // Column Definitions
@@ -63,7 +77,8 @@ const UserList = ({ isLoading, setIsLoading, recordCount, setRecordCount }) => {
                     pagination={pagination}
                     paginationPageSize={paginationPageSize}
                     paginationPageSizeSelector={paginationPageSizeSelector}
-                    quickFilterText={filterText} />
+                    quickFilterText={filterText}
+                    gridOptions={gridOptions} />
             </>
 
     return (

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Spinner from 'react-bootstrap/Spinner';
+import { useNavigate } from 'react-router-dom';
 
 // AgGrid
 import { AgGridReact } from 'ag-grid-react';
@@ -20,6 +21,16 @@ const ClientList = ({ isLoading, setIsLoading, recordCount, setRecordCount }) =>
         type: 'fitGridWidth'
     };
     const [filterText, setFilterText] = useState('');
+    const navigate = useNavigate();
+
+    const gridOptions = {
+        rowSelection: 'single',
+        onRowClicked: (event) => {
+            navigate({
+                pathname: '/client/' + event.data.id
+            });
+        },
+    };
 
     // ------------------------------------------------------------
     // Column Definitions
@@ -62,7 +73,8 @@ const ClientList = ({ isLoading, setIsLoading, recordCount, setRecordCount }) =>
                     pagination={pagination}
                     paginationPageSize={paginationPageSize}
                     paginationPageSizeSelector={paginationPageSizeSelector}
-                    quickFilterText={filterText} />
+                    quickFilterText={filterText}
+                    gridOptions={gridOptions} />
             </>
 
     return (
