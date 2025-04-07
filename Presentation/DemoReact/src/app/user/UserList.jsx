@@ -17,6 +17,7 @@ const UserList = ({ isLoading, setIsLoading, recordCount, setRecordCount }) => {
     const pagination = true;
     const paginationPageSize = 10;
     const paginationPageSizeSelector = [10, 20, 50, 100];
+    const [filterText, setFilterText] = useState('');
 
     // ------------------------------------------------------------
     // Column Definitions
@@ -54,14 +55,15 @@ const UserList = ({ isLoading, setIsLoading, recordCount, setRecordCount }) => {
                     <button className="btn btn-light border">
                         <FontAwesomeIcon icon="fa-solid fa-filter" className="gridFilter" />
                     </button>
-                    <input className="form-control form-control-sm border" type="search" placeholder="Filter..." aria-label="Search" />
+                    <input className="form-control form-control-sm border" type="search" placeholder="Filter..." aria-label="Filter" value={filterText} onChange={(e) => setFilterText(e.target.value)} />
                 </div>
                 <AgGridReact
                     rowData={rowData}
                     columnDefs={columnDefs}
                     pagination={pagination}
                     paginationPageSize={paginationPageSize}
-                    paginationPageSizeSelector={paginationPageSizeSelector} />
+                    paginationPageSizeSelector={paginationPageSizeSelector}
+                    quickFilterText={filterText} />
             </>
 
     return (
