@@ -1,68 +1,196 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+    font-weight: 500;
+    color: #646cff;
+    text-decoration: inherit;
 }
-a:hover {
-  color: #535bf2;
-}
+
+    a:hover {
+        color: #535bf2;
+    }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+    margin: 0;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.buttons {
+    text-align: right !important;
 }
+
+    .buttons button {
+        margin-left: 10px;
+    }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: border-color 0.25s;
 }
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+
+    button:hover {
+        border-color: #646cff;
+    }
+
+    button:focus,
+    button:focus-visible {
+        outline: 4px auto -webkit-focus-ring-color;
+    }
+
+@media (prefers-color-scheme: light) {
+    :root {
+        color: #213547;
+        background-color: #ffffff;
+    }
+
+    a:hover {
+        color: #747bff;
+    }
+
+    button {
+        background-color: #f9f9f9;
+    }
 }
 
 @media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+    :root {
+        color: #213547;
+        background-color: #ffffff;
+    }
+
+    a:hover {
+        color: #747bff;
+    }
+
+    button {
+        background-color: #f9f9f9;
+    }
+}
+
+/* HTML element overrides */
+ul.no-bullets {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+input:required, select:required {
+    background-color: #FEFFF0 !important;
+}
+
+/* Error display */
+.error {
+    text-align: center;
+    color: silver;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Bootstrap Overrides */
+
+.card-header {
+    font-weight: bold;
+}
+
+    .card-header .btn {
+        font-weight: bold;
+        font-size: 1.5em;
+    }
+
+.form-label {
+    color: #999;
+    margin-bottom: 0;
+}
+
+/* Detail Page */
+.data {
+    background: whitesmoke;
+}
+
+    .data .data-row {
+        border: solid 1px silver;
+        border-bottom: none;
+    }
+
+        .data .data-row:last-child {
+            border: solid 1px silver;
+        }
+
+    .data .col-key {
+        background: whitesmoke;
+        font-weight: bold;
+        padding: 5px;
+        padding-right: 10px;
+        text-align: right;
+        border-right: solid 1px silver;
+    }
+
+    .data .col-value {
+        background: white;
+        padding: 5px;
+    }
+
+.card-body.data-grid {
+    padding: 0px;
+    height: 375px !important;
+}
+
+    .card-body.data-grid .ag-root-wrapper {
+        border: none;
+        border-radius: 0;
+        height: 318px;
+    }
+
+.filter-box {
+    width: calc(100% - 20px);
+    border-radius: 0 !important;
+    margin: 10px;
+}
+
+    .filter-box input {
+        padding: 0;
+        padding-left: 8px;
+        border-radius: 0 !important;
+    }
+
+    .filter-box button {
+        color: #ccc;
+        padding: 0 8px;
+        border-radius: 0 !important;
+    }
+
+.pagination {
+    font-size: 14px;
+}
+
+    .pagination .recordCount {
+        padding-left: 40px;
+        padding-right: 40px;
+        padding-top: 6px;
+    }
+
+select {
+    width: 80px;
 }

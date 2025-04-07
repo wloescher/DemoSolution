@@ -11,10 +11,8 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
 
 // Configure Swagger
 builder.Services.AddSwaggerGen(options =>
@@ -48,6 +46,14 @@ builder.Services.AddSwaggerGen(options =>
                 });
 });
 
+builder.Services.ConfigureSwaggerGen(setup =>
+{
+    setup.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "Demo Web API",
+        Version = "v1"
+    });
+});
 
 // Configure Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -62,6 +68,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ClockSkew = TimeSpan.Zero
         };
     });
+//.AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
 // Configure CORS (Cross-Origin Requests)
 builder.Services.AddCors(options =>
@@ -130,10 +137,10 @@ IWebHostEnvironment environment = builder.Environment;
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseSwagger();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseSwagger();
     app.UseSwaggerUI();
 }
 
@@ -141,6 +148,8 @@ app.UseMiddleware<JwtMiddleware>();
 app.UseHttpsRedirection();
 app.MapSwagger().RequireAuthorization();
 app.UseCors();
+
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

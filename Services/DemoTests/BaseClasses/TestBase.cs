@@ -14,7 +14,7 @@ namespace DemoTests.BaseClasses
     public abstract class TestBase
     {
         // Dependencies
-        private DbContextOptions<DemoSqlContext> _dbContextOptions;
+        private readonly DbContextOptions<DemoSqlContext> _dbContextOptions;
         internal static ServiceProvider? _serviceProvider;
         internal static IConfiguration? _configuration;
         internal static Mock<HttpContext> _mockHttpContext = new();

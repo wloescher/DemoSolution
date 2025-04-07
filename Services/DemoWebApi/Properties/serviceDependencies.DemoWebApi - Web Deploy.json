@@ -3,6 +3,18 @@
     "apis1": {
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/wloescher-DemoWebApi/apis/DemoWebApi",
       "type": "apis.azure"
+    },
+    "identityapp1": {
+      "connectionInfo": "App registration: wloescher, Tenant: Wolf Loescher (wolfloescherhotmail.onmicrosoft.com - Microsoft Entra ID)",
+      "type": "identityapp.default"
+    },
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('serviceConnectorResourceGroupName')]/providers/Microsoft.Web/sites/DemoWebApi/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsDefaultConnection_E8E6307AEF",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/wloescher/databases/DemoSql",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:DefaultConnection",
+      "dynamicId": null
     }
   }
 }
