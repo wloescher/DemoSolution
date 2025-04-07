@@ -5,9 +5,11 @@ import NavBar from './components/NavBar'
 import Error from './components/Error';
 import './App.css'
 
-const Home = lazy(() => import('./App/Home/home'));
+const Home = lazy(() => import('./App/Home/Home'));
+const ClientDetail = lazy(() => import('./App/Client/ClientDetail'));
+const UserDetail = lazy(() => import('./App/User/UserDetail'));
+const WorkItemDetail = lazy(() => import('./App/WorkItem/WorkItemDetail'));
 //const Search = lazy(() => import('./App/Search'));
-//const Client = lazy(() => import('./App/Client'));
 //const ClientEdit = lazy(() => import('./App/Client/Edit'));
 
 function App() {
@@ -17,8 +19,10 @@ function App() {
             <Suspense fallback={<div className="container">Loading...</div>}>
                 <Routes>
                     <Route path="/" element={<Home />} />
+                    <Route path="/client/:id" element={<ClientDetail />} />
+                    <Route path="/user/:id" element={<UserDetail />} />
+                    <Route path="/workitem/:id" element={<WorkItemDetail />} />
                     {/*<Route path="/search" element={<Search />} />*/}
-                    {/*<Route path="/client/:clientId" element={<Client />} />*/}
                     {/*<Route path="/client/:clientId/edit" element={<ClientEdit />} />*/}
                     {/*<Route path="/contract/:contractId" element={<Contract />} />*/}
                     {/*<Route path="/content/:contentId" element={<Content />} />*/}

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import ErrorBoundary from "../../components/ErrorBoundary";
 import Spinner from 'react-bootstrap/Spinner';
 
 // AgGrid
