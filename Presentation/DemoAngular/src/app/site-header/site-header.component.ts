@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { faCode } from '@fortawesome/free-solid-svg-icons';
+import { faAngular } from '@fortawesome/free-brands-svg-icons';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 declare var bootbox: any;
@@ -10,7 +10,7 @@ declare var bootbox: any;
   styleUrls: ['./site-header.component.css'],
 })
 export class SiteHeaderComponent {
-  faCode = faCode;
+  faAngular = faAngular;
   faSearch = faSearch;
 
   search() {

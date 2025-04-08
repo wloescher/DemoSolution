@@ -152,6 +152,10 @@ input:required, select:required {
         padding: 5px;
     }
 
+.data-grid {
+    height: 303px;
+}
+
 .card-body.data-grid {
     padding: 0px;
     height: 375px !important;

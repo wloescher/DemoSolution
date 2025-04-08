@@ -1,16 +1,20 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 // Functions
 import { useLoadData } from '../functions';
 
-const WorkItemDetail = () => {
+const WorkItemEdit = () => {
     const [data = [], setData] = useState();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
     const params = useParams();
-    const id = parseInt(params.id);
+    const id = params.id ? parseInt(params.id) : 0;
+
+    const save = () => {
+        alert("TODO: Save changes.");
+    }
 
     // ------------------------------------------------------------
     // Load data
@@ -28,12 +32,12 @@ const WorkItemDetail = () => {
             <div className="container">
                 <div className="row">
                     <div className="col">
-                        <h1>View Work Item</h1>
+                        <h1>{ id == 0 ? "Add" : "Edit" } Work Item</h1>
                     </div>
                     <div className="col text-end mt-2">
-                        <Link to={`/workitem/${id}/edit`} className="btn btn-primary">
-                            <FontAwesomeIcon icon="fa-solid fa-pencil" className="me-2" /> Edit
-                        </Link>
+                        <button className="btn btn-primary" onClick={() => save()}>
+                            <FontAwesomeIcon icon="fa-solid fa-save" className="me-2" /> Save
+                        </button>
                     </div>
                 </div>
                 <div className="container data">
@@ -123,4 +127,4 @@ const WorkItemDetail = () => {
     );
 }
 
-export default WorkItemDetail;
+export default WorkItemEdit;

@@ -1,88 +1,60 @@
-import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import ErrorBoundary from "../../components/ErrorBoundary";
-import Spinner from 'react-bootstrap/Spinner';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import UserDataGrid from "../user/UserDataGrid"
+import { useLocation, Link } from 'react-router-dom';
 
-// AgGrid
-import { AgGridReact } from 'ag-grid-react';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-ModuleRegistry.registerModules([AllCommunityModule]);
+function UserList() {
+    const [isUsersLoading, setIsUsersLoading] = useState();
+    const [usersRecordCount, setUsersRecordCount] = useState();
+    const [usersGridRef, setUsersGridRef] = useState();
+    const location = useLocation();
 
-// Functions
-import { useLoadData } from '../functions';
-
-const UserList = ({ isLoading, setIsLoading, recordCount, setRecordCount }) => {
-    const [rowData, setRowData] = useState([]);
-    const [error, setError] = useState();
-    const pagination = true;
-    const paginationPageSize = 10;
-    const paginationPageSizeSelector = [10, 20, 50, 100];
-    const [filterText, setFilterText] = useState('');
-    const autoSizeStrategy = {
-        type: 'fitGridWidth'
-    };
-    const navigate = useNavigate();
-
-    const gridOptions = {
-        rowSelection: 'single',
-        onRowClicked: (event) => {
-            navigate({
-                pathname: '/user/' + event.data.id
-            });
-        },
+    const getButtonClassName = (path) => {
+        var className = 'btn btn-outline-secondary';
+        if (location.pathname === path) {
+            className += ' bg-info';
+        }
+        return className;
     };
 
-    // ------------------------------------------------------------
-    // Column Definitions
-    // ------------------------------------------------------------
-
-    const columnDefs = [
-        { headerName: 'Last Name', field: 'lastName' },
-        { headerName: 'First Name', field: 'firstName' },
-        { headerName: 'Email Address', field: 'emailAddress' },
-        { headerName: 'Type', field: 'type' },
-        { headerName: 'Active', field: 'isActive' },
-        { headerName: 'City', field: 'city' },
-        { headerName: 'Region', field: 'region' },
-        { headerName: 'Phone Number', field: 'phoneNumber' },
-    ];
-
-    // ------------------------------------------------------------
-    // Load data
-    // ------------------------------------------------------------
-
-    useLoadData('/test/user', setIsLoading, setRowData, setError, setRecordCount);
-
-    // ------------------------------------------------------------
-    // Presentation Layer
-    // ------------------------------------------------------------
-
-    const contents = isLoading
-        ? <div className="m-3"><Spinner size="sm" animation="border" role="status" /> Loading...</div>
-        : !rowData
-            ? <div className="alert alert-warning" role="alert">
-                <FontAwesomeIcon icon="fa-solid fa-exclamation-triangle" className="me-2" /> Data not found.
-            </div>
-            : <>
-                <div className="filter-box btn-group">
-                    <button className="btn btn-light border">
-                        <FontAwesomeIcon icon="fa-solid fa-filter" className="gridFilter" />
-                    </button>
-                    <input className="form-control form-control-sm border" type="search" placeholder="Filter..." aria-label="Filter" value={filterText} onChange={(e) => setFilterText(e.target.value)} />
-                </div>
-                <AgGridReact
-                    rowData={rowData}
-                    columnDefs={columnDefs}
-                    pagination={pagination}
-                    paginationPageSize={paginationPageSize}
-                    paginationPageSizeSelector={paginationPageSizeSelector}
-                    quickFilterText={filterText}
-                    gridOptions={gridOptions} />
-            </>
+    function onUsersGridReady(params) {
+        setUsersGridRef(params.api);
+    }
 
     return (
-        contents
+        <>
+            <div className="container">
+                <div className="row">
+                    <div className="col">
+                        <h1>User List</h1>
+                    </div>
+                    <div className="col text-end">
+                        <div className="btn-group border" role="group" >
+                            <Link to="/users" className={getButtonClassName('/users')}>ALL</Link>
+                            <Link to="/users/admin" className={getButtonClassName('/users/admin')}>Admin</Link>
+                            <Link to="/users/client" className={getButtonClassName('/users/client')}>Client</Link>
+                            <Link to="/users/sales" className={getButtonClassName('/users/sales')}>Sales</Link>
+                            <Link to="/users/marketing" className={getButtonClassName('/users/marketing')}>Marketing</Link>
+                            <Link to="/users/accounting" className={getButtonClassName('/users/accounting')}>Accounting</Link>
+                            <Link to="/users/executives" className={getButtonClassName('/users/executives')}>Executives</Link>
+                        </div>
+                    </div>
+                    <div className="col-1 text-end">
+                        <Link to="/user/add" className="btn btn-primary">
+                            <FontAwesomeIcon icon="fa-solid fa-plus" className="me-2" /> Add
+                        </Link>
+                    </div>
+                </div>
+                <div className="data-grid">
+                    <UserDataGrid isLoading={isUsersLoading}
+                        setIsLoading={setIsUsersLoading}
+                        recordCount={usersRecordCount}
+                        setRecordCount={setUsersRecordCount}
+                        onGridReady={onUsersGridReady} />
+                </div>
+            </div>
+        </>
+
     );
 }
 

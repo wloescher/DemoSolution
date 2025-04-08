@@ -58,20 +58,20 @@ const workItems = [
     { "id": 40, "guid": "6E126C25-C20C-489F-AB8F-3752BEB63D53", "clientId": 1, "clientName": "Internal Client", "typeId": 1, "type": "User Story", "statusId": 1, "status": "New", "isActive": false, "isDeleted": false, "title": "Title-638768946785857262", "subTitle": "SubTitle-638768946785857262", "summary": "Summary-638768946785857262", "body": "Body-638768946785857262" }
 ];
 
-export function useLoadData(webApiUrl, setIsLoading, setData, setError, setRecordCount) {
+export function useLoadData(webApiUrl, setIsLoading, setData, setError, setRecordCount, filter) {
     useEffect(() => {
-        reloadData(webApiUrl, setIsLoading, setData, setError, setRecordCount)
-    }, [setData, setError, setIsLoading, setRecordCount, webApiUrl]);
+        reloadData(webApiUrl, setIsLoading, setData, setError, setRecordCount, filter)
+    }, [setData, setError, setIsLoading, setRecordCount, filter, webApiUrl]);
 }
 
-export function reloadData(webApiUrl, setIsLoading, setData, setError, setRecordCount) {
+export function reloadData(webApiUrl, setIsLoading, setData, setError, setRecordCount, filter) {
     (async () => {
         try {
             setIsLoading(true);
 
             // Replace this with your actual data fetching logic
             //await new Promise(resolve => setTimeout(resolve, 2000));
-            let data = getTestData(webApiUrl);
+            let data = getTestData(webApiUrl, filter);
 
             //// Make Web API call
             //const response = await fetch(webApiUrl);
@@ -109,7 +109,7 @@ export function reloadData(webApiUrl, setIsLoading, setData, setError, setRecord
     })();
 }
 
-function getTestData(webApiUrl) {
+function getTestData(webApiUrl, filter) {
     // Get id from URL
     let id = 0;
     const urlElement = webApiUrl.split('/')[3];
@@ -122,19 +122,25 @@ function getTestData(webApiUrl) {
         if (id != 0) {
             return clients.find(x => x.id === id);
         }
-        return clients;
+        return !filter
+            ? clients
+            : clients.filter((x) => x.type.toLowerCase().replace(' ', '-') === filter.toLowerCase())
     }
     else if (webApiUrl.toLowerCase().startsWith("/test/user")) {
         if (id != 0) {
             return users.find(x => x.id === id);
         }
-        return users;
+        return !filter
+            ? users
+            : users.filter((x) => x.type.toLowerCase().replace(' ', '-') === filter.toLowerCase())
     }
     else if (webApiUrl.toLowerCase().startsWith("/test/workitem")) {
         if (id != 0) {
             return workItems.find(x => x.id === id);
         }
-        return workItems;
+        return !filter
+            ? workItems
+            : workItems.filter((x) => x.type.toLowerCase().replace(' ', '-') === filter.toLowerCase())
     }
     return null;
 }

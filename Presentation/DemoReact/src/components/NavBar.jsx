@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import './NavBar.jsx.css';
 
 function NavBar() {
@@ -33,10 +33,10 @@ function NavBar() {
     return (
         <nav className="navbar fixed-top navbar-expand-lg bg-body-tertiary">
             <div className="container-fluid">
-                <a href="/" className="navbar-brand">
-                    <FontAwesomeIcon icon="fa-solid fa-code" className="me-2" />
+                <Link to="/" className="navbar-brand">
+                    <FontAwesomeIcon icon="fa-brands fa-react" className="me-2" />
                     DemoAngular
-                </a>
+                </Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
@@ -47,16 +47,20 @@ function NavBar() {
                                 Clients
                             </a>
                             <ul className="dropdown-menu">
-                                <li><a className="dropdown-item" href="/clients">ALL</a></li>
-                                <li><hr className="dropdown-divider" /></li>
                                 <li>
-                                    <a className="dropdown-item" href="/clients/internal">Internal</a>
+                                    <Link to="/clients" className="dropdown-item">ALL</Link>
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href="/clients/external">External</a>
+                                    <hr className="dropdown-divider" />
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href="/clients/lead">Lead</a>
+                                    <Link to="/clients/internal" className="dropdown-item">Internal</Link>
+                                </li>
+                                <li>
+                                    <Link to="/clients/external" className="dropdown-item">External</Link>
+                                </li>
+                                <li>
+                                    <Link to="/clients/lead" className="dropdown-item">Lead</Link>
                                 </li>
                             </ul>
                         </li>
@@ -65,25 +69,29 @@ function NavBar() {
                                 Users
                             </a>
                             <ul className="dropdown-menu">
-                                <li><a className="dropdown-item" href="/users">ALL</a></li>
-                                <li><hr className="dropdown-divider" /></li>
                                 <li>
-                                    <a className="dropdown-item" href="/users/admin">Admin</a>
+                                    <Link to="/users" className="dropdown-item">ALL</Link>
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href="/users/client">Client</a>
+                                    <hr className="dropdown-divider" />
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href="/users/sales">Sales</a>
+                                    <Link to="/users/admin" className="dropdown-item">Admin</Link>
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href="/users/marketing">Marketing</a>
+                                    <Link to="/users/client" className="dropdown-item">Client</Link>
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href="/users/accounting">Accounting</a>
+                                    <Link to="/users/sales" className="dropdown-item">Sales</Link>
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href="/users/executive">Executive</a>
+                                    <Link to="/users/marketing" className="dropdown-item">Marketing</Link>
+                                </li>
+                                <li>
+                                    <Link to="/users/accounting" className="dropdown-item">Accounting</Link>
+                                </li>
+                                <li>
+                                    <Link to="/users/executive" className="dropdown-item">Executive</Link>
                                 </li>
                             </ul>
                         </li>
@@ -93,22 +101,26 @@ function NavBar() {
                                 Work Items
                             </a>
                             <ul className="dropdown-menu">
-                                <li><a className="dropdown-item" href="/workitems">ALL</a></li>
-                                <li><hr className="dropdown-divider" /></li>
                                 <li>
-                                    <a className="dropdown-item" href="/workitems/user-story">User Story</a>
+                                    <Link to="/workitems" className="dropdown-item">ALL</Link>
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href="/workitems/task">Task</a>
+                                    <hr className="dropdown-divider" />
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href="/workitems/bug">Bug</a>
+                                    <Link to="/workitems/user-story" className="dropdown-item">User Story</Link>
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href="/workitems/epic">Epic</a>
+                                    <Link to="/workitems/task" className="dropdown-item">Task</Link>
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href="/workitems/feature">Feature</a>
+                                    <Link to="/workitems/bug" className="dropdown-item">Bug</Link>
+                                </li>
+                                <li>
+                                    <Link to="/workitems/epic" className="dropdown-item">Epic</Link>
+                                </li>
+                                <li>
+                                    <Link to="/workitems/feature" className="dropdown-item">Feature</Link>
                                 </li>
                             </ul>
                         </li>

@@ -1,23 +1,26 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 // Functions
 import { useLoadData } from '../functions';
 
-const WorkItemDetail = () => {
+const ClientEdit = () => {
     const [data = [], setData] = useState();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
     const params = useParams();
-    const id = parseInt(params.id);
+    const id = params.id ? parseInt(params.id) : 0;
+
+    const save = () => {
+        alert("TODO: Save changes.");
+    }
 
     // ------------------------------------------------------------
     // Load data
     // ------------------------------------------------------------
 
-    // TODO: Swap out WebAPI URL to 'workItem/' + id
-    useLoadData('/test/workItem/' + id, setIsLoading, setData, setError);
+    useLoadData('/test/client/' + id, setIsLoading, setData, setError);
 
     // ------------------------------------------------------------
     // Presentation Layer
@@ -28,12 +31,12 @@ const WorkItemDetail = () => {
             <div className="container">
                 <div className="row">
                     <div className="col">
-                        <h1>View Work Item</h1>
+                        <h1>{id == 0 ? "Add" : "Edit"} Client</h1>
                     </div>
                     <div className="col text-end mt-2">
-                        <Link to={`/workitem/${id}/edit`} className="btn btn-primary">
-                            <FontAwesomeIcon icon="fa-solid fa-pencil" className="me-2" /> Edit
-                        </Link>
+                        <button className="btn btn-primary" onClick={() => save()}>
+                            <FontAwesomeIcon icon="fa-solid fa-save" className="me-2" /> Save
+                        </button>
                     </div>
                 </div>
                 <div className="container data">
@@ -71,50 +74,74 @@ const WorkItemDetail = () => {
                     </div>
                     <div className="row data-row">
                         <div className="col-2 col-key">
-                            StatusId
+                            Name
                         </div>
                         <div className="col-10 col-value">
-                            {data.statusId}
+                            <div>{data.name}</div>
                         </div>
                     </div>
                     <div className="row data-row">
                         <div className="col-2 col-key">
-                            Status
+                            Address (Line 1)
                         </div>
                         <div className="col-10 col-value">
-                            {data.status}
+                            <div>{data.addressLine1}</div>
                         </div>
                     </div>
                     <div className="row data-row">
                         <div className="col-2 col-key">
-                            Title
+                            Address (Line 2)
                         </div>
                         <div className="col-10 col-value">
-                            {data.title}
+                            <div>{data.addressLine2}</div>
                         </div>
                     </div>
                     <div className="row data-row">
                         <div className="col-2 col-key">
-                            Sub-Title
+                            City
                         </div>
                         <div className="col-10 col-value">
-                            {data.subTitle}
+                            <div>{data.city}</div>
                         </div>
                     </div>
                     <div className="row data-row">
                         <div className="col-2 col-key">
-                            Summary
+                            Region
                         </div>
                         <div className="col-10 col-value">
-                            {data.summary}
+                            <div>{data.region}</div>
                         </div>
                     </div>
                     <div className="row data-row">
                         <div className="col-2 col-key">
-                            Body
+                            Postal Code
                         </div>
                         <div className="col-10 col-value">
-                            {data.body}
+                            <div>{data.postalCode}</div>
+                        </div>
+                    </div>
+                    <div className="row data-row">
+                        <div className="col-2 col-key">
+                            Country
+                        </div>
+                        <div className="col-10 col-value">
+                            <div>{data.country}</div>
+                        </div>
+                    </div>
+                    <div className="row data-row">
+                        <div className="col-2 col-key">
+                            Phone Number
+                        </div>
+                        <div className="col-10 col-value">
+                            <a href="tel:{{ data.phoneNumber }}" target="_blank">{data.phoneNumber}</a>
+                        </div>
+                    </div>
+                    <div className="row data-row">
+                        <div className="col-2 col-key">
+                            URL / Website
+                        </div>
+                        <div className="col-10 col-value">
+                            <a href="{{ data.url }}" target="_blank">{data.url}</a>
                         </div>
                     </div>
                 </div>
@@ -123,4 +150,4 @@ const WorkItemDetail = () => {
     );
 }
 
-export default WorkItemDetail;
+export default ClientEdit;

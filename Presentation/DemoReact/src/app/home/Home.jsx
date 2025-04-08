@@ -1,23 +1,23 @@
 import { useState } from "react";
-import ClientList from "../client/ClientList"
-import UserList from "../user/UserList"
-import WorkItemList from "../workitem/WorkItemList"
+import ClientDataGrid from "../client/ClientDataGrid"
+import UserDataGrid from "../user/UserDataGrid"
+import WorkItemDataGrid from "../workitem/WorkItemDataGrid"
 
 function Home() {
     // Clients
     const [isClientsLoading, setIsClientsLoading] = useState();
-    const [ClientsRecordCount, setClientsRecordCount] = useState();
-    const [ClientsGridRef, setClientsGridRef] = useState();
+    const [clientsRecordCount, setClientsRecordCount] = useState();
+    const [clientsGridRef, setClientsGridRef] = useState();
 
     // Users
     const [isUsersLoading, setIsUsersLoading] = useState();
-    const [UsersRecordCount, setUsersRecordCount] = useState();
-    const [UsersGridRef, setUsersGridRef] = useState();
+    const [usersRecordCount, setUsersRecordCount] = useState();
+    const [usersGridRef, setUsersGridRef] = useState();
 
     // WorkItems
     const [isWorkItemsLoading, setIsWorkItemsLoading] = useState();
-    const [WorkItemsRecordCount, setWorkItemsRecordCount] = useState();
-    const [WorkItemsGridRef, setWorkItemsGridRef] = useState();
+    const [workItemsRecordCount, setWorkItemsRecordCount] = useState();
+    const [workItemsGridRef, setWorkItemsGridRef] = useState();
 
     function onClientsGridReady(params) {
         setClientsGridRef(params.api);
@@ -40,9 +40,9 @@ function Home() {
                             <a className="btn" href="/clients">Clients</a>
                         </div>
                         <div className="card-body data-grid">
-                            <ClientList isLoading={isClientsLoading}
+                            <ClientDataGrid isLoading={isClientsLoading}
                                 setIsLoading={setIsClientsLoading}
-                                recordCount={ClientsRecordCount}
+                                recordCount={clientsRecordCount}
                                 setRecordCount={setClientsRecordCount}
                                 onGridReady={onClientsGridReady} />
                         </div>
@@ -54,9 +54,9 @@ function Home() {
                             <a className="btn" href="/users">Users</a>
                         </div>
                         <div className="card-body data-grid">
-                            <UserList isLoading={isUsersLoading}
+                            <UserDataGrid isLoading={isUsersLoading}
                                 setIsLoading={setIsUsersLoading}
-                                recordCount={UsersRecordCount}
+                                recordCount={usersRecordCount}
                                 setRecordCount={setUsersRecordCount}
                                 onGridReady={onUsersGridReady} />
                         </div>
@@ -68,9 +68,9 @@ function Home() {
                     <a className="btn" href="/workitems">Work Items</a>
                 </div>
                 <div className="card-body data-grid">
-                    <WorkItemList isLoading={isWorkItemsLoading}
+                    <WorkItemDataGrid isLoading={isWorkItemsLoading}
                         setIsLoading={setIsWorkItemsLoading}
-                        recordCount={WorkItemsRecordCount}
+                        recordCount={workItemsRecordCount}
                         setRecordCount={setWorkItemsRecordCount}
                         onGridReady={onWorkItemsGridReady} />
                 </div>

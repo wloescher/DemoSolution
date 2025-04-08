@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 // Functions
 import { useLoadData } from '../functions';
@@ -27,12 +27,12 @@ const UserDetail = () => {
             <div className="container">
                 <div className="row">
                     <div className="col">
-                        <h1>User Detail</h1>
+                        <h1>View User</h1>
                     </div>
                     <div className="col text-end mt-2">
-                        <button className="btn btn-primary" href="/user/edit/{{id }}">
+                        <Link to={`/user/${id}/edit`} className="btn btn-primary">
                             <FontAwesomeIcon icon="fa-solid fa-pencil" className="me-2" /> Edit
-                        </button>
+                        </Link>
                     </div>
                 </div>
                 <div className="container data">
