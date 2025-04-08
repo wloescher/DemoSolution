@@ -198,3 +198,7 @@ input:required, select:required {
 select {
     width: 80px;
 }
+
+.ag-row-hover {
+    cursor: pointer;
+}
