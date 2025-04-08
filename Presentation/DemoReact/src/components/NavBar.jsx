@@ -8,26 +8,29 @@ function NavBar() {
     const [searchText, setSearchText] = useState('');
 
     function searchSubmit() {
-        // Check for empty value
-        if (!searchText) return;
+        alert('TODO: Implement search');
+        return;
 
-        // Check for search page
-        if (window.location.pathname == '/search') {
-            // Force update of querystring values
-            const url = new URL(location.href);
-            url.searchParams.set('text', searchText);
-            location.assign(url.search);
-        }
-        else {
-            // Load search page
-            navigate({
-                pathname: '/search',
-                search: '?text=' + encodeURIComponent(searchText)
-            });
-        }
+        //// Check for empty value
+        //if (!searchText) return;
 
-        // Clear value
-        setSearchText('');
+        //// Check for search page
+        //if (window.location.pathname == '/search') {
+        //    // Force update of querystring values
+        //    const url = new URL(location.href);
+        //    url.searchParams.set('text', searchText);
+        //    location.assign(url.search);
+        //}
+        //else {
+        //    // Load search page
+        //    navigate({
+        //        pathname: '/search',
+        //        search: '?text=' + encodeURIComponent(searchText)
+        //    });
+        //}
+
+        //// Clear value
+        //setSearchText('');
     }
 
     return (

@@ -14,6 +14,6 @@ export class SiteHeaderComponent {
   faSearch = faSearch;
 
   search() {
-    bootbox.alert('TODO: Search Content');
+    bootbox.alert('TODO: Implement search');
   }
 }
