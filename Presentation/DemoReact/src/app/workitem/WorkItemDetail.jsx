@@ -31,6 +31,9 @@ const WorkItemDetail = () => {
                         <h1>View Work Item</h1>
                     </div>
                     <div className="col text-end mt-2">
+                        <Link to="/workitems" className="btn btn-light border me-2">
+                            <FontAwesomeIcon icon="fa-solid fa-x" className="me-2" /> Cancel
+                        </Link>
                         <Link to={`/workitem/${id}/edit`} className="btn btn-primary">
                             <FontAwesomeIcon icon="fa-solid fa-pencil" className="me-2" /> Edit
                         </Link>

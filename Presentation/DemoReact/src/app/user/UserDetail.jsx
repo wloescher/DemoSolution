@@ -30,6 +30,9 @@ const UserDetail = () => {
                         <h1>View User</h1>
                     </div>
                     <div className="col text-end mt-2">
+                        <Link to="/users" className="btn btn-light border me-2">
+                            <FontAwesomeIcon icon="fa-solid fa-x" className="me-2" /> Cancel
+                        </Link>
                         <Link to={`/user/${id}/edit`} className="btn btn-primary">
                             <FontAwesomeIcon icon="fa-solid fa-pencil" className="me-2" /> Edit
                         </Link>

@@ -105,7 +105,7 @@ export class ClientEditComponent {
     { value: '', label: 'Select...' },
     { value: 'Canada', label: 'Canada' },
     { value: 'UK', label: 'United Kingdom' },
-    { value: 'USA', label: 'United State of America' },
+    { value: 'USA', label: 'United States of America' },
   ];
 
   constructor(
