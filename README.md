@@ -13,14 +13,11 @@ SERVICES LAYER
 - Tests
 - Utilities
   
-PRESENTATION LAYER
+PRESENTATION LAYER (Bootstrap, FontAwesome)
 - Angular v16 (Work in Progress)
-  - Bootstrap
-  - FontAwesome
-  - Bootbox.js
+- React v19 (Work in Progress)
 
 Still to come...
-  - React
   - Vue
   - Blazor
   - Razor
