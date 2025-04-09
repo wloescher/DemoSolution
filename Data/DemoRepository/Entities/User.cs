@@ -26,9 +26,6 @@ public partial class User
     public bool UserIsDeleted { get; set; }
 
     [StringLength(50)]
-    public string UserPassword { get; set; }
-
-    [StringLength(50)]
     public string UserFirstName { get; set; }
 
     [StringLength(50)]
@@ -57,6 +54,9 @@ public partial class User
 
     [StringLength(20)]
     public string UserPhoneNumber { get; set; }
+
+    [StringLength(50)]
+    public string UserPassword { get; set; }
 
     [StringLength(255)]
     public string UserPasswordHash { get; set; }

@@ -82,12 +82,22 @@
     <Build Include="Tables\WorkItemUser.sql" />
     <Build Include="Tables\WorkItemUserAudit.sql" />
     <Build Include="Views\WorkItemUserView.sql" />
+    <None Include="01-create-datadictionary-records.sql" />
+    <None Include="03-create-test-client-records.sql" />
+    <None Include="02-create-test-user-records.sql" />
+    <None Include="04-create-test-workitem-records.sql" />
+    <None Include="05-create-test-clientuser-records.sql" />
+    <None Include="06-create-test-workitemuser-records.sql" />
+    <Build Include="Views\WorkItemViewJson.sql" />
+    <Build Include="Views\UserViewJson.sql" />
+    <Build Include="Views\ClientViewJson.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DemoSql.refactorlog" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DemoSql.publish.xml" />
+    <None Include="demosolution-test-data.json" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\UserAudit.sql" />

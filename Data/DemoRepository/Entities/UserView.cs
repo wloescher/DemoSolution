@@ -1,5 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace DemoRepository.Entities;
 
@@ -30,9 +33,6 @@ public partial class UserView
 
     [StringLength(50)]
     public string LastName { get; set; }
-
-    [StringLength(153)]
-    public string FullName { get; set; }
 
     [StringLength(255)]
     public string AddressLine1 { get; set; }

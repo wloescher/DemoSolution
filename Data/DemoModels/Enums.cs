@@ -36,12 +36,12 @@ namespace DemoModels
         public enum UserType
         {
             Admin = 1,
-            Client = 2,
+            Developer = 2,
             Sales = 3,
             Marketing = 4,
             Accounting = 5,
             Executive = 6,
-            Developer = 7,
+            Client = 7,
         }
 
         public enum ClientType

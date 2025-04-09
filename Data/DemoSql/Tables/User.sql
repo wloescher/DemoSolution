@@ -6,7 +6,6 @@
     [UserEmailAddress] NVARCHAR(100) NOT NULL, 
 	[UserIsActive] BIT NOT NULL DEFAULT 0, 
 	[UserIsDeleted] BIT NOT NULL DEFAULT 0, 
-    [UserPassword] NVARCHAR(50) NULL, 
     [UserFirstName] NVARCHAR(50) NULL, 
     [UserMiddleName] NVARCHAR(50) NULL, 
     [UserLastName] NVARCHAR(50) NULL, 
@@ -17,6 +16,7 @@
     [UserPostalCode] NVARCHAR(10) NULL,
     [UserCountry] NVARCHAR(50) NULL,
     [UserPhoneNumber] NVARCHAR(20) NULL,
+    [UserPassword] NVARCHAR(50) NULL, 
     [UserPasswordHash] NVARCHAR(255) NULL,
     [UserPasswordAttemptCount] INT NOT NULL DEFAULT -1,
 
