@@ -210,6 +210,43 @@ export function getClientTypes() {
     ];
 }
 
+export function getUserTypes() {
+    return [
+        { value: '0', label: 'Select...' },
+        { value: '1', label: 'Admin' },
+        { value: '2', label: 'Developer' },
+        { value: '3', label: 'Sales' },
+        { value: '4', label: 'Marketing' },
+        { value: '5', label: 'Accounting' },
+        { value: '6', label: 'Executive' },
+        { value: '7', label: 'Client' },
+    ];
+}
+
+export function getWorkItemTypes() {
+    return [
+        { value: '0', label: 'Select...' },
+        { value: '1', label: 'User Story' },
+        { value: '2', label: 'Task' },
+        { value: '3', label: 'Bug' },
+        { value: '4', label: 'Epic' },
+        { value: '5', label: 'Feature' },
+    ];
+}
+
+export function getWorkItemStatus() {
+    return [
+        { value: '0', label: 'Select...' },
+        { value: '1', label: 'New' },
+        { value: '2', label: 'In Planning' },
+        { value: '3', label: 'In Progress' },
+        { value: '4', label: 'Approved' },
+        { value: '5', label: 'Rejected' },
+        { value: '6', label: 'Staged' },
+        { value: '7', label: 'Completed' },
+    ];
+}
+
 export function getRegions() {
     return [
         { value: 'AL', label: 'Alabama[ngValue]=' },
