@@ -1,11 +1,21 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import './NavBar.jsx.css';
+import { useAuth } from "../utils/AuthProvider";
 
 function NavBar() {
-    const navigate = useNavigate();
+    const location = useLocation();
+    const isProtectedRoute = location.pathname.toLowerCase() !== '/login' && location.pathname.toLowerCase() !== '/logout';
     const [searchText, setSearchText] = useState('');
+
+    const { logout } = useAuth();
+    const handleLogout = () => {
+        logout();
+    };
+
+    // Check authentication
+    if (!isProtectedRoute) return <></>;
 
     function searchSubmit() {
         alert('TODO: Implement search');
@@ -23,10 +33,7 @@ function NavBar() {
         //}
         //else {
         //    // Load search page
-        //    navigate({
-        //        pathname: '/search',
-        //        search: '?text=' + encodeURIComponent(searchText)
-        //    });
+        //    navigate('/search?text=' + encodeURIComponent(searchText));
         //}
 
         //// Clear value
@@ -38,7 +45,7 @@ function NavBar() {
             <div className="container-fluid">
                 <Link to="/" className="navbar-brand">
                     <FontAwesomeIcon icon="fa-brands fa-react" className="me-2" />
-                    DemoAngular
+                    DemoReact
                 </Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
@@ -128,12 +135,15 @@ function NavBar() {
                             </ul>
                         </li>
                     </ul>
-                    <form className="d-flex btn-group" role="search" onSubmit={searchSubmit}>
+                    <form className="d-flex btn-group me-2" role="search" onSubmit={searchSubmit}>
                         <input className="form-control border" type="search" placeholder="Search..." aria-label="Search" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
                         <button className="btn btn-outline-success" type="submit">
                             <FontAwesomeIcon icon="fa-solid fa-search" />
                         </button>
                     </form>
+                    <button className="btn btn-outline-secondary" type="button" title="Logout" onClick={handleLogout}>
+                        <FontAwesomeIcon icon="fa-solid fa-sign-out" />
+                    </button>                 
                 </div>
             </div>
         </nav >

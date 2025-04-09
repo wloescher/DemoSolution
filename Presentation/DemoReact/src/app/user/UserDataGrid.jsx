@@ -22,9 +22,7 @@ const UserDataGrid = ({ isLoading, setIsLoading, recordCount, setRecordCount }) 
     };
     const gridOptions = {
         onRowClicked: (event) => {
-            navigate({
-                pathname: '/user/' + event.data.id
-            });
+            navigate('/user/' + event.data.id);
         },
     };
     const [filterText, setFilterText] = useState('');
@@ -51,14 +49,14 @@ const UserDataGrid = ({ isLoading, setIsLoading, recordCount, setRecordCount }) 
     // Load data
     // ------------------------------------------------------------
 
-    useLoadData('/test/user', setIsLoading, setRowData, setError, setRecordCount, filter);
+    const onGridReady = useLoadData('/test/user', setIsLoading, setRowData, setError, setRecordCount, filter);
 
     // ------------------------------------------------------------
     // Presentation Layer
     // ------------------------------------------------------------
 
     const contents = isLoading
-        ? <div className="m-3"><Spinner size="sm" animation="border" role="status" /> Loading...</div>
+        ? <div className="m-3 text-secondary"><Spinner size="sm" animation="border" role="status" /> Loading...</div>
         : !rowData
             ? <div className="alert alert-warning" role="alert">
                 <FontAwesomeIcon icon="fa-solid fa-exclamation-triangle" className="me-2" /> Data not found.
@@ -73,12 +71,16 @@ const UserDataGrid = ({ isLoading, setIsLoading, recordCount, setRecordCount }) 
                 <AgGridReact
                     rowData={rowData}
                     columnDefs={columnDefs}
+                    onGridReady={onGridReady}
                     autoSizeStrategy={autoSizeStrategy}
                     pagination={pagination}
                     paginationPageSize={paginationPageSize}
                     paginationPageSizeSelector={paginationPageSizeSelector}
                     quickFilterText={filterText}
-                    gridOptions={gridOptions} />
+                    gridOptions={gridOptions}
+                    overlayLoadingTemplate={'<div className="m-3 text-secondary"><Spinner size="sm" animation="border" role="status" /> Loading...</div>'}
+                    overlayNoRowsTemplate={'<span>No data available.</span>'}
+                />
             </>
 
     return (

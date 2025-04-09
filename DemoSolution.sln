@@ -33,6 +33,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{AF
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "DemoReact", "Presentation\DemoReact\DemoReact.esproj", "{B64FC0C0-34E9-84FC-E291-70BD830257BB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\Downloads\demosolution-angular-screenshot.png = ..\..\..\Downloads\demosolution-angular-screenshot.png
+		..\..\..\Downloads\demosolution-react-screenshot.png = ..\..\..\Downloads\demosolution-react-screenshot.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

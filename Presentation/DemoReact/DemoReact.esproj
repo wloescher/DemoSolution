@@ -9,6 +9,10 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="src\app\authentication\**" />
+    <TypeScriptConfiguration Remove="src\app\authentication\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="public\" />
     <Folder Include="src\assets\" />
   </ItemGroup>

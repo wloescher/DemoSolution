@@ -1,6 +1,13 @@
 import { lazy, Suspense } from 'react'
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate, Outlet } from 'react-router';
+import Spinner from 'react-bootstrap/Spinner';
+import Login from './Components/Login';
+import Logout from './Components/Logout';
+import AccessDenied from './Components/AccessDenied';
 import RouteNotFound from './Components/RouteNotFound';
+import PrivateRoutes from "./components/PrivateRoutes";
+import { AuthProvider } from "./utils/AuthProvider";
+
 import NavBar from './components/NavBar'
 import Error from './components/Error';
 import './App.css'
@@ -22,34 +29,39 @@ const WorkItemEdit = lazy(() => import('./App/WorkItem/WorkItemEdit'));
 
 function App() {
     return (
-        <>
+        <AuthProvider>
             <NavBar />
-            <Suspense fallback={<div className="container">Loading...</div>}>
+            <Suspense fallback={<div className="container text-secondary"><Spinner size="sm" animation="border" role="status" /> Loading...</div>}>
                 <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/clients" element={<ClientList />} />
-                    <Route path="/clients/:filter" element={<ClientList />} />
-                    <Route path="/client/:id" element={<ClientDetail />} />
-                    <Route path="/client/:id/edit" element={<ClientEdit />} />
-                    <Route path="/client/add" element={<ClientEdit />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/logout" element={<Logout />} />
+                    <Route path="/accessdenied" element={<AccessDenied />} />
+                    <Route element={<PrivateRoutes />}>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/clients" element={<ClientList />} />
+                        <Route path="/clients/:filter" element={<ClientList />} />
+                        <Route path="/client/:id" element={<ClientDetail />} />
+                        <Route path="/client/:id/edit" element={<ClientEdit />} />
+                        <Route path="/client/add" element={<ClientEdit />} />
 
-                    <Route path="/users" element={<UserList />} />
-                    <Route path="/users/:filter" element={<UserList />} />
-                    <Route path="/user/:id" element={<UserDetail />} />
-                    <Route path="/user/:id/edit" element={<UserEdit />} />
-                    <Route path="/user/add" element={<UserEdit />} />
+                        <Route path="/users" element={<UserList />} />
+                        <Route path="/users/:filter" element={<UserList />} />
+                        <Route path="/user/:id" element={<UserDetail />} />
+                        <Route path="/user/:id/edit" element={<UserEdit />} />
+                        <Route path="/user/add" element={<UserEdit />} />
 
-                    <Route path="/workitems" element={<WorkItemList />} />
-                    <Route path="/workitems/:filter" element={<WorkItemList />} />
-                    <Route path="/workitem/:id" element={<WorkItemDetail />} />
-                    <Route path="/workitem/:id/edit" element={<WorkItemEdit />} />
-                    <Route path="/workitem/add" element={<WorkItemEdit />} />
+                        <Route path="/workitems" element={<WorkItemList />} />
+                        <Route path="/workitems/:filter" element={<WorkItemList />} />
+                        <Route path="/workitem/:id" element={<WorkItemDetail />} />
+                        <Route path="/workitem/:id/edit" element={<WorkItemEdit />} />
+                        <Route path="/workitem/add" element={<WorkItemEdit />} />
 
-                    {/*<Route path="/search" element={<Search />} />*/}
+                        {/*<Route path="/search" element={<Search />} />*/}
+                    </Route>
                     <Route path="*" element={<RouteNotFound />} />
                 </Routes>
             </Suspense>
-        </>
+        </AuthProvider>
     )
 }
 
