@@ -365,3 +365,8 @@ Presentation/DemoAngular/obj/Debug//package.g.props
 Presentation/DemoReact/obj/Debug//package.g.props
 Presentation/DemoVue/obj/Debug//package.g.props
 Presentation/DemoAngular/obj/Debug//package.g.props
+Presentation/DemoAngular/obj/Debug//package.g.props
+.gitignore
+Presentation/DemoVue/obj/Debug//package.g.props
+Presentation/DemoReact/obj/Debug//package.g.props
+Presentation/DemoAngular/obj/Debug//package.g.props
