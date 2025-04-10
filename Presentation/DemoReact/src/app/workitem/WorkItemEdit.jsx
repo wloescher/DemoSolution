@@ -1,130 +1,188 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from "react-router-dom";
 
 // Functions
-import { useLoadData } from '../functions';
+import { useLoadData } from "../functions";
+import { getWorkItemTypes } from "../functions";
+import { getWorkItemStatuses } from "../functions";
 
 const WorkItemEdit = () => {
-    const [data = [], setData] = useState();
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState();
-    const params = useParams();
-    const id = params.id ? parseInt(params.id) : 0;
+  const [data = [], setData] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
+  const params = useParams();
+  const id = params.id ? parseInt(params.id) : 0;
 
-    const save = () => {
-        alert("TODO: Save changes.");
-    }
+  const saveChanges = () => {
+    alert("TODO: Save changes.");
+  };
 
-    // ------------------------------------------------------------
-    // Load data
-    // ------------------------------------------------------------
+  const deleteItem = () => {
+    alert("TODO: Delete item.");
+  };
 
-    // TODO: Swap out WebAPI URL to 'workItem/' + id
-    useLoadData('/test/workItem/' + id, setIsLoading, setData, setError);
+  // ------------------------------------------------------------
+  // Load data
+  // ------------------------------------------------------------
 
-    // ------------------------------------------------------------
-    // Presentation Layer
-    // ------------------------------------------------------------
+  // TODO: Swap out WebAPI URL to 'workItem/' + id
+  useLoadData("/test/workItem/" + id, setIsLoading, setData, setError);
 
-    return (
-        <>
-            <div className="container">
-                <div className="row">
-                    <div className="col">
-                        <h1>{ id == 0 ? "Add" : "Edit" } Work Item</h1>
-                    </div>
-                    <div className="col text-end mt-2">
-                        <button className="btn btn-primary" onClick={() => save()}>
-                            <FontAwesomeIcon icon="fa-solid fa-save" className="me-2" /> Save
-                        </button>
-                    </div>
-                </div>
-                <div className="container data">
-                    <div className="row data-row">
-                        <div className="col-2 col-key">
-                            Id
-                        </div>
-                        <div className="col-10 col-value">
-                            {id}
-                        </div>
-                    </div>
-                    <div className="row data-row">
-                        <div className="col-2 col-key">
-                            Guid
-                        </div>
-                        <div className="col-10 col-value">
-                            {data.guid}
-                        </div>
-                    </div>
-                    <div className="row data-row">
-                        <div className="col-2 col-key">
-                            TypeId
-                        </div>
-                        <div className="col-10 col-value">
-                            {data.typeId}
-                        </div>
-                    </div>
-                    <div className="row data-row">
-                        <div className="col-2 col-key">
-                            Type
-                        </div>
-                        <div className="col-10 col-value">
-                            {data.type}
-                        </div>
-                    </div>
-                    <div className="row data-row">
-                        <div className="col-2 col-key">
-                            StatusId
-                        </div>
-                        <div className="col-10 col-value">
-                            {data.statusId}
-                        </div>
-                    </div>
-                    <div className="row data-row">
-                        <div className="col-2 col-key">
-                            Status
-                        </div>
-                        <div className="col-10 col-value">
-                            {data.status}
-                        </div>
-                    </div>
-                    <div className="row data-row">
-                        <div className="col-2 col-key">
-                            Title
-                        </div>
-                        <div className="col-10 col-value">
-                            {data.title}
-                        </div>
-                    </div>
-                    <div className="row data-row">
-                        <div className="col-2 col-key">
-                            Sub-Title
-                        </div>
-                        <div className="col-10 col-value">
-                            {data.subTitle}
-                        </div>
-                    </div>
-                    <div className="row data-row">
-                        <div className="col-2 col-key">
-                            Summary
-                        </div>
-                        <div className="col-10 col-value">
-                            {data.summary}
-                        </div>
-                    </div>
-                    <div className="row data-row">
-                        <div className="col-2 col-key">
-                            Body
-                        </div>
-                        <div className="col-10 col-value">
-                            {data.body}
-                        </div>
-                    </div>
-                </div>
-            </div >
-        </>
-    );
-}
+  // ------------------------------------------------------------
+  // Presentation Layer
+  // ------------------------------------------------------------
+
+  return (
+    <>
+      <div className="container">
+        <div className="row">
+          <div className="col">
+            <h1>{id == 0 ? "Add" : "Edit"} Work Item</h1>
+          </div>
+          <div className="col text-end mt-2">
+            <Link to={`/user/${id}`} className="btn btn-light border me-2">
+              <FontAwesomeIcon icon="fa-solid fa-x" className="me-2" /> Cancel
+            </Link>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              onClick={() => saveChanges()}
+            >
+              <FontAwesomeIcon icon="fa-solid fa-save" className="me-2" /> Save
+            </button>
+          </div>
+        </div>
+        <div className="row data-row">
+          <div className="col-6">
+            <div className="mb-3">
+              <input
+                id="title"
+                type="text"
+                className="form-control required"
+                aria-label="Title"
+                value={data.title ?? ""}
+                required
+                onChange={(e) =>
+                  setData({
+                    ...data,
+                    title: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="typeId" className="form-label">
+                Work Item Type
+              </label>
+              <select
+                id="typeId"
+                className="form-select required"
+                aria-label="Type"
+                value={data.typeId ?? 0}
+                required
+                onChange={(e) =>
+                  setData({
+                    ...data,
+                    typeId: e.target.value,
+                  })
+                }
+              >
+                {getWorkItemTypes().map((item) => (
+                  <option key={item.value} value={item.value}>
+                    {item.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="statusId" className="form-label">
+                Work Item Status
+              </label>
+              <select
+                id="statusId"
+                className="form-select required"
+                aria-label="Status"
+                value={data.statusId ?? 0}
+                required
+                onChange={(e) =>
+                  setData({
+                    ...data,
+                    statusId: e.target.value,
+                  })
+                }
+              >
+                {getWorkItemStatuses().map((item) => (
+                  <option key={item.value} value={item.value}>
+                    {item.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="col-6">
+              <div className="mb-3">
+                <input
+                  id="subTitle"
+                  type="text"
+                  className="form-control"
+                  aria-label="Sub-Title"
+                  value={data.subTitle ?? ""}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      subTitle: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div className="mb-3">
+                <input
+                  id="summary"
+                  type="text"
+                  className="form-control"
+                  aria-label="Summary"
+                  value={data.summary ?? ""}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      summary: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div className="mb-3">
+                <input
+                  id="body"
+                  type="text"
+                  className="form-control"
+                  aria-label="Body"
+                  value={data.body ?? ""}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      body: e.target.value,
+                    })
+                  }
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className={id == 0 ? "hidden" : "row"}>
+          <div className="col text-end">
+            <button
+              type="submit"
+              className="btn btn-danger"
+              onClick={() => deleteItem()}
+            >
+              <FontAwesomeIcon icon="fa-solid fa-trash" className="me-2" />{" "}
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
 
 export default WorkItemEdit;
