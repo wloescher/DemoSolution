@@ -234,7 +234,7 @@ export function getWorkItemTypes() {
     ];
 }
 
-export function getWorkItemStatus() {
+export function getWorkItemStatuses() {
     return [
         { value: '0', label: 'Select...' },
         { value: '1', label: 'New' },

@@ -65,7 +65,7 @@ const Login = () => {
                             </div>
                         </div>}
                     {authenticedFailed &&
-                        <div class="alert alert-danger mt-2" role="alert">
+                        <div className="alert alert-danger mt-2" role="alert">
                             <FontAwesomeIcon icon="fa-solid fa-exclamation-triangle" className="me-2" />
                             Invalid username or password!
                         </div>}

@@ -225,7 +225,7 @@ const UserEdit = () => {
                         </div>
                     </div>
                 </form >
-                <div className="row" className={id == 0 ? 'hidden' : ''}>
+                <div className={id == 0 ? 'hidden' : 'row'}>
                     <div className="col text-end">
                         <button type="submit" className="btn btn-danger" onClick={() => deleteItem()}>
                             <FontAwesomeIcon icon="fa-solid fa-trash" className="me-2" /> Delete
