@@ -1,22 +1,30 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
-    const [token, setToken] = useState(null);
+    const cookieName = 'UserToken';
+    const [cookies, setCookie, removeCookie] = useCookies([cookieName]);
+
     const login = (userToken) => {
-        setToken(userToken);
+        setCookie(cookieName, userToken, { path: '/', maxAge: 3600 });
         navigate('/');
     };
     const logout = () => {
-        setToken(null);
-        navigate('/Logout');
+        removeCookie(cookieName, { path: '/' });
+        window.location.href = "/logout";
     };
-    const isAuthenticated = !!token;
+
+    const getIsAuthenticated = () => {
+        const cookie = cookies[cookieName];
+        return !!cookie;
+    }
+
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+        <AuthContext.Provider value={{ getIsAuthenticated, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

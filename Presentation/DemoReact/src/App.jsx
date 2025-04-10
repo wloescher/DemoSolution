@@ -35,8 +35,9 @@ function App() {
                 <Routes>
                     <Route path="/login" element={<Login />} />
                     <Route path="/logout" element={<Logout />} />
-                    <Route path="/accessdenied" element={<AccessDenied />} />
                     <Route element={<PrivateRoutes />}>
+                        <Route path="/accessdenied" element={<AccessDenied />} />
+
                         <Route path="/" element={<Home />} />
                         <Route path="/clients" element={<ClientList />} />
                         <Route path="/clients/:filter" element={<ClientList />} />

@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from 'react-router-dom';
 
-const AccessDenied = () => {
+const Logout = () => {
     return (
         <div className="error">
             <h1>
@@ -9,7 +9,7 @@ const AccessDenied = () => {
                 Logout
             </h1>
             <p>You have been logged out.</p>
-            <Link to="/" className="btn btn-primary">
+            <Link to="/Login" className="btn btn-primary">
                 <FontAwesomeIcon icon="fa-solid fa-sign-in" className="me-2" />
                 Login
             </Link>            
@@ -17,4 +17,4 @@ const AccessDenied = () => {
     );
 }
 
-export default AccessDenied;
+export default Logout;
