@@ -1,44 +1,36 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav *ngIf="isLoggedIn" class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" routerLink="/home">
       <fa-icon [icon]="faAngular"></fa-icon>
       DemoAngular
     </a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
+    <button class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
+          <a class="nav-link dropdown-toggle"
+             href="#"
+             role="button"
+             data-bs-toggle="dropdown"
+             aria-expanded="false">
             Clients
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" routerLink="/clients">ALL</a></li>
             <li><hr class="dropdown-divider" /></li>
             <li>
-              <a class="dropdown-item" routerLink="/clients/internal"
-                >Internal</a
-              >
+              <a class="dropdown-item" routerLink="/clients/internal">Internal</a>
             </li>
             <li>
-              <a class="dropdown-item" routerLink="/clients/external"
-                >External</a
-              >
+              <a class="dropdown-item" routerLink="/clients/external">External</a>
             </li>
             <li>
               <a class="dropdown-item" routerLink="/clients/lead">Lead</a>
@@ -46,13 +38,11 @@
           </ul>
         </li>
         <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
+          <a class="nav-link dropdown-toggle"
+             href="#"
+             role="button"
+             data-bs-toggle="dropdown"
+             aria-expanded="false">
             Users
           </a>
           <ul class="dropdown-menu">
@@ -68,39 +58,29 @@
               <a class="dropdown-item" routerLink="/users/sales">Sales</a>
             </li>
             <li>
-              <a class="dropdown-item" routerLink="/users/marketing"
-                >Marketing</a
-              >
+              <a class="dropdown-item" routerLink="/users/marketing">Marketing</a>
             </li>
             <li>
-              <a class="dropdown-item" routerLink="/users/accounting"
-                >Accounting</a
-              >
+              <a class="dropdown-item" routerLink="/users/accounting">Accounting</a>
             </li>
             <li>
-              <a class="dropdown-item" routerLink="/users/executive"
-                >Executive</a
-              >
+              <a class="dropdown-item" routerLink="/users/executive">Executive</a>
             </li>
           </ul>
         </li>
         <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
+          <a class="nav-link dropdown-toggle"
+             href="#"
+             role="button"
+             data-bs-toggle="dropdown"
+             aria-expanded="false">
             Work Items
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" routerLink="/workitems">ALL</a></li>
             <li><hr class="dropdown-divider" /></li>
             <li>
-              <a class="dropdown-item" routerLink="/workitems/user-story"
-                >User Story</a
-              >
+              <a class="dropdown-item" routerLink="/workitems/user-story">User Story</a>
             </li>
             <li>
               <a class="dropdown-item" routerLink="/workitems/task">Task</a>
@@ -112,28 +92,27 @@
               <a class="dropdown-item" routerLink="/workitems/epic">Epic</a>
             </li>
             <li>
-              <a class="dropdown-item" routerLink="/workitems/feature"
-                >Feature</a
-              >
+              <a class="dropdown-item" routerLink="/workitems/feature">Feature</a>
             </li>
           </ul>
         </li>
       </ul>
       <form class="d-flex btn-group" role="search">
-        <input
-          class="form-control border"
-          type="search"
-          placeholder="Search..."
-          aria-label="Search"
-        />
-        <button
-          (click)="search()"
-          class="btn btn-outline-success"
-          type="submit"
-        >
+        <input class="form-control border"
+               type="search"
+               placeholder="Search..."
+               id="search"
+               aria-label="Search" />
+        <button (click)="search()"
+                class="btn btn-outline-success me-2"
+                type="submit">
           <fa-icon [icon]="faSearch"></fa-icon>
         </button>
       </form>
+      <button class="btn btn-outline-secondary" type="button" title="Logout" (click)="logout()">
+        <fa-icon [icon]="faSignOut"></fa-icon>
+      </button>
+
     </div>
   </div>
 </nav>

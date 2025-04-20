@@ -9,6 +9,7 @@ export interface IUser {
   firstName: string;
   middleName: string;
   lastName: string;
+  fullName: string;
   addressLine1: string;
   addressLine2: string;
   city: string;
@@ -16,4 +17,8 @@ export interface IUser {
   postalCode: string;
   country: string;
   phoneNumber: string;
+  createdDate: string;
+  createdBy: string;
+  modifiedDate: string;
+  modifiedBy: string;
 }

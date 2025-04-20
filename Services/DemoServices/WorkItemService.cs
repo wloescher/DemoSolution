@@ -259,7 +259,7 @@ namespace DemoServices
 
             // Convert to models
             var models = new List<UserModel>();
-            foreach (var entity in entities.OrderBy(x => x.FullName))
+            foreach (var entity in entities.OrderBy(x => x.LastName).ThenBy(x => x.FirstName))
             {
                 var model = UserService.GetModel(entity);
                 if (model != null)

@@ -11,7 +11,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState('');
     const [isAuthenticating, setIsAuthenticating] = useState(false);
-    const [authenticedFailed, setAuthenticationFailed] = useState(false);
+    const [authenticationFailed, setAuthenticationFailed] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -64,7 +64,7 @@ const Login = () => {
                                 <Spinner size="sm" animation="border" role="status" /> Authenticating...
                             </div>
                         </div>}
-                    {authenticedFailed &&
+                    {authenticationFailed &&
                         <div className="alert alert-danger mt-2" role="alert">
                             <FontAwesomeIcon icon="fa-solid fa-exclamation-triangle" className="me-2" />
                             Invalid username or password!

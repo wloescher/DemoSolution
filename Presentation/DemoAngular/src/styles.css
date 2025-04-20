@@ -41,3 +41,17 @@
     background: white;
     padding: 5px;
   }
+
+input:required, select:required {
+  background-color: #FEFFF0 !important;
+}
+
+/* Error display */
+.error {
+  text-align: center;
+  color: silver;
+}
+
+.hidden {
+  display: none;
+}

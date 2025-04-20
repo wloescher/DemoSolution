@@ -1,0 +1,52 @@
+<form class="mt-4" (ngSubmit)="onSubmit()">
+  <div class="row">
+    <div class="col-2 offset-md-5">
+      <h1 class="text-center">
+        <fa-icon [icon]="faAngular"></fa-icon>
+        DemoAngular
+      </h1>
+      <input type="text"
+             class="form-control required mb-2"
+             required
+             id="username"
+             name="username"
+             aria-label="Username"
+             placeholder="Username"
+             [(ngModel)]="username" />
+      <input type="password"
+             class="form-control required mb-2"
+             required
+             id="password"
+             name="password"
+             aria-label="Password"
+             placeholder="Password"
+             [(ngModel)]="password" />
+      <div class="row ">
+        <div class="col-6 pt-1">
+          <input type="checkbox"
+                 class="form-check-input me-2"
+                 id="rememberMe"
+                 name="rememberMe"
+                 aria-label="Remember Me"
+                 [(ngModel)]="rememberMe" />
+          <label htmlFor="isActive" class="form-label">Remember Me</label>
+        </div>
+        <div class="col-6 text-end">
+          <button type="submit" class="btn btn-primary">
+            <fa-icon [icon]="faSignIn"></fa-icon>
+            Login
+          </button>
+        </div>
+      </div>
+      <div *ngIf="authenticating" class="row">
+        <div class="col text-secondary">
+          <fa-icon [icon]="faSpinner" [spin]="authenticating"></fa-icon> Authenticating...
+        </div>
+      </div>
+      <div *ngIf="authenticationFailed" class="alert alert-danger mt-2" role="alert">
+        <fa-icon [icon]="faTriangleExclamation" class="me-2"></fa-icon>
+        Invalid username or password!
+      </div>
+    </div>
+  </div>
+</form>

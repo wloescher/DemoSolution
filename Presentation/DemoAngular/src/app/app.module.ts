@@ -6,6 +6,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { SiteHeaderComponent } from './site-header/site-header.component';
+import { LoginComponent } from './login/login.component';
+import { LogoutComponent } from './logout/logout.component';
+import { ErrorComponent } from './error/error.component';
+import { AccessDeniedComponent } from './access-denied/access-denied.component';
 import { HomeComponent } from './home/home.component';
 import { GenericTableComponent } from './generic-table/generic-table.component';
 
@@ -28,6 +32,11 @@ import { WorkItemEditComponent } from './workitem/workitem-edit/workitem-edit.co
   declarations: [
     AppComponent,
     SiteHeaderComponent,
+    LoginComponent,
+    LogoutComponent,
+    ErrorComponent,
+    AccessDeniedComponent,
+
     HomeComponent,
 
     // Clients

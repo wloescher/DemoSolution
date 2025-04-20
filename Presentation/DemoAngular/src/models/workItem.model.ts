@@ -13,4 +13,8 @@ export interface IWorkItem {
   subTitle: string;
   summary: string;
   body: string;
+  createdDate: string;
+  createdBy: string;
+  modifiedDate: string;
+  modifiedBy: string;
 }

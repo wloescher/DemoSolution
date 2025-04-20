@@ -14,4 +14,8 @@ export interface IClient {
   country: string;
   phoneNumber: string;
   url: string;
+  createdDate: string;
+  createdBy: string;
+  modifiedDate: string;
+  modifiedBy: string;
 }

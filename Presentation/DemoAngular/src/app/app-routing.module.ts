@@ -1,5 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from '../guards/auth.guard';
+
+import { LoginComponent } from './login/login.component';
+import { LogoutComponent } from './logout/logout.component';
+import { ErrorComponent } from './error/error.component';
+import { AccessDeniedComponent } from './access-denied/access-denied.component';
 import { HomeComponent } from './home/home.component';
 
 // Clients
@@ -18,29 +24,34 @@ import { WorkItemDetailComponent } from './workitem/workitem-detail/workitem-det
 import { WorkItemEditComponent } from './workitem/workitem-edit/workitem-edit.component';
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent, title: "Home - DemoAngular" },
+  { path: 'login', component: LoginComponent },
+  { path: 'logout', component: LogoutComponent },
+  { path: 'access-denied', component: AccessDeniedComponent },
+  { path: 'home', component: HomeComponent, title: "Home - DemoAngular", canActivate: [AuthGuard] },
 
   // Clients
-  { path: 'clients/:filter', component: ClientListComponent, title: "Client List - DemoAngular" },
-  { path: 'clients', component: ClientListComponent, title: "Client List - DemoAngular" },
-  { path: 'client/add', component: ClientEditComponent, title: "Client Add - DemoAngular" },
-  { path: 'client/edit/:id', component: ClientEditComponent, title: "Client Edit - DemoAngular" },
-  { path: 'client/:id', component: ClientDetailComponent, title: "Client Detail - DemoAngular" },
+  { path: 'clients/:filter', component: ClientListComponent, title: "Client List - DemoAngular", canActivate: [AuthGuard] },
+  { path: 'clients', component: ClientListComponent, title: "Client List - DemoAngular", canActivate: [AuthGuard] },
+  { path: 'client/add', component: ClientEditComponent, title: "Client Add - DemoAngular", canActivate: [AuthGuard] },
+  { path: 'client/edit/:id', component: ClientEditComponent, title: "Client Edit - DemoAngular", canActivate: [AuthGuard] },
+  { path: 'client/:id', component: ClientDetailComponent, title: "Client Detail - DemoAngular", canActivate: [AuthGuard] },
 
   // Users
-  { path: 'users/:filter', component: UserListComponent, title: "User List - DemoAngular" },
-  { path: 'users', component: UserListComponent, title: "User List - DemoAngular" },
-  { path: 'user/add', component: UserEditComponent, title: "User Add - DemoAngular" },
-  { path: 'user/edit/:id', component: UserEditComponent, title: "User Edit - DemoAngular" },
-  { path: 'user/:id', component: UserDetailComponent, title: "User Detail - DemoAngular" },
+  { path: 'users/:filter', component: UserListComponent, title: "User List - DemoAngular", canActivate: [AuthGuard] },
+  { path: 'users', component: UserListComponent, title: "User List - DemoAngular", canActivate: [AuthGuard] },
+  { path: 'user/add', component: UserEditComponent, title: "User Add - DemoAngular", canActivate: [AuthGuard] },
+  { path: 'user/edit/:id', component: UserEditComponent, title: "User Edit - DemoAngular", canActivate: [AuthGuard] },
+  { path: 'user/:id', component: UserDetailComponent, title: "User Detail - DemoAngular", canActivate: [AuthGuard] },
 
   // WorkItems
-  { path: 'workitems/:filter', component: WorkItemListComponent, title: "Work Item List - DemoAngular" },
-  { path: 'workitems', component: WorkItemListComponent, title: "Work Item List - DemoAngular" },
-  { path: 'workitem/add', component: WorkItemEditComponent, title: "Work Item Add - DemoAngular" },
-  { path: 'workitem/edit/:id', component: WorkItemEditComponent, title: "Work Item Edit - DemoAngular" },
-  { path: 'workitem/:id', component: WorkItemDetailComponent, title: "Work Item Detail - DemoAngular" },
-  { path: '', redirectTo: '/home', pathMatch: 'full' }
+  { path: 'workitems/:filter', component: WorkItemListComponent, title: "Work Item List - DemoAngular", canActivate: [AuthGuard] },
+  { path: 'workitems', component: WorkItemListComponent, title: "Work Item List - DemoAngular", canActivate: [AuthGuard] },
+  { path: 'workitem/add', component: WorkItemEditComponent, title: "Work Item Add - DemoAngular", canActivate: [AuthGuard] },
+  { path: 'workitem/edit/:id', component: WorkItemEditComponent, title: "Work Item Edit - DemoAngular", canActivate: [AuthGuard] },
+  { path: 'workitem/:id', component: WorkItemDetailComponent, title: "Work Item Detail - DemoAngular, canActivate: [AuthGuard]" },
+
+  { path: 'error', component: ErrorComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' }
 ];
 
 @NgModule({
