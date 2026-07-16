@@ -19,6 +19,3 @@ PRESENTATION LAYER (Bootstrap, FontAwesome)
 - Vue v3.5
 - Razor .NET 8
 - Blazor .NET 8
-
-Still to come...
-  - MudBlazor v9.7
